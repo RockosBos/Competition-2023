@@ -5,8 +5,10 @@
 package frc.robot;
 
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.commands.autonomous.Mobility;
 import frc.robot.subsystems.Swerve;
+
+import com.pathplanner.lib.PathPlanner;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -43,7 +45,6 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
-    private final Mobility mobilityAutoCommand = new Mobility(s_Swerve);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -57,7 +58,7 @@ public class RobotContainer {
             )
         );
 
-        autonomousSelector.setDefaultOption("Mobility", mobilityAutoCommand);
+        autonomousSelector.setDefaultOption("Mobility", s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Mobility", 1, 1), true));
 
         // Configure the button bindings
         configureButtonBindings();

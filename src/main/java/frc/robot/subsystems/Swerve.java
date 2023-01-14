@@ -110,13 +110,6 @@ public class Swerve extends SubsystemBase {
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
 
         return new SequentialCommandGroup(
-             new InstantCommand(() -> {
-               // Reset odometry for the first path you run during auto
-               if(isFirstPath){
-                    System.out.println("First Run");
-                   this.resetOdometry(traj.getInitialHolonomicPose());
-               }
-             }),
              new PPSwerveControllerCommand(
                  traj, 
                  this::getPose, // Pose supplier
