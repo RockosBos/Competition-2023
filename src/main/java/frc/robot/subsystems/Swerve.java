@@ -104,15 +104,13 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
 
-        for(SwerveModule mod : mSwerveMods){
-            //SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            //SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-           // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
-
-            Shuffleboard.getTab("Diagnostics").add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            Shuffleboard.getTab("Diagnostics").add("Mod " + mod.moduleNumber + " Integrated", mod.getCanCoder().getDegrees());
-            Shuffleboard.getTab("Diagnostics").add("Mod " + mod.moduleNumber + " Velocity", mod.getCanCoder().getDegrees());
-            
-        }
+        /*for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+        }*/
+        SmartDashboard.putNumber("Pose X", getPose().getX());
+        SmartDashboard.putNumber("Pose Y", getPose().getY());
+        SmartDashboard.putNumber("Angle", getYaw().getDegrees());
     }
 }
