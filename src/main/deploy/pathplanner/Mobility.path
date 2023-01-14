@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.0,
-        "y": 3.0
+        "x": 0.0,
+        "y": 0.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 3.0
+        "x": 1.0,
+        "y": 0.0
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,18 +24,18 @@
     },
     {
       "anchorPoint": {
-        "x": 3.0,
-        "y": 5.0
+        "x": 1.2145789769468265,
+        "y": 2.0355115175280276
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 1.203143518983186,
+        "y": 1.0406266746912944
       },
       "nextControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 1.203143518983186,
+        "y": 1.0406266746912944
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": -91.16913932790739,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -49,15 +49,40 @@
     },
     {
       "anchorPoint": {
-        "x": 5.0,
-        "y": 3.0
+        "x": 1.923577370692544,
+        "y": 0.5946438141093098
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 3.0
+        "x": 1.5462072578924042,
+        "y": 1.5552222830551212
+      },
+      "nextControl": {
+        "x": 2.0483205936636577,
+        "y": 0.27711561018284026
+      },
+      "holonomicAngle": 88.8982938847936,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.7126239701837465,
+        "y": 1.4065613295277946
+      },
+      "prevControl": {
+        "x": 1.7126239701837465,
+        "y": 1.4065613295277946
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 178.4088597288054,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
