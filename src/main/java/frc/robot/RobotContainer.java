@@ -2,6 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+//This project utilizes a modified version of FIRST Robotics Competition Team 364's Open source Swerve Drive code. 
+//This project can be accessed from the following link: https://github.com/Team364/BaseFalconSwerve
+
 package frc.robot;
 
 import frc.robot.commands.TeleopSwerve;
