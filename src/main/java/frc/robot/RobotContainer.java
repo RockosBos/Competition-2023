@@ -8,7 +8,11 @@
 package frc.robot;
 
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.Conveyor.SetConveyor;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Swerve;
+
+import frc.robot.commands.Conveyor.*;
 
 import com.pathplanner.lib.PathPlanner;
 
@@ -46,11 +50,14 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final Conveyor s_Conveyor = new Conveyor();
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+
+        //SET DEFAULT COMMANDS  
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
@@ -60,6 +67,8 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
+
+        s_Conveyor.setDefaultCommand(new SetConveyor(s_Conveyor));
 
         autonomousSelector.setDefaultOption("Mobility", s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Mobility", 1, 1), true));
 

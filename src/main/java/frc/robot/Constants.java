@@ -13,6 +13,20 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    //Motor Controller ID's
+    public static final int CONVEYOR_CONTROLLER = 13;
+
+    //Sensor ID's
+    public static final int CONVEYOR_INTAKE_SENSOR = 0;
+    public static final int CONVEYOR_LIFT_SENSOR = 1;
+
+    //Speeds
+    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = 5.0;
+    public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = -5.0;
+
+    //Ramp Rates
+    public static final double CONVEYOR_RAMP_RATE = 0.1;
+
     public static final class Swerve {
         public static final int pigeonID = 15;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
