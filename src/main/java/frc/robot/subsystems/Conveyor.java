@@ -31,7 +31,7 @@ public class Conveyor extends SubsystemBase {
             conveyorMotor.setVoltage(speed);
             inTransitionState = true;
         }
-        else if(liftSensor.get()){
+        if(liftSensor.get()){
             conveyorMotor.stopMotor();
             inTransitionState = false;
         }
