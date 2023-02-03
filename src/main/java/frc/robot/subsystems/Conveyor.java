@@ -38,9 +38,9 @@ import frc.robot.Constants;
 
 public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
-    private DigitalInput intakeSensor = new DigitalInput(Constants.CONVEYOR_INTAKE_SENSOR);
-    private DigitalInput liftSensor = new DigitalInput(Constants.CONVEYOR_LIFT_SENSOR);
-    private CANSparkMax conveyorMotor = new CANSparkMax(Constants.CONVEYOR_CONTROLLER, MotorType.kBrushless);
+    private DigitalInput intakeSensor = new DigitalInput(Constants.conveyorFrontPhotoEyeID);
+    private DigitalInput liftSensor = new DigitalInput(Constants.conveyorBackPhotoEyeID);
+    private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean inTransitionState = false;
     private boolean logging = false;
 
