@@ -13,8 +13,25 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    //Motor ID's
+
+    public static final int conveyorID = 14;
+    public static final int intakeRollerID = 15;
+    public static final int intakeExtendID = 16;
+    public static final int liftRotateID = 17;
+    public static final int liftExtendID = 18;
+    public static final int grabber = 19;
+
+    //Sensor ID's
+
+    public static final int intakePhotoEyeID = 0;
+    public static final int liftPhotoEyeID = 1;
+    public static final int intakeExtendLimitID = 2;
+    public static final int intakeRetractLimitID = 3;
+    public static final int liftZeroPositionLimitID = 4;
+
     public static final class Swerve {
-        public static final int pigeonID = 15;
+        public static final int pigeonID = 13;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule = //TODO: This must be tuned to specific robot
