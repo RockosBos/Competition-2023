@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  *  setManualBackward - Manually runs the conveyor backward.
  * 
  * Functions *
- *  setConveyor
- *  setConveyorManual
- *  get
+ *  setConveyor - Turns on conveyor based on photoeye states.
+ *  setConveyorManual - Turns on conveyor based on input speed.
+ *  isconveyorLoaded - Returns state of the conveyor to find if it is loaded.
  */
 
 public class Conveyor extends SubsystemBase {

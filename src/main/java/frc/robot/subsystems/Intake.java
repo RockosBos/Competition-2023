@@ -20,7 +20,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  *  It will retract once the intake button is no longer being pressed. It will be required 
  * 
  * Commands *
- *  
+ *  Stop Intake (default) - Intake is retracted and roller wheels are halted.
+ *  Activate Intake - Intake is moved into the extended position and the roller wheels are turned on.
+ *  Manual Extention - Manually extends the intake.
+ *  Manual Retraction - Manually retracts the intake.
+ * 
+ * Functions *
+ *  SetIntakeRollers - turns on intake rollers
+ *  SetIntakeExtension - Runs intake extension as long as limits are not reached.
+ *  isIntakeRetracted - returns true/false on whether the intake is extended or not.
  */
 
 public class Intake extends SubsystemBase {
