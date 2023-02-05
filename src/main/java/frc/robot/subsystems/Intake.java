@@ -4,7 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 //This subsystem will control the intake arm that work to bring a game piece into the robot. This includes the extension and the intake rollers.
 
@@ -33,7 +38,34 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  public Intake() {}
+  private CANSparkMax intakeExtend = new CANSparkMax(Constants.intakeExtendID, MotorType.kBrushless);
+  private CANSparkMax intakeRoller = new CANSparkMax(Constants.intakeRollerID, MotorType.kBrushless);
+  private DigitalInput intakeExtendedLimit = new DigitalInput(Constants.intakeExtendLimitID);
+  private DigitalInput intakeRetractedLimit = new DigitalInput(Constants.intakeRetractLimitID);
+
+  public Intake() {
+
+  } 
+
+  public void SetIntakeRollers(double voltage) {
+    intakeRoller.setVoltage(voltage);
+  }
+
+  public void SetIntakeExtension(double voltage){
+    if(voltage > 0 && intakeExtendedLimit.get()){
+      intakeExtend.stopMotor();
+    }
+    else if(voltage < 0 && intakeRetractedLimit.get()){
+      intakeExtend.stopMotor();
+    } 
+    else{
+      intakeExtend.setVoltage(voltage);
+    }
+  }
+
+  public boolean isIntakeRetracted(){
+    return intakeRetractedLimit.get();
+  }
 
   @Override
   public void periodic() {
