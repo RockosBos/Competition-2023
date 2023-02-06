@@ -61,6 +61,7 @@ public final class Constants {
     public static final ShuffleboardTab intakeDebugTab = Shuffleboard.getTab("Intake Debug");
     public static final ShuffleboardTab liftDebugTab = Shuffleboard.getTab("Lift Debug");
     public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
+    public static final ShuffleboardTab pidConfigTab = Shuffleboard.getTab("PID Config");
 
     public static final class Swerve {
         public static final int pigeonID = 14;
