@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -42,7 +44,8 @@ public class Conveyor extends SubsystemBase {
     private DigitalInput liftSensor = new DigitalInput(Constants.conveyorBackPhotoEyeID);
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean inTransitionState = false;
-    private boolean logging = false;
+
+    private ShuffleboardTab conveyorTab = Shuffleboard.getTab("Conveyor Debug");
 
     public Conveyor() {
         conveyorMotor.clearFaults();
@@ -72,20 +75,15 @@ public class Conveyor extends SubsystemBase {
         return false;
     }
 
-    public void changeLoggingState(boolean state){
-        this.logging = state;
-    }
-
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(logging){
-            SmartDashboard.putBoolean("Intake Sensor", intakeSensor.get());
-            SmartDashboard.putBoolean("Lift Sensor", liftSensor.get());
-            SmartDashboard.putBoolean("Transition State Flag", inTransitionState);
-            SmartDashboard.putNumber("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
-            SmartDashboard.putNumber("Conveyor Motor Set Speed", conveyorMotor.get());
-            SmartDashboard.putNumber("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
-        }
+        conveyorTab.add("Intake Sensor", intakeSensor.get());
+        conveyorTab.add("Lift Sensor", liftSensor.get());
+        conveyorTab.add("Transition State Flag", inTransitionState);
+        conveyorTab.add("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
+        conveyorTab.add("Conveyor Motor Set Speed", conveyorMotor.get());
+        conveyorTab.add("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
+        
     }
 }

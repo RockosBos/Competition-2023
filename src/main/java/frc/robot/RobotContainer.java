@@ -17,6 +17,8 @@ import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -57,6 +59,13 @@ public class RobotContainer {
     private final Conveyor s_Conveyor = new Conveyor();
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
+
+    private final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
+    private final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
+    private final ShuffleboardTab conveyorDebugTab = Shuffleboard.getTab("Conveyor Debug");
+    private final ShuffleboardTab intakeDebugTab = Shuffleboard.getTab("Intake Debug");
+    private final ShuffleboardTab liftDebugTab = Shuffleboard.getTab("Lift Debug");
+    private final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {

@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,6 +30,8 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+
+    public ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve Debug");
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
@@ -127,13 +130,15 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
 
-        /*for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
-        }*/
-        SmartDashboard.putNumber("Pose X", getPose().getX());
-        SmartDashboard.putNumber("Pose Y", getPose().getY());
-        SmartDashboard.putNumber("Angle", getYaw().getDegrees());
+        for(SwerveModule mod : mSwerveMods){
+            swerveTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+            swerveTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+            swerveTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+        }
+
+        swerveTab.add("Pose X", getPose().getX());
+        swerveTab.add("Pose Y", getPose().getY());
+        swerveTab.add("Angle", getYaw().getDegrees());
+
     }
 }
