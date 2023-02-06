@@ -42,7 +42,10 @@ public class Conveyor extends SubsystemBase {
     private DigitalInput liftSensor = new DigitalInput(Constants.conveyorBackPhotoEyeID);
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean inTransitionState = false;
+
     private boolean logging = false;
+    private boolean errorFlag;
+    private String errorMessage;
 
     public Conveyor() {
         conveyorMotor.clearFaults();
@@ -51,14 +54,21 @@ public class Conveyor extends SubsystemBase {
     }
 
     public void setConveyor(double speed){
-        if(intakeSensor.get() || inTransitionState){
-            conveyorMotor.setVoltage(speed);
-            inTransitionState = true;
+        if(conveyorMotor.getOutputCurrent() < Constants.CONVEYOR_MAX_CURRENT){
+            if(intakeSensor.get() || inTransitionState){
+                conveyorMotor.setVoltage(speed);
+                inTransitionState = true;
+            }
+            if(liftSensor.get()){
+                conveyorMotor.stopMotor();
+                inTransitionState = false;
+            }
         }
-        if(liftSensor.get()){
-            conveyorMotor.stopMotor();
-            inTransitionState = false;
+        else{
+            errorFlag = true;
+            errorMessage = "Conveyor Motor (ID:15) has exceeded its max current draw";
         }
+        
     }
 
     public void setConveyorManual(double speed){
@@ -76,6 +86,15 @@ public class Conveyor extends SubsystemBase {
         this.logging = state;
     }
 
+    public String getError(){
+        return errorMessage;
+    }
+
+    public void clearErrors(){
+        errorFlag = false;
+        errorMessage = "";
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
@@ -86,6 +105,10 @@ public class Conveyor extends SubsystemBase {
             SmartDashboard.putNumber("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
             SmartDashboard.putNumber("Conveyor Motor Set Speed", conveyorMotor.get());
             SmartDashboard.putNumber("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
+        }
+
+        if(errorFlag){
+            System.out.println(errorMessage);
         }
     }
 }

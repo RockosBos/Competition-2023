@@ -15,12 +15,14 @@ public final class Constants {
 
     //Motor ID's
 
-    public static final int conveyorID = 14;
-    public static final int intakeRollerID = 15;
-    public static final int intakeExtendID = 16;
-    public static final int liftRotateID = 17;
-    public static final int liftExtendID = 18;
-    public static final int grabber = 19;
+    public static final int conveyorID = 15;
+    public static final int intakeRollerID = 16;
+    public static final int intakeExtendID = 17;
+    public static final int liftRotateID = 18;
+    public static final int liftExtendID = 19;
+    public static final int grabberID = 20;
+    public static final int extraMotor1ID = 21;
+    public static final int extraMotor2ID = 22;
 
     //Sensor ID's
 
@@ -34,13 +36,25 @@ public final class Constants {
 
     public static final double CONVEYOR_FORWARD_SPEED_VOLTS = 5.0;
     public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = -5.0;
+    public static final double INTAKE_EXTENTION_SPEED = 3.0;
+    public static final double INTAKE_RETRACTION_SPEED = -3.0;
+    public static final double INTAKE_ROLLER_SPEED = 6.0;
+    
 
     //Ramp Rates
 
     public static final double CONVEYOR_RAMP_RATE = 0.1;
+    public static final double INTAKE_EXTEND_RAMP_RATE = 0.25;
+    public static final double INTAKE_ROLLER_RAMP_RATE = 0.1;
+
+    //Software Current Limits
+
+    public static final double CONVEYOR_MAX_CURRENT = 40.0;
+    public static final double INTAKE_EXTEND_MAX_CURRENT = 40.0;
+    public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
     public static final class Swerve {
-        public static final int pigeonID = 13;
+        public static final int pigeonID = 14;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule = 

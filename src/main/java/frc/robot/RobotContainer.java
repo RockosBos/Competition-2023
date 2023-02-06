@@ -9,21 +9,21 @@ package frc.robot;
 
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 import frc.robot.commands.Conveyor.*;
+import frc.robot.commands.Intake.ExtendIntake;
+import frc.robot.commands.Intake.RetractIntake;
 
 import com.pathplanner.lib.PathPlanner;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -51,10 +51,12 @@ public class RobotContainer {
     /* Operator Buttons */
     private final JoystickButton conveyorManualForward = new JoystickButton(operatorController, XboxController.Button.kB.value);
     private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kX.value);
+    private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kA.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Conveyor s_Conveyor = new Conveyor();
+    private final Intake s_Intake = new Intake();
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
@@ -73,6 +75,8 @@ public class RobotContainer {
         );
 
         s_Conveyor.setDefaultCommand(new SetConveyor(s_Conveyor));
+        s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
+
 
         autonomousSelector.setDefaultOption("Mobility", s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Mobility", 1, 1), true));
 
@@ -93,6 +97,8 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
+        intakeRun.onTrue(new ExtendIntake(s_Intake));
+
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
