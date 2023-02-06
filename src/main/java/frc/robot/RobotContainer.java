@@ -62,13 +62,6 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
-    private final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
-    private final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
-    private final ShuffleboardTab conveyorDebugTab = Shuffleboard.getTab("Conveyor Debug");
-    private final ShuffleboardTab intakeDebugTab = Shuffleboard.getTab("Intake Debug");
-    private final ShuffleboardTab liftDebugTab = Shuffleboard.getTab("Lift Debug");
-    private final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
 

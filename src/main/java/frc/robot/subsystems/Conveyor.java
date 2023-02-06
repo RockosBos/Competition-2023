@@ -100,12 +100,12 @@ public class Conveyor extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        conveyorTab.add("Intake Sensor", intakeSensor.get());
-        conveyorTab.add("Lift Sensor", liftSensor.get());
-        conveyorTab.add("Transition State Flag", inTransitionState);
-        conveyorTab.add("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
-        conveyorTab.add("Conveyor Motor Set Speed", conveyorMotor.get());
-        conveyorTab.add("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
+        Constants.conveyorDebugTab.add("Intake Sensor", intakeSensor.get());
+        Constants.conveyorDebugTab.add("Lift Sensor", liftSensor.get());
+        Constants.conveyorDebugTab.add("Transition State Flag", inTransitionState);
+        Constants.conveyorDebugTab.add("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
+        Constants.conveyorDebugTab.add("Conveyor Motor Set Speed", conveyorMotor.get());
+        Constants.conveyorDebugTab.add("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
 
         if(errorFlag){
             System.out.println(errorMessage);
