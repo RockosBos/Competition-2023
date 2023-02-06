@@ -75,6 +75,10 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    Constants.intakeDebugTab.add("Intake Extend CAN ID", intakeExtend.getDeviceId());
+    Constants.intakeDebugTab.add("Intake Roller CAN ID", intakeRoller.getDeviceId());
+    Constants.intakeDebugTab.add("Intake Extended Limit", intakeExtendedLimit.get());
+    Constants.intakeDebugTab.add("Intake Retracted Limit", intakeRetractedLimit.get());
+
   }
 }

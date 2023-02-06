@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -52,6 +54,13 @@ public final class Constants {
     public static final double CONVEYOR_MAX_CURRENT = 40.0;
     public static final double INTAKE_EXTEND_MAX_CURRENT = 40.0;
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
+
+    public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
+    public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
+    public static final ShuffleboardTab conveyorDebugTab = Shuffleboard.getTab("Conveyor Debug");
+    public static final ShuffleboardTab intakeDebugTab = Shuffleboard.getTab("Intake Debug");
+    public static final ShuffleboardTab liftDebugTab = Shuffleboard.getTab("Lift Debug");
+    public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
 
     public static final class Swerve {
         public static final int pigeonID = 14;

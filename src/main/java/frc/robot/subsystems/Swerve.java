@@ -32,8 +32,6 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
-    public ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve Debug");
-
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.configFactoryDefault();
@@ -136,14 +134,14 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getYaw(), getModulePositions());  
 
         for(SwerveModule mod : mSwerveMods){
-            swerveTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            swerveTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            swerveTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
 
-        swerveTab.add("Pose X", getPose().getX());
-        swerveTab.add("Pose Y", getPose().getY());
-        swerveTab.add("Angle", getYaw().getDegrees());
+        Constants.swerveDebugTab.add("Pose X", getPose().getX());
+        Constants.swerveDebugTab.add("Pose Y", getPose().getY());
+        Constants.swerveDebugTab.add("Angle", getYaw().getDegrees());
 
     }
 }
