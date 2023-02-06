@@ -44,6 +44,14 @@ public final class Constants {
     //Ramp Rates
 
     public static final double CONVEYOR_RAMP_RATE = 0.1;
+    public static final double INTAKE_EXTEND_RAMP_RATE = 0.25;
+    public static final double INTAKE_ROLLER_RAMP_RATE = 0.1;
+
+    //Software Current Limits
+
+    public static final double CONVEYOR_MAX_CURRENT = 40.0;
+    public static final double INTAKE_EXTEND_MAX_CURRENT = 40.0;
+    public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
     public static final class Swerve {
         public static final int pigeonID = 14;

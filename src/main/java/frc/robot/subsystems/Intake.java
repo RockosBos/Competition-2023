@@ -44,7 +44,13 @@ public class Intake extends SubsystemBase {
   private DigitalInput intakeRetractedLimit = new DigitalInput(Constants.intakeRetractLimitID);
 
   public Intake() {
+    intakeExtend.clearFaults();
+    intakeExtend.restoreFactoryDefaults();
+    intakeExtend.setOpenLoopRampRate(Constants.INTAKE_EXTEND_RAMP_RATE);
 
+    intakeRoller.clearFaults();
+    intakeRoller.restoreFactoryDefaults();
+    intakeRoller.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
   } 
 
   public void SetIntakeRollers(double voltage) {
