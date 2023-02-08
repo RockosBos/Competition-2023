@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -76,7 +77,7 @@ public class RobotContainer {
             )
         );
 
-        s_Conveyor.setDefaultCommand(new SetConveyor(s_Conveyor));
+        s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
 
 
@@ -99,7 +100,7 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-        intakeRun.onTrue(new ExtendIntake(s_Intake));
+        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor)));
 
     }
   public Command getAutonomousCommand() {

@@ -28,8 +28,8 @@ public final class Constants {
 
     //Sensor ID's
 
-    public static final int conveyorFrontPhotoEyeID = 0;
-    public static final int conveyorBackPhotoEyeID = 1;
+    public static final int conveyorPhotoEyeID = 0;
+
     public static final int intakeExtendLimitID = 2;
     public static final int intakeRetractLimitID = 3;
     public static final int liftZeroPositionLimitID = 4;

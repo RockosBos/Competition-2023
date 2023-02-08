@@ -40,15 +40,10 @@ import frc.robot.Constants;
 
 public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
-    private DigitalInput intakeSensor = new DigitalInput(Constants.conveyorFrontPhotoEyeID);
-    private DigitalInput liftSensor = new DigitalInput(Constants.conveyorBackPhotoEyeID);
+    private DigitalInput conveyorSensor = new DigitalInput(Constants.conveyorPhotoEyeID);
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
-    private boolean inTransitionState = false;
+    private boolean runConveyor = false;
 
-
-    private ShuffleboardTab conveyorTab = Shuffleboard.getTab("Conveyor Debug");
-
-    private boolean logging = false;
     private boolean errorFlag;
     private String errorMessage;
 
@@ -59,20 +54,13 @@ public class Conveyor extends SubsystemBase {
         conveyorMotor.setOpenLoopRampRate(Constants.CONVEYOR_RAMP_RATE);
     }
 
-    public void setConveyor(double speed){
-        if(conveyorMotor.getOutputCurrent() < Constants.CONVEYOR_MAX_CURRENT){
-            if(intakeSensor.get() || inTransitionState){
-                conveyorMotor.setVoltage(speed);
-                inTransitionState = true;
-            }
-            if(liftSensor.get()){
-                conveyorMotor.stopMotor();
-                inTransitionState = false;
-            }
+    public void setConveyor(double voltage){
+        if(!conveyorSensor.get()){
+            conveyorMotor.setVoltage(voltage);
         }
         else{
-            errorFlag = true;
-            errorMessage = "Conveyor Motor (ID:15) has exceeded its max current draw";
+            conveyorMotor.stopMotor();
+            runConveyor = false;
         }
         
     }
@@ -81,11 +69,8 @@ public class Conveyor extends SubsystemBase {
       conveyorMotor.setVoltage(speed);
     }
 
-    public boolean isConveyorLoaded(){
-        if(intakeSensor.get() || liftSensor.get() || inTransitionState){
-            return true;
-        }
-        return false;
+    public void setConveyorState(boolean state){
+        runConveyor = state;
     }
 
     public String getError(){
@@ -99,10 +84,16 @@ public class Conveyor extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if(runConveyor == true){
+            setConveyor(Constants.CONVEYOR_FORWARD_SPEED_VOLTS);
+        }
+        else{
+            conveyorMotor.stopMotor();
+        }
+
         // This method will be called once per scheduler run
-        Constants.conveyorDebugTab.add("Intake Sensor", intakeSensor.get());
-        Constants.conveyorDebugTab.add("Lift Sensor", liftSensor.get());
-        Constants.conveyorDebugTab.add("Transition State Flag", inTransitionState);
+        Constants.conveyorDebugTab.add("Intake Sensor", conveyorSensor.get());
+        Constants.conveyorDebugTab.add("Transition State Flag", runConveyor);
         Constants.conveyorDebugTab.add("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
         Constants.conveyorDebugTab.add("Conveyor Motor Set Speed", conveyorMotor.get());
         Constants.conveyorDebugTab.add("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
