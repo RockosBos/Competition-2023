@@ -167,6 +167,7 @@ public class Lift extends SubsystemBase {
           liftExtendController.setOutputRange(extend_MinO, extend_MaxO); 
           extend_kMinOutput = extend_MinO; extend_kMaxOutput = extend_MaxO; 
         }
+        
 
         liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
         liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);

@@ -14,6 +14,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+    public static final double MAX_VOLTS = 12.0;
 
     //Motor ID's
 
@@ -29,18 +30,30 @@ public final class Constants {
     //Sensor ID's
 
     public static final int conveyorPhotoEyeID = 0;
-
-    public static final int intakeExtendLimitID = 2;
-    public static final int intakeRetractLimitID = 3;
-    public static final int liftZeroPositionLimitID = 4;
+    public static final int intakeExtendLimitID = 1;
+    public static final int intakeRetractLimitID = 2;
+    public static final int liftZeroPositionLimitID = 3;
 
     //Speeds
 
-    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = 5.0;
-    public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = -5.0;
-    public static final double INTAKE_EXTENTION_SPEED = 3.0;
-    public static final double INTAKE_RETRACTION_SPEED = -3.0;
-    public static final double INTAKE_ROLLER_SPEED = 6.0;
+    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 5.0;
+    public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -5.0;
+    public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 3.0;
+    public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -3.0;
+    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * 6.0;
+    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * 2.0;
+    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * 2.0;
+
+    //Motor Position
+
+    public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
+    public static final double LIFT_ROTATE_POSITION_0 = 0.0;
+    public static final double LIFT_EXTEND_POSITION_1 = 0.0; //Level 1 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_1 = 0.0;
+    public static final double LIFT_EXTEND_POSITION_2 = 0.0; //Level 2 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_2 = 0.0;
+    public static final double LIFT_EXTEND_POSITION_3 = 0.0; //Level 3 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_3 = 0.0;
     
 
     //Ramp Rates

@@ -25,8 +25,8 @@ public class ExtendIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.s_Intake.SetIntakeExtension(Constants.INTAKE_EXTENTION_SPEED);
-    this.s_Intake.SetIntakeRollers(Constants.INTAKE_ROLLER_SPEED);
+    this.s_Intake.SetIntakeExtension(Constants.INTAKE_EXTENTION_SPEED_VOLTS);
+    this.s_Intake.SetIntakeRollers(Constants.INTAKE_ROLLER_SPEED_VOLTS);
   }
 
   // Called once the command ends or is interrupted.
