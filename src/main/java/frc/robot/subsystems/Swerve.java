@@ -132,7 +132,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
-
+        /*
         for(SwerveModule mod : mSwerveMods){
             Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
@@ -142,6 +142,6 @@ public class Swerve extends SubsystemBase {
         Constants.swerveDebugTab.add("Pose X", getPose().getX());
         Constants.swerveDebugTab.add("Pose Y", getPose().getY());
         Constants.swerveDebugTab.add("Angle", getYaw().getDegrees());
-
+        */
     }
 }
