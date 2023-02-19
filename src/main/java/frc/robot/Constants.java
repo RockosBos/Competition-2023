@@ -54,6 +54,7 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_2 = 0.0;
     public static final double LIFT_EXTEND_POSITION_3 = 0.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 0.0;
+    public static final double LIFT_ROTATE_CLEAR_POSITION = 0.0; //Position where extension can be turned on.
     
 
     //Ramp Rates

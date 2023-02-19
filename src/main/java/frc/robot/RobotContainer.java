@@ -10,14 +10,22 @@ package frc.robot;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Swerve;
 
 import frc.robot.commands.Conveyor.*;
 import frc.robot.commands.Intake.ExtendIntake;
+import frc.robot.commands.Intake.ManualExtendIntake;
+import frc.robot.commands.Intake.ManualRetractIntake;
 import frc.robot.commands.Intake.RetractIntake;
+import frc.robot.commands.Lift.SetPosition0;
+import frc.robot.commands.Lift.SetPosition1;
+import frc.robot.commands.Lift.SetPosition2;
+import frc.robot.commands.Lift.SetPosition3;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -53,13 +61,23 @@ public class RobotContainer {
 
     /* Operator Buttons */
     private final JoystickButton conveyorManualForward = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kX.value);
-    private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kA.value);
+    private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton intakeManualRetract = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton intakeManualExtend = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton SetLiftPosition0 = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton SetLiftPosition1 = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton SetLiftPosition2 = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton GrabberDropCube = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kB.value);
+
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Conveyor s_Conveyor = new Conveyor();
     private final Intake s_Intake = new Intake();
+    private final Lift s_Lift = new Lift();
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
@@ -79,6 +97,7 @@ public class RobotContainer {
 
         s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
+        s_Lift.setDefaultCommand(new SetPosition0(s_Lift, s_Intake.isIntakeRetracted()));
 
 
         autonomousSelector.setDefaultOption("Mobility", s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Mobility", 1, 1), true));
@@ -100,7 +119,13 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor)));
+        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
+        intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, s_Lift.isLiftRetracted()));
+        intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, s_Lift.isLiftRetracted()));
+        SetLiftPosition0.onTrue(new SetPosition0(s_Lift, s_Intake.isIntakeRetracted()));
+        SetLiftPosition1.onTrue(new SetPosition1(s_Lift, s_Intake.isIntakeRetracted()));
+        SetLiftPosition2.onTrue(new SetPosition2(s_Lift, s_Intake.isIntakeRetracted()));
+        SetLiftPosition3.onTrue(new SetPosition3(s_Lift, s_Intake.isIntakeRetracted()));
 
     }
   public Command getAutonomousCommand() {

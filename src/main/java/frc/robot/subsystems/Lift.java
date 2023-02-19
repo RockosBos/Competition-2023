@@ -55,6 +55,7 @@ public class Lift extends SubsystemBase {
     private GenericEntry extend_PEntry, extend_IEntry, extend_DEntry, extend_IZEntry, extend_FFEntry, extend_MaxOEntry, extend_MinOEntry, extend_RotEntry;
     private GenericEntry rotatePositionEntry, extendPositionEntry, rotateSetPointEntry, extendSetPointEntry;
     private double rotateSetpoint, extendSetpoint;
+    private DigitalInput zeroLimit;
 
     public Lift() {
       liftRotate.restoreFactoryDefaults();
@@ -129,6 +130,10 @@ public class Lift extends SubsystemBase {
         this.extendSetpoint = extendSetpoint;
     }
 
+    public boolean isLiftRetracted(){
+      return true;
+    }
+
     @Override
     public void periodic() {
 
@@ -168,6 +173,10 @@ public class Lift extends SubsystemBase {
           extend_kMinOutput = extend_MinO; extend_kMaxOutput = extend_MaxO; 
         }
         
+        if(zeroLimit.get()){
+          liftRotateEncoder.setPosition(0.0);
+          liftExtendEncoder.setPosition(0.0);
+        }
 
         liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
         liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);

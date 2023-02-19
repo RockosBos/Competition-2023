@@ -69,6 +69,10 @@ public class Intake extends SubsystemBase {
     }
   }
 
+  public void SetIntakeExtensionManual(double voltage){
+    intakeExtend.setVoltage(voltage);
+  }
+
   public boolean isIntakeRetracted(){
     return intakeRetractedLimit.get();
   }
