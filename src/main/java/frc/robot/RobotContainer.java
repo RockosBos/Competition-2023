@@ -79,6 +79,7 @@ public class RobotContainer {
     private final Intake s_Intake = new Intake();
     private final Lift s_Lift = new Lift();
 
+
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -100,6 +101,7 @@ public class RobotContainer {
         s_Lift.setDefaultCommand(new SetPosition0(s_Lift, s_Intake.isIntakeRetracted()));
 
 
+
         autonomousSelector.setDefaultOption("Mobility", s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Mobility", 1, 1), true));
 
         // Configure the button bindings
@@ -117,6 +119,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        
         conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
         intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
