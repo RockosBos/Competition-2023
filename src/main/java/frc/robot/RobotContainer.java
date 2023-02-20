@@ -8,6 +8,11 @@
 package frc.robot;
 
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.Autonomous.Mobility;
+import frc.robot.commands.Autonomous.Score2Left;
+import frc.robot.commands.Autonomous.Score2Right;
+import frc.robot.commands.Autonomous.ScoreBalanceLeft;
+import frc.robot.commands.Autonomous.ScoreBalanceRight;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -75,10 +80,16 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final Conveyor s_Conveyor = new Conveyor();
-    private final Intake s_Intake = new Intake();
-    private final Lift s_Lift = new Lift();
+    //private final Conveyor s_Conveyor = new Conveyor();
+    //private final Intake s_Intake = new Intake();
+    //private final Lift s_Lift = new Lift();
 
+    /* Auto Commands */
+    private final Mobility c_Mobility = new Mobility(s_Swerve);
+    private final ScoreBalanceLeft c_ScoreBalanceLeft = new ScoreBalanceLeft(s_Swerve);
+    private final ScoreBalanceRight c_ScoreBalanceRight = new ScoreBalanceRight(s_Swerve);
+    private final Score2Left c_Score2Left = new Score2Left(s_Swerve);
+    private final Score2Right c_Score2Right = new Score2Right(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
@@ -96,13 +107,18 @@ public class RobotContainer {
             )
         );
 
+        /*
         s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(new SetPosition0(s_Lift, s_Intake.isIntakeRetracted()));
+        */
 
 
-
-        autonomousSelector.setDefaultOption("Mobility", s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Mobility", 1, 1), true));
+        autonomousSelector.setDefaultOption("Mobility", c_Mobility);
+        autonomousSelector.addOption("Score Balance Left", c_ScoreBalanceLeft);
+        autonomousSelector.addOption("Score Balance Right", c_ScoreBalanceRight);
+        autonomousSelector.addOption("Score 2 Left", c_Score2Left);
+        autonomousSelector.addOption("Score 2 right", c_Score2Right);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -120,6 +136,7 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         
+        /*
         conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
         intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
@@ -129,7 +146,7 @@ public class RobotContainer {
         SetLiftPosition1.onTrue(new SetPosition1(s_Lift, s_Intake.isIntakeRetracted()));
         SetLiftPosition2.onTrue(new SetPosition2(s_Lift, s_Intake.isIntakeRetracted()));
         SetLiftPosition3.onTrue(new SetPosition3(s_Lift, s_Intake.isIntakeRetracted()));
-
+        */
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous

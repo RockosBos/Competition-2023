@@ -9,8 +9,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import static com.pathplanner.lib.PathPlannerTrajectory.transformStateForAlliance;
+
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -18,12 +22,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,6 +39,10 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+
+    public final GenericEntry poseXEntry;
+    public final GenericEntry poseYEntry;
+    public final GenericEntry angleEntry;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
@@ -45,6 +57,20 @@ public class Swerve extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
+
+        
+
+        //Update Dashboard
+        /*
+        for(SwerveModule mod : mSwerveMods){
+            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees()).getEntry();
+            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees()).getEntry();
+            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond).getEntry();
+        }
+        */
+        poseXEntry = Constants.swerveDebugTab.add("Pose X", getPose().getX()).getEntry();
+        poseYEntry = Constants.swerveDebugTab.add("Pose Y", getPose().getY()).getEntry();
+        angleEntry = Constants.swerveDebugTab.add("Angle", getYaw().getDegrees()).getEntry();
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -110,9 +136,16 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+        
 
         return new SequentialCommandGroup(
-             new PPSwerveControllerCommand(
+            new InstantCommand(() -> {
+                // Reset odometry for the first path you run during auto
+                if(isFirstPath){
+                    this.resetOdometry(traj.getInitialHolonomicPose());
+                }
+            }),
+            new PPSwerveControllerCommand(
                  traj, 
                  this::getPose, // Pose supplier
                  Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
@@ -132,16 +165,10 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
-        /*
-        for(SwerveModule mod : mSwerveMods){
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        }
 
-        Constants.swerveDebugTab.add("Pose X", getPose().getX());
-        Constants.swerveDebugTab.add("Pose Y", getPose().getY());
-        Constants.swerveDebugTab.add("Angle", getYaw().getDegrees());
-        */
+        poseXEntry.setDouble(getPose().getX());
+        poseYEntry.setDouble(getPose().getY());
+        angleEntry.setDouble(getYaw().getDegrees());
+        
     }
 }

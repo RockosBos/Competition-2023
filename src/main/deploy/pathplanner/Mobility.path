@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 1.8778355388379817,
+        "y": 0.9377075530185282
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0,
-        "y": 0.0
+        "x": 2.877835538837983,
+        "y": 0.9377075530185282
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,62 +24,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.839619151420899,
-        "y": 0.011435457963639883
+        "x": 5.708713956657585,
+        "y": 0.9720139269094513
       },
       "prevControl": {
-        "x": 4.0391370939660565,
-        "y": 0.06861274778184272
-      },
-      "nextControl": {
-        "x": 5.64010120887574,
-        "y": -0.04574183185456292
-      },
-      "holonomicAngle": 0.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 4.953973731057306,
-        "y": 1.6123995728733251
-      },
-      "prevControl": {
-        "x": 5.800197620366711,
-        "y": 1.4408677034187154
-      },
-      "nextControl": {
-        "x": 4.158160451803469,
-        "y": 1.7737130754247792
-      },
-      "holonomicAngle": 3.0940580589170987,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 3.1814777466930115,
-        "y": 1.6581414047278882
-      },
-      "prevControl": {
-        "x": 3.661766981165918,
-        "y": 1.6295527598187867
+        "x": 4.885281574202277,
+        "y": 0.9720139269094513
       },
       "nextControl": null,
       "holonomicAngle": 0.0,
