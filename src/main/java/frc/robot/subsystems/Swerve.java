@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -142,7 +143,9 @@ public class Swerve extends SubsystemBase {
             new InstantCommand(() -> {
                 // Reset odometry for the first path you run during auto
                 if(isFirstPath){
-                    this.resetOdometry(traj.getInitialHolonomicPose());
+                    PathPlannerState myTraj =  traj.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
+                    System.out.println(myTraj.poseMeters.getX() + " | " + myTraj.poseMeters.getY());
+                    this.resetOdometry(myTraj.poseMeters);
                 }
             }),
             new PPSwerveControllerCommand(
