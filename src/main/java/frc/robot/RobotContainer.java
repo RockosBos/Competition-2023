@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.Autonomous.Mobility;
 import frc.robot.commands.Autonomous.Score2Left;
 import frc.robot.commands.Autonomous.Score2Right;
@@ -19,14 +18,8 @@ import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Swerve;
 
 import frc.robot.commands.Conveyor.*;
-import frc.robot.commands.Intake.ExtendIntake;
-import frc.robot.commands.Intake.ManualExtendIntake;
-import frc.robot.commands.Intake.ManualRetractIntake;
-import frc.robot.commands.Intake.RetractIntake;
-import frc.robot.commands.Lift.SetPosition0;
-import frc.robot.commands.Lift.SetPosition1;
-import frc.robot.commands.Lift.SetPosition2;
-import frc.robot.commands.Lift.SetPosition3;
+import frc.robot.commands.Swerve.AutoBalance;
+import frc.robot.commands.Swerve.TeleopSwerve;
 
 import com.pathplanner.lib.PathPlanner;
 
@@ -90,6 +83,7 @@ public class RobotContainer {
     private final ScoreBalanceRight c_ScoreBalanceRight = new ScoreBalanceRight(s_Swerve);
     private final Score2Left c_Score2Left = new Score2Left(s_Swerve);
     private final Score2Right c_Score2Right = new Score2Right(s_Swerve);
+    private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
@@ -119,6 +113,7 @@ public class RobotContainer {
         autonomousSelector.addOption("Score Balance Right", c_ScoreBalanceRight);
         autonomousSelector.addOption("Score 2 Left", c_Score2Left);
         autonomousSelector.addOption("Score 2 right", c_Score2Right);
+        autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
 
         // Configure the button bindings
         configureButtonBindings();

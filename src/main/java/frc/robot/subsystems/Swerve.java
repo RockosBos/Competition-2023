@@ -44,6 +44,8 @@ public class Swerve extends SubsystemBase {
     public final GenericEntry poseXEntry;
     public final GenericEntry poseYEntry;
     public final GenericEntry angleEntry;
+    public final GenericEntry pitchEntry;
+    public final GenericEntry rollEntry;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
@@ -59,19 +61,13 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
 
-        
-
-        //Update Dashboard
-        /*
-        for(SwerveModule mod : mSwerveMods){
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees()).getEntry();
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees()).getEntry();
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond).getEntry();
-        }
-        */
         poseXEntry = Constants.swerveDebugTab.add("Pose X", getPose().getX()).getEntry();
         poseYEntry = Constants.swerveDebugTab.add("Pose Y", getPose().getY()).getEntry();
         angleEntry = Constants.swerveDebugTab.add("Angle", getYaw().getDegrees()).getEntry();
+        pitchEntry = Constants.swerveDebugTab.add("Pitch", getPitch()).getEntry();
+        rollEntry = Constants.swerveDebugTab.add("Roll", gyro.getPitch()).getEntry();
+
+        
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -134,6 +130,10 @@ public class Swerve extends SubsystemBase {
 
     public Rotation2d getYaw() {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+    }
+
+    public double getPitch(){
+        return gyro.getPitch();
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
