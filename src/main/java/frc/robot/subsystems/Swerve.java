@@ -61,11 +61,11 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
 
-        poseXEntry = Constants.swerveDebugTab.add("Pose X", getPose().getX()).getEntry();
-        poseYEntry = Constants.swerveDebugTab.add("Pose Y", getPose().getY()).getEntry();
-        angleEntry = Constants.swerveDebugTab.add("Angle", getYaw().getDegrees()).getEntry();
-        pitchEntry = Constants.swerveDebugTab.add("Pitch", getPitch()).getEntry();
-        rollEntry = Constants.swerveDebugTab.add("Roll", gyro.getPitch()).getEntry();
+        poseXEntry = Constants.swerveDebugTab.add("Pose X", 0).getEntry();
+        poseYEntry = Constants.swerveDebugTab.add("Pose Y", 0).getEntry();
+        angleEntry = Constants.swerveDebugTab.add("Angle", 0).getEntry();
+        pitchEntry = Constants.swerveDebugTab.add("Pitch", 0).getEntry();
+        rollEntry = Constants.swerveDebugTab.add("Roll", 0).getEntry();
 
         
     }
@@ -132,8 +132,8 @@ public class Swerve extends SubsystemBase {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
 
-    public double getPitch(){
-        return gyro.getPitch();
+    public double getRoll(){
+        return gyro.getRoll();
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
@@ -172,6 +172,8 @@ public class Swerve extends SubsystemBase {
         poseXEntry.setDouble(getPose().getX());
         poseYEntry.setDouble(getPose().getY());
         angleEntry.setDouble(getYaw().getDegrees());
+        pitchEntry.setDouble(gyro.getPitch());
+        rollEntry.setDouble(gyro.getRoll());
         
     }
 }

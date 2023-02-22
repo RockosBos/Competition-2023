@@ -8,10 +8,10 @@
 package frc.robot;
 
 import frc.robot.commands.Autonomous.Mobility;
-import frc.robot.commands.Autonomous.Score2Left;
-import frc.robot.commands.Autonomous.Score2Right;
-import frc.robot.commands.Autonomous.ScoreBalanceLeft;
-import frc.robot.commands.Autonomous.ScoreBalanceRight;
+import frc.robot.commands.Autonomous.Score2Adjacent;
+import frc.robot.commands.Autonomous.Score2Opposite;
+import frc.robot.commands.Autonomous.ScoreBalanceAdjacent;
+import frc.robot.commands.Autonomous.ScoreBalanceOpposite;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
@@ -79,10 +79,10 @@ public class RobotContainer {
 
     /* Auto Commands */
     private final Mobility c_Mobility = new Mobility(s_Swerve);
-    private final ScoreBalanceLeft c_ScoreBalanceLeft = new ScoreBalanceLeft(s_Swerve);
-    private final ScoreBalanceRight c_ScoreBalanceRight = new ScoreBalanceRight(s_Swerve);
-    private final Score2Left c_Score2Left = new Score2Left(s_Swerve);
-    private final Score2Right c_Score2Right = new Score2Right(s_Swerve);
+    private final ScoreBalanceAdjacent c_ScoreBalanceAdjacent = new ScoreBalanceAdjacent(s_Swerve);
+    private final ScoreBalanceOpposite c_ScoreBalanceOpposite = new ScoreBalanceOpposite(s_Swerve);
+    private final Score2Adjacent c_Score2Adjacent = new Score2Adjacent(s_Swerve);
+    private final Score2Opposite c_Score2Opposite = new Score2Opposite(s_Swerve);
     private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
@@ -109,10 +109,10 @@ public class RobotContainer {
 
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
-        autonomousSelector.addOption("Score Balance Left", c_ScoreBalanceLeft);
-        autonomousSelector.addOption("Score Balance Right", c_ScoreBalanceRight);
-        autonomousSelector.addOption("Score 2 Left", c_Score2Left);
-        autonomousSelector.addOption("Score 2 right", c_Score2Right);
+        autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
+        autonomousSelector.addOption("Score Balance Opposite", c_ScoreBalanceOpposite);
+        autonomousSelector.addOption("Score 2 Adjacent", c_Score2Adjacent);
+        autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
 
         // Configure the button bindings

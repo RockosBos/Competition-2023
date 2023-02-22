@@ -15,14 +15,14 @@ import frc.robot.subsystems.Swerve;
 public class AutoBalance extends CommandBase {
   
     private Swerve s_Swerve;
-    private double prevPitchSample;
-    private double pitch;
+    private double prevRollSample;
+    private double roll;
     private double samplePeriod = 0.25;  //Frequency (in seconds) of checking samples
-    private double sampleDifferenceThreshold = 3.0;   //Degree threshold that will determine if charging station is in motion
-    private double balancedThreshold = 3.0;           //Degree threshold for the charge station to be considered threshold
+    private double sampleDifferenceThreshold = 1;   //Degree threshold that will determine if charging station is in motion
+    private double balancedThreshold = 2;           //Degree threshold for the charge station to be considered threshold
     private double driveSpeed = 0.2;
 
-    private Timer timer;
+    private Timer timer = new Timer();
 
     private double translation;
     private double strafe;
@@ -37,32 +37,36 @@ public class AutoBalance extends CommandBase {
     @Override
     public void initialize() {
         timer.start();
-        prevPitchSample = this.s_Swerve.getPitch();
+        prevRollSample = this.s_Swerve.getRoll();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        pitch = this.s_Swerve.getPitch();
-
-        if(pitch > balancedThreshold){
-          translation = driveSpeed;
-        }
-        else if(pitch < -balancedThreshold){
-            translation = driveSpeed;
+        roll = this.s_Swerve.getRoll();
+        if(timer.get() > 0.5){
+            if(timer.get() < 0.75){
+                if(roll > balancedThreshold){
+                    translation = -driveSpeed;
+                }
+                else if(roll < -balancedThreshold){
+                    translation = driveSpeed;
+                }
+                else{
+                    timer.reset();
+                    translation = 0.0;
+                }
+            }
+            else{
+                timer.reset();
+            }
+            
         }
         else{
             translation = 0.0;
         }
 
-        if(timer.get() > samplePeriod){
-            timer.reset();
-            if(Math.abs(prevPitchSample - pitch) > sampleDifferenceThreshold){
-                translation = 0.0;
-                strafe = 0.0;
-                rotation = 0.0;
-            }
-        }
+        prevRollSample = s_Swerve.gyro.getRoll();
 
         s_Swerve.drive(
             new Translation2d(translation, strafe).times(Constants.Swerve.maxSpeed),

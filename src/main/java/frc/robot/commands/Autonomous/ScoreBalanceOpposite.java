@@ -7,20 +7,22 @@ package frc.robot.commands.Autonomous;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.subsystems.Swerve;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreBalanceRight extends SequentialCommandGroup {
+public class ScoreBalanceOpposite extends SequentialCommandGroup {
   /** Creates a new ScoreBalanceRight. */
   Swerve s_Swerve;
-  public ScoreBalanceRight(Swerve s_Swerve) {
+  public ScoreBalanceOpposite(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceRight", 1, 1), true)
+      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceOpposite", 1, 1), true),
+      new AutoBalance(s_Swerve)
     );
   }
 }

@@ -12,15 +12,15 @@ import frc.robot.subsystems.Swerve;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Score2Left extends SequentialCommandGroup {
+public class Score2Adjacent extends SequentialCommandGroup {
   /** Creates a new Score2Left. */
   Swerve s_Swerve;
-  public Score2Left(Swerve s_Swerve) {
+  public Score2Adjacent(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Left", 1, 1), true)
+      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent", 1, 1), true)
     );
   }
 }
