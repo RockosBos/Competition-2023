@@ -56,6 +56,9 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_3 = 0.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 0.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 0.0; //Position where rotation can proceed into the lowered position.
+
+    public static final double GRABBER_OPEN_POSITION = 0.0;
+    public static final double GRABBER_CLOSED_POSITION = 15.0;
     
 
     //Ramp Rates
@@ -72,7 +75,7 @@ public final class Constants {
 
     //Software Limits
 
-    public static final float GRABBER_FORWARD_LIMIT = 0.0f;
+    public static final float GRABBER_FORWARD_LIMIT = 15.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
 
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
