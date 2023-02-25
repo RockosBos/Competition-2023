@@ -54,7 +54,8 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_2 = 0.0;
     public static final double LIFT_EXTEND_POSITION_3 = 0.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 0.0;
-    public static final double LIFT_ROTATE_CLEAR_POSITION = 0.0; //Position where extension can be turned on.
+    public static final double LIFT_ROTATE_CLEAR_POSITION = 0.0; //Position where extension can proceed into the lowered position.
+    public static final double LIFT_EXTEND_CLEAR_POSITION = 0.0; //Position where rotation can proceed into the lowered position.
     
 
     //Ramp Rates
@@ -68,6 +69,11 @@ public final class Constants {
     public static final double CONVEYOR_MAX_CURRENT = 40.0;
     public static final double INTAKE_EXTEND_MAX_CURRENT = 40.0;
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
+
+    //Software Limits
+
+    public static final float GRABBER_FORWARD_LIMIT = 0.0f;
+    public static final float GRABBER_REVERSE_LIMIT = 0.0f;
 
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -60,6 +61,8 @@ public class Lift extends SubsystemBase {
     public Lift() {
       liftRotate.restoreFactoryDefaults();
       liftExtend.restoreFactoryDefaults();
+      liftRotate.setIdleMode(IdleMode.kBrake);
+      liftExtend.setIdleMode(IdleMode.kBrake);
 
       liftRotateController = liftRotate.getPIDController();
       liftExtendController = liftExtend.getPIDController();

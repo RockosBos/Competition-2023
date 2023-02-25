@@ -7,6 +7,7 @@ package frc.robot.commands.Autonomous;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.subsystems.Swerve;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -20,7 +21,8 @@ public class ScoreBalanceAdjacent extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceAdjacent", 1, 1), true)
+      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceAdjacent", 1, 1), true),
+      new AutoBalance(s_Swerve)
     );
   }
 }
