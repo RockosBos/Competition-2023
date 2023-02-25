@@ -39,11 +39,6 @@ public class Grabber extends SubsystemBase {
       grabberMotor.setIdleMode(IdleMode.kBrake);
       grabberMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.GRABBER_FORWARD_LIMIT);
       grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, Constants.GRABBER_REVERSE_LIMIT);
-
-      grabberMotor.restoreFactoryDefaults();
-      grabberMotor.setIdleMode(IdleMode.kBrake);
-      grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 15f);
-      grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
       grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
       grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
       m_pidController = grabberMotor.getPIDController();
