@@ -48,12 +48,12 @@ public final class Constants {
 
     public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
-    public static final double LIFT_EXTEND_POSITION_1 = 0.0; //Level 1 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_1 = 0.0;
-    public static final double LIFT_EXTEND_POSITION_2 = 0.0; //Level 2 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_2 = 0.0;
-    public static final double LIFT_EXTEND_POSITION_3 = 0.0; //Level 3 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_3 = 0.0;
+    public static final double LIFT_EXTEND_POSITION_1 = 10.0; //Level 1 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_1 = 20.0;
+    public static final double LIFT_EXTEND_POSITION_2 = 60.0; //Level 2 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_2 = 30.0;
+    public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_3 = 40.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 0.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 0.0; //Position where rotation can proceed into the lowered position.
 
@@ -77,6 +77,10 @@ public final class Constants {
 
     public static final float GRABBER_FORWARD_LIMIT = 15.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_EXTEND_FORWARD_LIMIT = 130.0f;
+    public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_ROTATE_FORWARD_LIMIT = 40.0f;
+    public static final float LIFT_ROTATE_REVERSE_LIMIT = 0.0f;
 
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
@@ -84,6 +88,7 @@ public final class Constants {
     public static final ShuffleboardTab intakeDebugTab = Shuffleboard.getTab("Intake Debug");
     public static final ShuffleboardTab liftDebugTab = Shuffleboard.getTab("Lift Debug");
     public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
+    public static final ShuffleboardTab limelightDebugTab = Shuffleboard.getTab("Limelight Debug");
     public static final ShuffleboardTab pidConfigTab = Shuffleboard.getTab("PID Config");
 
     public static final class Swerve {
