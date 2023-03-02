@@ -20,8 +20,8 @@ public final class Constants {
 
     public static final int conveyorID = 15;
     public static final int intakeRollerID = 16;
-    public static final int intakeExtendID = 17;
-    public static final int liftRotateID = 18;
+    public static final int liftRotateID = 17;
+    public static final int intakeExtendID = 18;
     public static final int liftExtendID = 19;
     public static final int grabberID = 20;
     public static final int extraMotor1ID = 21;
