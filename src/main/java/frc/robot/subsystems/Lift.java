@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -63,6 +64,10 @@ public class Lift extends SubsystemBase {
       liftExtend.restoreFactoryDefaults();
       liftRotate.setIdleMode(IdleMode.kBrake);
       liftExtend.setIdleMode(IdleMode.kBrake);
+      liftRotate.enableSoftLimit(SoftLimitDirection.kForward, true);
+      liftRotate.enableSoftLimit(SoftLimitDirection.kReverse, true);
+      liftExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
+      liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
       liftRotateController = liftRotate.getPIDController();
       liftExtendController = liftExtend.getPIDController();

@@ -8,6 +8,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Swerve;
@@ -17,6 +18,15 @@ import frc.robot.commands.Autonomous.Score2Opposite;
 import frc.robot.commands.Autonomous.ScoreBalanceAdjacent;
 import frc.robot.commands.Autonomous.ScoreBalanceOpposite;
 import frc.robot.commands.Conveyor.*;
+import frc.robot.commands.Grabber.OpenGrabber;
+import frc.robot.commands.Intake.ExtendIntake;
+import frc.robot.commands.Intake.ManualExtendIntake;
+import frc.robot.commands.Intake.ManualRetractIntake;
+import frc.robot.commands.Intake.RetractIntake;
+import frc.robot.commands.Lift.SetPosition0;
+import frc.robot.commands.Lift.SetPosition1;
+import frc.robot.commands.Lift.SetPosition2;
+import frc.robot.commands.Lift.SetPosition3;
 import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.commands.Swerve.TeleopSwerve;
 
@@ -31,6 +41,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -72,9 +83,10 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    //private final Conveyor s_Conveyor = new Conveyor();
-    //private final Intake s_Intake = new Intake();
-    //private final Lift s_Lift = new Lift();
+    private final Conveyor s_Conveyor = new Conveyor();
+    private final Intake s_Intake = new Intake();
+    private final Lift s_Lift = new Lift();
+    private final Grabber s_Grabber = new Grabber();
 
     /* Auto Commands */
     private final Mobility c_Mobility = new Mobility(s_Swerve);
@@ -100,11 +112,12 @@ public class RobotContainer {
             )
         );
 
-        /*
+        
         s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
-        s_Lift.setDefaultCommand(new SetPosition0(s_Lift, s_Intake.isIntakeRetracted()));
-        */
+        s_Lift.setDefaultCommand(new SetPosition0(s_Lift));
+        s_Grabber.setDefaultCommand(new OpenGrabber(s_Grabber));
+        
 
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
@@ -130,17 +143,28 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         
-        /*
+        
         conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
         intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
         intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, s_Lift.isLiftRetracted()));
         intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, s_Lift.isLiftRetracted()));
-        SetLiftPosition0.onTrue(new SetPosition0(s_Lift, s_Intake.isIntakeRetracted()));
-        SetLiftPosition1.onTrue(new SetPosition1(s_Lift, s_Intake.isIntakeRetracted()));
-        SetLiftPosition2.onTrue(new SetPosition2(s_Lift, s_Intake.isIntakeRetracted()));
-        SetLiftPosition3.onTrue(new SetPosition3(s_Lift, s_Intake.isIntakeRetracted()));
-        */
+        SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
+        SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
+        SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
+        SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
+        
+        
+        //Special Conditional Commands
+
+        if(!s_Intake.isIntakeRetracted()){
+            s_Lift.run(() -> new SetPosition0(s_Lift));
+        }
+
+        if(!s_Lift.isLiftRetracted()){
+            s_Intake.run(() -> new RetractIntake(s_Intake));
+        }
+
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous

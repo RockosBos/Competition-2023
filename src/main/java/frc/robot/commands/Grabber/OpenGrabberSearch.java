@@ -2,19 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Lift;
+package frc.robot.commands.Grabber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Lift;
+import frc.robot.subsystems.Grabber;
 
-public class SetPosition1 extends CommandBase {
+public class OpenGrabberSearch extends CommandBase {
+  
+  private Grabber s_Grabber;
+  private double translationX;
 
-  private Lift s_Lift = new Lift();
-  /** Creates a new SetPosition3. */
-  public SetPosition1(Lift s_Lift) {
-    this.s_Lift = s_Lift;
-    addRequirements(this.s_Lift);
+  public OpenGrabberSearch(Grabber s_Grabber, double translationX) {
+      this.s_Grabber = s_Grabber;
+      this.translationX = translationX;
+      addRequirements(s_Grabber);
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +26,12 @@ public class SetPosition1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_1, Constants.LIFT_ROTATE_POSITION_1);
+      if(Math.abs(translationX) < 0.5){
+          s_Grabber.setPosition(Constants.GRABBER_OPEN_POSITION);
+      }
+      else{
+        s_Grabber.setPosition(Constants.GRABBER_CLOSED_POSITION);
+      }
   }
 
   // Called once the command ends or is interrupted.
