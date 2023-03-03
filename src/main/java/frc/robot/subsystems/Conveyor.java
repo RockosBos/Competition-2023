@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -43,6 +44,7 @@ public class Conveyor extends SubsystemBase {
     private DigitalInput conveyorSensor = new DigitalInput(Constants.conveyorPhotoEyeID);
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean runConveyor = false;
+    private GenericEntry sensorEntry;
 
     private boolean errorFlag;
     private String errorMessage;
@@ -52,6 +54,8 @@ public class Conveyor extends SubsystemBase {
         conveyorMotor.clearFaults();
         conveyorMotor.restoreFactoryDefaults();
         conveyorMotor.setOpenLoopRampRate(Constants.CONVEYOR_RAMP_RATE);
+
+        sensorEntry = Constants.conveyorDebugTab.add("Intake Sensor", conveyorSensor.get()).getEntry();
     }
 
     public void setConveyor(double voltage){
@@ -95,14 +99,7 @@ public class Conveyor extends SubsystemBase {
             conveyorMotor.stopMotor();
         }
 
-        // This method will be called once per scheduler run
-        /*
-        Constants.conveyorDebugTab.add("Intake Sensor", conveyorSensor.get());
-        Constants.conveyorDebugTab.add("Transition State Flag", runConveyor);
-        Constants.conveyorDebugTab.add("Conveyor Motor CAN ID", conveyorMotor.getDeviceId());
-        Constants.conveyorDebugTab.add("Conveyor Motor Set Speed", conveyorMotor.get());
-        Constants.conveyorDebugTab.add("Conveyor Motor Temperature (Celsius)", conveyorMotor.getMotorTemperature());
-        */
+        sensorEntry.setBoolean(conveyorSensor.get());
 
         if(errorFlag){
             System.out.println(errorMessage);

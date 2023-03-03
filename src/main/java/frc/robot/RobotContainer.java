@@ -88,10 +88,10 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Conveyor s_Conveyor = new Conveyor();
-    private final Intake s_Intake = new Intake();
-    private final Lift s_Lift = new Lift();
-    private final Grabber s_Grabber = new Grabber();
-    private final Limelight s_Limelight = new Limelight();
+    //private final Intake s_Intake = new Intake();
+    //private final Lift s_Lift = new Lift();
+    //private final Grabber s_Grabber = new Grabber();
+    //private final Limelight s_Limelight = new Limelight();
 
     /* Auto Commands */
     private final Mobility c_Mobility = new Mobility(s_Swerve);
@@ -119,9 +119,9 @@ public class RobotContainer {
 
         
         s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
-        s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
-        s_Lift.setDefaultCommand(new SetPosition0(s_Lift));
-        s_Grabber.setDefaultCommand(new OpenGrabber(s_Grabber));
+        //s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
+        //s_Lift.setDefaultCommand(null);
+        //s_Grabber.setDefaultCommand(new OpenGrabber(s_Grabber));
         
 
 
@@ -151,18 +151,19 @@ public class RobotContainer {
         
         //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
+        //intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
         //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, s_Lift.isLiftRetracted()));
         //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, s_Lift.isLiftRetracted()));
-        SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
-        SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
-        SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
-        SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
-        GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+        //SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
+        //SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
+        //SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
+        //SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
+        //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
         
         
         //Special Conditional Commands
 
+        /*
         if(!s_Intake.isIntakeRetracted()){
             s_Lift.run(() -> new SetPosition0(s_Lift));
         }
@@ -191,6 +192,7 @@ public class RobotContainer {
             }
         }
 
+        */
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
