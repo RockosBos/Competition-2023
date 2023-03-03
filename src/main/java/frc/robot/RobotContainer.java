@@ -11,6 +11,7 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.Autonomous.Mobility;
 import frc.robot.commands.Autonomous.Score2Adjacent;
@@ -18,7 +19,9 @@ import frc.robot.commands.Autonomous.Score2Opposite;
 import frc.robot.commands.Autonomous.ScoreBalanceAdjacent;
 import frc.robot.commands.Autonomous.ScoreBalanceOpposite;
 import frc.robot.commands.Conveyor.*;
+import frc.robot.commands.Grabber.CloseGrabber;
 import frc.robot.commands.Grabber.OpenGrabber;
+import frc.robot.commands.Grabber.OpenGrabberSearch;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.ManualExtendIntake;
 import frc.robot.commands.Intake.ManualRetractIntake;
@@ -87,6 +90,7 @@ public class RobotContainer {
     private final Intake s_Intake = new Intake();
     private final Lift s_Lift = new Lift();
     private final Grabber s_Grabber = new Grabber();
+    private final Limelight s_Limelight = new Limelight();
 
     /* Auto Commands */
     private final Mobility c_Mobility = new Mobility(s_Swerve);
@@ -153,6 +157,7 @@ public class RobotContainer {
         SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
         SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
         SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
+        GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
         
         
         //Special Conditional Commands
@@ -163,6 +168,26 @@ public class RobotContainer {
 
         if(!s_Lift.isLiftRetracted()){
             s_Intake.run(() -> new RetractIntake(s_Intake));
+        }
+
+        if(s_Lift.getLiftRotatePosition() > Constants.GRABBER_LIFT_CLOSED_THRESHOLD){ //Arm is in the air
+            if(s_Conveyor.getSensor()){
+              s_Conveyor.run(() -> new CloseGrabber(s_Grabber));
+            }
+            else{
+              s_Conveyor.run(() -> new OpenGrabber(s_Grabber));
+            }
+        }
+        else{ //arm is facing down
+            if(GrabberDropCone.getAsBoolean()){
+                s_Grabber.run(() -> new OpenGrabber(s_Grabber));
+            }
+            else if(GrabberDropCube.getAsBoolean()){
+                s_Grabber.run(() -> new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+            } 
+            else{
+                s_Grabber.run(() -> new CloseGrabber(s_Grabber));
+            }
         }
 
     }

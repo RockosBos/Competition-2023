@@ -59,6 +59,8 @@ public final class Constants {
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
     public static final double GRABBER_CLOSED_POSITION = 15.0;
+
+    public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     
 
     //Ramp Rates

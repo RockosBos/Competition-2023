@@ -77,6 +77,10 @@ public class Conveyor extends SubsystemBase {
         return errorMessage;
     }
 
+    public boolean getSensor(){
+        return this.conveyorSensor.get();
+    }
+
     public void clearErrors(){
         errorFlag = false;
         errorMessage = "";

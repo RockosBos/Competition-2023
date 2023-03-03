@@ -142,6 +142,14 @@ public class Lift extends SubsystemBase {
       return true;
     }
 
+    public double getLiftRotatePosition(){
+      return this.liftRotateEncoder.getPosition();
+    }
+
+    public double getLiftExtendPosition(){
+      return this.liftExtendEncoder.getPosition();
+    }
+
     @Override
     public void periodic() {
 
