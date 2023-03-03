@@ -30,8 +30,7 @@ public final class Constants {
     //Sensor ID's
 
     public static final int conveyorPhotoEyeID = 0;
-    public static final int intakeExtendLimitID = 1;
-    public static final int intakeRetractLimitID = 2;
+    public static final int intakeZeroLimitID = 1;
     public static final int liftZeroPositionLimitID = 3;
 
     //Speeds
@@ -54,8 +53,8 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_2 = 30.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 40.0;
-    public static final double LIFT_ROTATE_CLEAR_POSITION = 0.0; //Position where extension can proceed into the lowered position.
-    public static final double LIFT_EXTEND_CLEAR_POSITION = 0.0; //Position where rotation can proceed into the lowered position.
+    public static final double LIFT_ROTATE_CLEAR_POSITION = 15.0; //Position where extension can proceed into the lowered position.
+    public static final double LIFT_EXTEND_CLEAR_POSITION = 5.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
     public static final double GRABBER_CLOSED_POSITION = 15.0;
@@ -83,6 +82,8 @@ public final class Constants {
     public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
     public static final float LIFT_ROTATE_FORWARD_LIMIT = 40.0f;
     public static final float LIFT_ROTATE_REVERSE_LIMIT = 0.0f;
+    public static final float INTAKE_EXTEND_FORWARD_LIMIT = 20.0f;
+    public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
 
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");

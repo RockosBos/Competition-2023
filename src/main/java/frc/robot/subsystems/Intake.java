@@ -5,8 +5,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -40,17 +42,24 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private CANSparkMax intakeExtend = new CANSparkMax(Constants.intakeExtendID, MotorType.kBrushless);
   private CANSparkMax intakeRoller = new CANSparkMax(Constants.intakeRollerID, MotorType.kBrushless);
-  private DigitalInput intakeExtendedLimit = new DigitalInput(Constants.intakeExtendLimitID);
-  private DigitalInput intakeRetractedLimit = new DigitalInput(Constants.intakeRetractLimitID);
+  private DigitalInput intakeZeroLimit = new DigitalInput(Constants.intakeZeroLimitID);
+  private GenericEntry extensionPositionEntry, intakeZeroLimitEntry;
 
   public Intake() {
     intakeExtend.clearFaults();
     intakeExtend.restoreFactoryDefaults();
     intakeExtend.setOpenLoopRampRate(Constants.INTAKE_EXTEND_RAMP_RATE);
+    intakeExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
+    intakeExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_EXTEND_FORWARD_LIMIT);
+    intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_EXTEND_REVERSE_LIMIT);
 
     intakeRoller.clearFaults();
     intakeRoller.restoreFactoryDefaults();
     intakeRoller.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
+
+    extensionPositionEntry = Constants.intakeDebugTab.add("Extension Rotate Position", 0).getEntry();
+    intakeZeroLimitEntry = Constants.intakeDebugTab.add("Intake Zero Limit", intakeZeroLimit.get()).getEntry();
   } 
 
   public void SetIntakeRollers(double voltage) {
@@ -58,15 +67,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void SetIntakeExtension(double voltage){
-    if(voltage > 0 && intakeExtendedLimit.get()){
-      intakeExtend.stopMotor();
-    }
-    else if(voltage < 0 && intakeRetractedLimit.get()){
-      intakeExtend.stopMotor();
-    } 
-    else{
       intakeExtend.setVoltage(voltage);
-    }
   }
 
   public void SetIntakeExtensionManual(double voltage){
@@ -74,15 +75,18 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean isIntakeRetracted(){
-    return intakeRetractedLimit.get();
+    return intakeZeroLimit.get();
   }
 
   @Override
   public void periodic() {
-    Constants.intakeDebugTab.add("Intake Extend CAN ID", intakeExtend.getDeviceId());
-    Constants.intakeDebugTab.add("Intake Roller CAN ID", intakeRoller.getDeviceId());
-    Constants.intakeDebugTab.add("Intake Extended Limit", intakeExtendedLimit.get());
-    Constants.intakeDebugTab.add("Intake Retracted Limit", intakeRetractedLimit.get());
+
+    if(intakeZeroLimit.get()){
+      intakeExtend.getEncoder().setPosition(0.0);
+    }
+
+    extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
+    intakeZeroLimitEntry.setBoolean(intakeZeroLimit.get());
 
   }
 }

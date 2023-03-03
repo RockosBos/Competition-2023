@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
@@ -12,6 +13,8 @@ public class RetractIntake extends CommandBase {
   /** Creates a new RetractIntake. */
 
   private Intake s_Intake;
+
+  private Timer timer;
   
   public RetractIntake(Intake s_Intake) {
     this.s_Intake = s_Intake;
@@ -21,12 +24,20 @@ public class RetractIntake extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+      timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.s_Intake.SetIntakeExtension(Constants.INTAKE_RETRACTION_SPEED_VOLTS);
+    if(timer.get() < 2.0){
+        this.s_Intake.SetIntakeExtension(0.0);
+    }
+    else{
+        this.s_Intake.SetIntakeExtension(Constants.INTAKE_RETRACTION_SPEED_VOLTS);
+    }
+    
     this.s_Intake.SetIntakeRollers(0.0);
   }
 
