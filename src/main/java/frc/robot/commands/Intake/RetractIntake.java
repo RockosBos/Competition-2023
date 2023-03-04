@@ -14,7 +14,7 @@ public class RetractIntake extends CommandBase {
 
   private Intake s_Intake;
 
-  private Timer timer;
+  private Timer timer = new Timer();
   
   public RetractIntake(Intake s_Intake) {
     this.s_Intake = s_Intake;

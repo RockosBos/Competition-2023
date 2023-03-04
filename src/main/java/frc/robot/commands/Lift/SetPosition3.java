@@ -10,7 +10,7 @@ import frc.robot.subsystems.Lift;
 
 public class SetPosition3 extends CommandBase {
 
-  private Lift s_Lift = new Lift();
+  private Lift s_Lift;
   /** Creates a new SetPosition3. */
   public SetPosition3(Lift s_Lift) {
     this.s_Lift = s_Lift;
@@ -24,7 +24,7 @@ public class SetPosition3 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_ROTATE_POSITION_3);
+      this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_EXTEND_POSITION_3);
   }
 
   // Called once the command ends or is interrupted.

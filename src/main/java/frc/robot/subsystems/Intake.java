@@ -53,6 +53,7 @@ public class Intake extends SubsystemBase {
     intakeExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
     intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_EXTEND_FORWARD_LIMIT);
     intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_EXTEND_REVERSE_LIMIT);
+    intakeExtend.setInverted(true);
 
     intakeRoller.clearFaults();
     intakeRoller.restoreFactoryDefaults();
@@ -82,7 +83,7 @@ public class Intake extends SubsystemBase {
   public void periodic() {
 
     if(intakeZeroLimit.get()){
-      intakeExtend.getEncoder().setPosition(0.0);
+      //intakeExtend.getEncoder().setPosition(0.0);
     }
 
     extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
