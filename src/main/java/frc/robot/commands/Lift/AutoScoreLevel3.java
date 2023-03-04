@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Lift;
 
-public class SetPosition0 extends CommandBase {
-
+public class AutoScoreLevel3 extends CommandBase {
+  
   private Lift s_Lift;
-  /** Creates a new SetPosition3. */
-  public SetPosition0(Lift s_Lift) {
-    this.s_Lift = s_Lift;
-    addRequirements(this.s_Lift);
+  /** Creates a new AutoScoreLevel3. */
+  public AutoScoreLevel3(Lift s_Lift) {
+      this.s_Lift = s_Lift;
+      addRequirements(this.s_Lift);
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +24,7 @@ public class SetPosition0 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_0, Constants.LIFT_EXTEND_POSITION_0);
+      s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_ROTATE_POSITION_3);
   }
 
   // Called once the command ends or is interrupted.
@@ -34,7 +34,6 @@ public class SetPosition0 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
-    return false;
+    return s_Lift.atSetpoint();
   }
 }

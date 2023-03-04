@@ -74,6 +74,13 @@ public class Grabber extends SubsystemBase {
      grabberMotor.set(speed);
   }
 
+  public boolean atSetpoint(){
+    if(Math.abs(rotations - this.grabberMotor.getEncoder().getPosition()) < 1.0){
+        return true;
+    }
+    return false;
+  }
+
   @Override
   public void periodic() {
     double p = pGainEntry.getDouble(0);
