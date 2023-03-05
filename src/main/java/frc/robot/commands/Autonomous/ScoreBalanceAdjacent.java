@@ -32,7 +32,7 @@ public class ScoreBalanceAdjacent extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-
+    /*
       new ParallelCommandGroup(
           new AutoScoreLevel3(s_Lift),
           new AutoCloseGrabber(s_Grabber)
@@ -41,6 +41,7 @@ public class ScoreBalanceAdjacent extends SequentialCommandGroup {
           new AutoScoreLevel0(s_Lift),
           new AutoOpenGrabber(s_Grabber)  
         ),
+        */
       s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceAdjacent", 1, 1), true),
       new AutoBalance(s_Swerve)
     );

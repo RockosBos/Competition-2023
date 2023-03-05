@@ -48,12 +48,12 @@ public class Grabber extends SubsystemBase {
 
     // PID coefficients
     kP = 0.1; 
-    kI = 1e-4;
-    kD = 1; 
+    kI = 0;
+    kD = 0; 
     kIz = 0; 
     kFF = 0; 
-    kMaxOutput = 1; 
-    kMinOutput = -1;
+    kMaxOutput = 0.5; 
+    kMinOutput = -0.5;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -83,6 +83,7 @@ public class Grabber extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /*
     double p = pGainEntry.getDouble(0);
     double i = iGainEntry.getDouble(0);
     double d = dGainEntry.getDouble(0);
@@ -102,6 +103,7 @@ public class Grabber extends SubsystemBase {
        m_pidController.setOutputRange(min, max); 
        kMinOutput = min; kMaxOutput = max; 
      }
+     */
     
      m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
     

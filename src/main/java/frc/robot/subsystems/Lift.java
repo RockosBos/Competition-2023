@@ -82,8 +82,8 @@ public class Lift extends SubsystemBase {
       rotate_kD = 0; 
       rotate_kIz = 0; 
       rotate_kFF = 0; 
-      rotate_kMaxOutput = 0.5; 
-      rotate_kMinOutput = -0.5;
+      rotate_kMaxOutput = .75; 
+      rotate_kMinOutput = -.75;
 
       extend_kP = 1; 
       extend_kI = 0;
@@ -152,7 +152,7 @@ public class Lift extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftRotatePosition()) < 1.0){
+      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 /*&& Math.abs(extendSetpoint - this.getLiftRotatePosition()) < 1.0*/){
           return true;
       }
       return false;
@@ -205,11 +205,13 @@ public class Lift extends SubsystemBase {
         */
 
         if(liftRotate.getEncoder().getPosition() < Constants.LIFT_ROTATE_CLEAR_POSITION){
-          extendSetpoint = 0.0;
+          extendSetpoint = Constants.LIFT_EXTEND_CLEAR_POSITION;
         }
+        /*
         if(liftExtend.getEncoder().getPosition() > Constants.LIFT_EXTEND_CLEAR_POSITION){
-          rotateSetpoint = 0.0;
+          rotateSetpoint = Constants.LIFT_ROTATE_CLEAR_POSITION;
         }
+        */
 
         liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
         liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);

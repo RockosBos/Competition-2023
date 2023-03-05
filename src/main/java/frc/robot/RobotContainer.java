@@ -121,7 +121,7 @@ public class RobotContainer {
         s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
-        s_Grabber.setDefaultCommand(new OpenGrabber(s_Grabber));
+        s_Grabber.setDefaultCommand(null);
         
 
 
@@ -155,11 +155,12 @@ public class RobotContainer {
         intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
         //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
         //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
-        SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
-        SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
-        SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
-        SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
+        SetLiftPosition0.onTrue(new SetPosition0(s_Lift, s_Grabber));
+        SetLiftPosition1.onTrue(new SetPosition1(s_Lift, s_Grabber));
+        SetLiftPosition2.onTrue(new SetPosition2(s_Lift, s_Grabber));
+        SetLiftPosition3.onTrue(new SetPosition3(s_Lift, s_Grabber));
         //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+        GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
         
         //Special Conditional Commands
@@ -172,7 +173,7 @@ public class RobotContainer {
         if(!s_Lift.isLiftRetracted()){
             s_Intake.run(() -> new RetractIntake(s_Intake));
         }
-        */
+        
         if(s_Lift.getLiftRotatePosition() > Constants.GRABBER_LIFT_CLOSED_THRESHOLD){ //Arm is in the air
             if(s_Conveyor.getSensor()){
               s_Conveyor.run(() -> new CloseGrabber(s_Grabber));
@@ -192,7 +193,7 @@ public class RobotContainer {
                 s_Grabber.run(() -> new CloseGrabber(s_Grabber));
             }
         }
-        
+        */
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous

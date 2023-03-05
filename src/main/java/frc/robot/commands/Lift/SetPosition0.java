@@ -6,15 +6,18 @@ package frc.robot.commands.Lift;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Lift;
 
 public class SetPosition0 extends CommandBase {
 
   private Lift s_Lift;
+  private Grabber s_Grabber;
   /** Creates a new SetPosition3. */
-  public SetPosition0(Lift s_Lift) {
+  public SetPosition0(Lift s_Lift, Grabber s_Grabber) {
     this.s_Lift = s_Lift;
-    addRequirements(this.s_Lift);
+    this.s_Grabber = s_Grabber;
+    addRequirements(this.s_Lift, this.s_Grabber);
   }
 
   // Called when the command is initially scheduled.
@@ -25,6 +28,7 @@ public class SetPosition0 extends CommandBase {
   @Override
   public void execute() {
       this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_0, Constants.LIFT_EXTEND_POSITION_0);
+      this.s_Grabber.setPosition(Constants.GRABBER_OPEN_POSITION);
   }
 
   // Called once the command ends or is interrupted.

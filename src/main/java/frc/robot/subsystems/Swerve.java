@@ -137,13 +137,14 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-        
+        PathPlannerState myTraj =  traj.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
+
 
         return new SequentialCommandGroup(
+            
             new InstantCommand(() -> {
-                // Reset odometry for the first path you run during auto
+                
                 if(isFirstPath){
-                    PathPlannerState myTraj =  traj.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
                     System.out.println(myTraj.poseMeters.getX() + " | " + myTraj.poseMeters.getY());
                     this.resetOdometry(myTraj.poseMeters);
                 }
