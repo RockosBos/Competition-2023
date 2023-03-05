@@ -151,6 +151,13 @@ public class Lift extends SubsystemBase {
       return this.liftExtend.getEncoder().getPosition();
     }
 
+    public boolean atSetpoint(){
+      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftRotatePosition()) < 1.0){
+          return true;
+      }
+      return false;
+    }
+
     @Override
     public void periodic() {
 
