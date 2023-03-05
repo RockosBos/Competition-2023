@@ -41,7 +41,8 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private CANSparkMax intakeExtend = new CANSparkMax(Constants.intakeExtendID, MotorType.kBrushless);
-  private CANSparkMax intakeRoller = new CANSparkMax(Constants.intakeRollerID, MotorType.kBrushless);
+  private CANSparkMax intakeRollerTop = new CANSparkMax(Constants.intakeRollerTopID, MotorType.kBrushless);
+  private CANSparkMax IntakeRollerBottom = new CANSparkMax(Constants.intakeRollerBottomID,MotorType.kBrushless);
   private DigitalInput intakeZeroLimit = new DigitalInput(Constants.intakeZeroLimitID);
   private GenericEntry extensionPositionEntry, intakeZeroLimitEntry;
 
@@ -55,16 +56,22 @@ public class Intake extends SubsystemBase {
     intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_EXTEND_REVERSE_LIMIT);
     intakeExtend.setInverted(true);
 
-    intakeRoller.clearFaults();
-    intakeRoller.restoreFactoryDefaults();
-    intakeRoller.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
+    intakeRollerTop.clearFaults();
+    intakeRollerTop.restoreFactoryDefaults();
+    intakeRollerTop.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
+
+    IntakeRollerBottom.clearFaults();
+    IntakeRollerBottom.restoreFactoryDefaults();
+    IntakeRollerBottom.setInverted(true);
+    IntakeRollerBottom.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
+    IntakeRollerBottom.follow(intakeRollerTop);
 
     extensionPositionEntry = Constants.intakeDebugTab.add("Extension Rotate Position", 0).getEntry();
     intakeZeroLimitEntry = Constants.intakeDebugTab.add("Intake Zero Limit", intakeZeroLimit.get()).getEntry();
   } 
 
   public void SetIntakeRollers(double voltage) {
-    intakeRoller.setVoltage(voltage);
+    intakeRollerTop.setVoltage(voltage);
   }
 
   public void SetIntakeExtension(double voltage){
