@@ -137,20 +137,25 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-        PathPlannerState myTraj =  traj.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
 
+        DriverStation.refreshData();
+        //PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
+        //PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+
+        PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), Alliance.Red);
+        PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, Alliance.Red);
 
         return new SequentialCommandGroup(
             
             new InstantCommand(() -> {
                 
                 if(isFirstPath){
-                    System.out.println(myTraj.poseMeters.getX() + " | " + myTraj.poseMeters.getY());
-                    this.resetOdometry(myTraj.poseMeters);
+                    this.resetOdometry(myState.poseMeters);
+                    //this.resetOdometry(traj.getInitialHolonomicPose());
                 }
             }),
             new PPSwerveControllerCommand(
-                 traj, 
+                 myTraj, 
                  this::getPose, // Pose supplier
                  Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
                  new PIDController(AutoConstants.kPXController, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
@@ -175,6 +180,5 @@ public class Swerve extends SubsystemBase {
         angleEntry.setDouble(getYaw().getDegrees());
         pitchEntry.setDouble(gyro.getPitch());
         rollEntry.setDouble(gyro.getRoll());
-        
     }
 }
