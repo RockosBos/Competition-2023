@@ -33,16 +33,12 @@ public class ScoreBalanceOpposite extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-      new ParallelCommandGroup(
-          new AutoScoreLevel3(s_Lift),
-          new AutoCloseGrabber(s_Grabber)
-      ),
-      new ParallelCommandGroup(
-          new AutoScoreLevel0(s_Lift),
-          new AutoOpenGrabber(s_Grabber)  
-      ),
+        new AutoCloseGrabber(s_Grabber),
+        new AutoScoreLevel3(s_Lift),
+        new AutoOpenGrabber(s_Grabber), 
+        new AutoScoreLevel0(s_Lift),
         s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceOpposite", 1, 1), true),
-      new AutoBalance(s_Swerve)
+        new AutoBalance(s_Swerve)
     );
   }
 }

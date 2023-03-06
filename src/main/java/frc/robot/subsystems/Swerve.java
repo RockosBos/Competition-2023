@@ -142,8 +142,8 @@ public class Swerve extends SubsystemBase {
         //PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
         //PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
 
-        PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), Alliance.Red);
-        PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, Alliance.Red);
+        PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
+        PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
 
         return new SequentialCommandGroup(
             

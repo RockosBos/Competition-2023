@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Intake.ExtendIntake;
 
 public class Lift extends SubsystemBase {
   /** Creates a new Lift. */
@@ -205,13 +206,19 @@ public class Lift extends SubsystemBase {
         */
 
         if(liftRotate.getEncoder().getPosition() < Constants.LIFT_ROTATE_CLEAR_POSITION){
-          extendSetpoint = Constants.LIFT_EXTEND_CLEAR_POSITION;
+          liftExtend.setSoftLimit(SoftLimitDirection.kForward, ((float)Constants.LIFT_EXTEND_CLEAR_POSITION));
         }
-        /*
+        else{
+          liftExtend.setSoftLimit(SoftLimitDirection.kForward, ((float)Constants.LIFT_EXTEND_FORWARD_LIMIT));
+        }
+        
         if(liftExtend.getEncoder().getPosition() > Constants.LIFT_EXTEND_CLEAR_POSITION){
-          rotateSetpoint = Constants.LIFT_ROTATE_CLEAR_POSITION;
+          liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_CLEAR_POSITION));
         }
-        */
+        else{
+          liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_FORWARD_LIMIT));
+        }
+        
 
         liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
         liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);

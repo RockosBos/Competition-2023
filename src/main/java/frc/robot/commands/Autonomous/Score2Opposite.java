@@ -34,22 +34,16 @@ public class Score2Opposite extends SequentialCommandGroup {
     this.s_Intake = s_Intake;
     this.s_Grabber = s_Grabber;
     addCommands(
-        new ParallelCommandGroup(
-          new AutoScoreLevel3(s_Lift),
-          new AutoCloseGrabber(s_Grabber)
-        ),
-        new ParallelCommandGroup(
-          new AutoScoreLevel0(s_Lift),
-          new AutoOpenGrabber(s_Grabber)  
-        ),
-        new ParallelCommandGroup(
+      new AutoCloseGrabber(s_Grabber),
+      new AutoScoreLevel3(s_Lift),
+      new AutoOpenGrabber(s_Grabber),
+      new AutoScoreLevel0(s_Lift),
+      new ParallelCommandGroup(
             s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Opposite", 1, 1), true), 
             s_Intake.run(() -> new ExtendIntake(s_Intake, !s_Lift.isLiftRetracted()))
         ),
-        new ParallelCommandGroup(
-          new AutoScoreLevel3(s_Lift),
-          new AutoCloseGrabber(s_Grabber)
-        ),
+        new AutoCloseGrabber(s_Grabber),
+        new AutoScoreLevel3(s_Lift),
         new AutoOpenGrabber(s_Grabber)
     );
   }
