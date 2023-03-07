@@ -91,8 +91,8 @@ public class Lift extends SubsystemBase {
       extend_kD = 0; 
       extend_kIz = 0; 
       extend_kFF = 0; 
-      extend_kMaxOutput = 0.5; 
-      extend_kMinOutput = -0.5;
+      extend_kMaxOutput = 0.75; 
+      extend_kMinOutput = -0.75;
 
       liftRotateController.setP(rotate_kP);
       liftRotateController.setI(rotate_kI);
@@ -138,6 +138,7 @@ public class Lift extends SubsystemBase {
     public void setPosition(double rotateSetpoint, double extendSetpoint){
         this.rotateSetpoint = rotateSetpoint;
         this.extendSetpoint = extendSetpoint;
+
     }
 
     public boolean isLiftRetracted(){
@@ -153,7 +154,21 @@ public class Lift extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 /*&& Math.abs(extendSetpoint - this.getLiftRotatePosition()) < 1.0*/){
+      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftRotatePosition()) < 1.0){
+          return true;
+      }
+      return false;
+    }
+
+    public boolean atRotateSetpoint(){
+      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0){
+          return true;
+      }
+      return false;
+    }
+
+    public boolean atExtendSetpoint(){
+      if(Math.abs(extendSetpoint - this.getLiftExtendPosition()) < 1.0){
           return true;
       }
       return false;
@@ -205,6 +220,7 @@ public class Lift extends SubsystemBase {
         }
         */
 
+        /*
         if(liftRotate.getEncoder().getPosition() < Constants.LIFT_ROTATE_CLEAR_POSITION){
           liftExtend.setSoftLimit(SoftLimitDirection.kForward, ((float)Constants.LIFT_EXTEND_CLEAR_POSITION));
         }
@@ -216,12 +232,21 @@ public class Lift extends SubsystemBase {
           liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_CLEAR_POSITION));
         }
         else{
-          liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_FORWARD_LIMIT));
+          liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_REVERSE_LIMIT));
         }
-        
-
-        liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
-        liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);
+        */
+        if(getLiftExtendPosition() < 1.0){
+          liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
+        }
+        else{
+          liftRotateController.setReference(getLiftRotatePosition(), CANSparkMax.ControlType.kPosition);
+        }
+        if(atRotateSetpoint()){
+          liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);
+        }
+        else{
+          liftExtendController.setReference(Constants.LIFT_EXTEND_POSITION_0, CANSparkMax.ControlType.kPosition);
+        }
 
         rotatePositionEntry.setDouble(getLiftRotatePosition());
         extendPositionEntry.setDouble(getLiftExtendPosition());
