@@ -14,10 +14,9 @@ public class SetPosition3 extends CommandBase {
   private Lift s_Lift;
   private Grabber s_Grabber;
   /** Creates a new SetPosition3. */
-  public SetPosition3(Lift s_Lift, Grabber s_Grabber) {
+  public SetPosition3(Lift s_Lift) {
     this.s_Lift = s_Lift;
-    this.s_Grabber = s_Grabber;
-    addRequirements(this.s_Lift, this.s_Grabber);
+    addRequirements(this.s_Lift);
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +27,6 @@ public class SetPosition3 extends CommandBase {
   @Override
   public void execute() {
       this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_EXTEND_POSITION_3);
-      this.s_Grabber.setPosition(Constants.GRABBER_CLOSED_POSITION);
   }
 
   // Called once the command ends or is interrupted.
@@ -38,6 +36,9 @@ public class SetPosition3 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(s_Lift.atSetpoint()){
+      return true;
+    }
     return false;
   }
 }
