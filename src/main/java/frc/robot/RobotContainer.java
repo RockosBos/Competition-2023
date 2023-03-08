@@ -37,6 +37,7 @@ import frc.robot.commands.Swerve.TeleopSwerve;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -106,6 +107,7 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
     public static final SendableChooser<String> modeSelector = new SendableChooser<String>();
+    public static final DigitalInput photoEye = new DigitalInput(0);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -125,7 +127,7 @@ public class RobotContainer {
         );
 
         
-        s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
+        s_Conveyor.setDefaultCommand(new ConveyorOff(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
@@ -160,7 +162,7 @@ public class RobotContainer {
         driverY_Button.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
         //operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
-        operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
+        operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new ConveyorOn(s_Conveyor)));
         operatorY_Button.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
         operatorX_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition1(s_Lift)));
         operatorB_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition2(s_Lift)));
@@ -170,6 +172,19 @@ public class RobotContainer {
 
         //Manual Buttons
 
+        //operatorLB_Button.onTrue();
+        operatorY_Button.onTrue(new InstantCommand(() -> s_Lift.setManualRotateVoltage(Constants.LIFT_ROTATE_FORWARD_SPEED_VOLTS)));
+        operatorY_Button.onFalse(new InstantCommand(() -> s_Lift.setManualRotateVoltage(0.0)));
+        operatorA_Button.onTrue(new InstantCommand(() -> s_Lift.setManualRotateVoltage(Constants.LIFT_ROTATE_REVERSE_SPEED_VOLTS)));
+        operatorA_Button.onFalse(new InstantCommand(() -> s_Lift.setManualRotateVoltage(0.0)));
+        operatorB_Button.onTrue(new InstantCommand(() -> s_Lift.setManualExtendVoltage(Constants.LIFT_EXTEND_FORWARD_SPEED_VOLTS)));
+        operatorB_Button.onFalse(new InstantCommand(() -> s_Lift.setManualExtendVoltage(0.0)));
+        operatorX_Button.onTrue(new InstantCommand(() -> s_Lift.setManualExtendVoltage(Constants.LIFT_EXTEND_REVERSE_SPEED_VOLTS)));
+        operatorX_Button.onFalse(new InstantCommand(() -> s_Lift.setManualExtendVoltage(0.0)));
+        operatorRB_Button.onTrue(new InstantCommand(() -> s_Grabber.grabberManual(Constants.GRABBER_FORWARD_SPEED_VOLTS)));
+        operatorRB_Button.onFalse(new InstantCommand(() -> s_Grabber.grabberManual(0.0)));
+        operatorRT_Button.onTrue(new InstantCommand(() -> s_Grabber.grabberManual(Constants.GRABBER_REVERSE_SPEED_VOLTS)));
+        operatorRT_Button.onFalse(new InstantCommand(() -> s_Grabber.grabberManual(0.0)));
         
     }
     public Command getAutonomousCommand() {
