@@ -30,6 +30,7 @@ import frc.robot.commands.Lift.SetPosition0;
 import frc.robot.commands.Lift.SetPosition1;
 import frc.robot.commands.Lift.SetPosition2;
 import frc.robot.commands.Lift.SetPosition3;
+import frc.robot.commands.Lift.SetPositionIntake;
 import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.commands.Swerve.TeleopSwerve;
 
@@ -46,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -103,6 +105,8 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
 
+    private boolean intakeLess = false;
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
 
@@ -148,19 +152,32 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         
+        if(!intakeLess){
+            //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
+            //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
+            intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
+            intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
+            //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
+            //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
+            SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
+            SetLiftPosition1.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition1(s_Lift)));
+            SetLiftPosition2.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition2(s_Lift)));
+            SetLiftPosition3.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition3(s_Lift)));
+            //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+            GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
+        }
+        else{
+            SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
+            SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
+            SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
+            SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
+            intakeRun.onTrue(new SetPositionIntake(s_Lift));
+
+            GrabberDropCube.toggleOnTrue(new OpenGrabber(s_Grabber));
+            GrabberDropCube.toggleOnFalse(new CloseGrabber(s_Grabber));
+            //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.get()));
+        }
         
-        //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
-        //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
-        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
-        //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
-        //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
-        SetLiftPosition0.onTrue(new SetPosition0(s_Lift, s_Grabber));
-        SetLiftPosition1.onTrue(new SetPosition1(s_Lift, s_Grabber));
-        SetLiftPosition2.onTrue(new SetPosition2(s_Lift, s_Grabber));
-        SetLiftPosition3.onTrue(new SetPosition3(s_Lift, s_Grabber));
-        //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
-        GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
         
         //Special Conditional Commands
@@ -172,26 +189,6 @@ public class RobotContainer {
 
         if(!s_Lift.isLiftRetracted()){
             s_Intake.run(() -> new RetractIntake(s_Intake));
-        }
-        
-        if(s_Lift.getLiftRotatePosition() > Constants.GRABBER_LIFT_CLOSED_THRESHOLD){ //Arm is in the air
-            if(s_Conveyor.getSensor()){
-              s_Conveyor.run(() -> new CloseGrabber(s_Grabber));
-            }
-            else{
-              s_Conveyor.run(() -> new OpenGrabber(s_Grabber));
-            }
-        }
-        else{ //arm is facing down
-            if(GrabberDropCone.getAsBoolean()){
-                s_Grabber.run(() -> new OpenGrabber(s_Grabber));
-            }
-            else if(GrabberDropCube.getAsBoolean()){
-                //s_Grabber.run(() -> new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
-            } 
-            else{
-                s_Grabber.run(() -> new CloseGrabber(s_Grabber));
-            }
         }
         */
     }
