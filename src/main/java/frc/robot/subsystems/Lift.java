@@ -52,11 +52,12 @@ public class Lift extends SubsystemBase {
     private SparkMaxPIDController liftExtendController;
     private double rotate_kP, rotate_kI, rotate_kD, rotate_kIz, rotate_kFF, rotate_kMaxOutput, rotate_kMinOutput;
     private double extend_kP, extend_kI, extend_kD, extend_kIz, extend_kFF, extend_kMaxOutput, extend_kMinOutput;
-    private GenericEntry rotate_PEntry, rotate_IEntry, rotate_DEntry, rotate_IZEntry, rotate_FFEntry, rotate_MaxOEntry, rotate_MinOEntry, rotate_RotEntry;
-    private GenericEntry extend_PEntry, extend_IEntry, extend_DEntry, extend_IZEntry, extend_FFEntry, extend_MaxOEntry, extend_MinOEntry, extend_RotEntry;
     private GenericEntry rotatePositionEntry, extendPositionEntry, rotateSetPointEntry, extendSetPointEntry;
     private double rotateSetpoint, extendSetpoint;
     private DigitalInput zeroLimit;
+    private boolean manualControl;
+    private int setpointLevel;
+    private double lastExtendSetpoint;
 
     public Lift() {
       liftRotate.restoreFactoryDefaults();
@@ -75,6 +76,9 @@ public class Lift extends SubsystemBase {
 
       liftRotateController = liftRotate.getPIDController();
       liftExtendController = liftExtend.getPIDController();
+
+      manualControl = false;
+      setpointLevel = 0;
 
       //PID Setup
 
@@ -108,24 +112,6 @@ public class Lift extends SubsystemBase {
       liftExtendController.setFF(extend_kFF);
       liftExtendController.setOutputRange(extend_kMinOutput, extend_kMaxOutput);
 
-      rotate_PEntry = Constants.pidConfigTab.add("Lift Rotate P Gain", rotate_kP).getEntry();
-      rotate_IEntry = Constants.pidConfigTab.add("Lift Rotate I Gain", rotate_kI).getEntry();
-      rotate_DEntry = Constants.pidConfigTab.add("Lift Rotate D Gain", rotate_kD).getEntry();
-      rotate_IZEntry = Constants.pidConfigTab.add("Lift Rotate I Zone", rotate_kIz).getEntry();
-      rotate_FFEntry = Constants.pidConfigTab.add("Lift Rotate FF", rotate_kFF).getEntry();
-      rotate_MaxOEntry = Constants.pidConfigTab.add("Lift Rotate Max Out", rotate_kMaxOutput).getEntry();
-      rotate_MinOEntry = Constants.pidConfigTab.add("Lift Rotate Min Out", rotate_kMinOutput).getEntry();
-      rotate_RotEntry = Constants.pidConfigTab.add("Lift Rotate Set Rotations", 0).getEntry();
-
-      extend_PEntry = Constants.pidConfigTab.add("Lift Extend P Gain", extend_kP).getEntry();
-      extend_IEntry = Constants.pidConfigTab.add("Lift Extend I Gain", extend_kI).getEntry();
-      extend_DEntry = Constants.pidConfigTab.add("Lift Extend D Gain", extend_kD).getEntry();
-      extend_IZEntry = Constants.pidConfigTab.add("Lift Extend I Zone", extend_kIz).getEntry();
-      extend_FFEntry = Constants.pidConfigTab.add("Lift Extend FF", extend_kFF).getEntry();
-      extend_MaxOEntry = Constants.pidConfigTab.add("Lift Extend Max Out", extend_kMaxOutput).getEntry();
-      extend_MinOEntry = Constants.pidConfigTab.add("Lift Extend Min Out", extend_kMinOutput).getEntry();
-      extend_RotEntry = Constants.pidConfigTab.add("Lift Extend Set Rotations", 0).getEntry();
-
       rotatePositionEntry = Constants.liftDebugTab.add("Lift Rotate Current Position", 0).getEntry();
       extendPositionEntry = Constants.liftDebugTab.add("Extend Rotate Current Position", 0).getEntry();
       rotateSetPointEntry = Constants.liftDebugTab.add("Lift Rotate Set Point", 0).getEntry();
@@ -136,6 +122,8 @@ public class Lift extends SubsystemBase {
     }
 
     public void setPosition(double rotateSetpoint, double extendSetpoint){
+
+        lastExtendSetpoint = this.extendSetpoint;
         this.rotateSetpoint = rotateSetpoint;
         this.extendSetpoint = extendSetpoint;
 
@@ -174,44 +162,23 @@ public class Lift extends SubsystemBase {
       return false;
     }
 
+    public void setManualControl(){
+        manualControl = true;
+    }
+
+    public void setAutoControl(){
+        manualControl = false;
+    }
+
+    public void setManualExtendVoltage(double voltage){
+        liftExtend.setVoltage(voltage);
+    }
+    public void setManualRotateVoltage(double voltage){
+        liftRotate.setVoltage(voltage);
+  }
+
     @Override
     public void periodic() {
-
-        double rotate_P = rotate_PEntry.getDouble(0);
-        double rotate_I = rotate_IEntry.getDouble(0);
-        double rotate_D = rotate_DEntry.getDouble(0);
-        double rotate_IZ = rotate_IZEntry.getDouble(0);
-        double rotate_FF = rotate_FFEntry.getDouble(0);
-        double rotate_MaxO = rotate_MaxOEntry.getDouble(0);
-        double rotate_MinO = rotate_MinOEntry.getDouble(0);
-
-        double extend_P = extend_PEntry.getDouble(0);
-        double extend_I = extend_IEntry.getDouble(0);
-        double extend_D = extend_DEntry.getDouble(0);
-        double extend_IZ = extend_IZEntry.getDouble(0);
-        double extend_FF = extend_FFEntry.getDouble(0);
-        double extend_MaxO = extend_MaxOEntry.getDouble(0);
-        double extend_MinO = extend_MinOEntry.getDouble(0);
-      /*
-        if((rotate_P != rotate_kP)) { liftRotateController.setP(rotate_P); rotate_kP = rotate_P; }
-        if((rotate_I != rotate_kI)) { liftRotateController.setI(rotate_I); rotate_kI = rotate_I; }
-        if((rotate_D != rotate_kD)) { liftRotateController.setD(rotate_D); rotate_kD = rotate_D; }
-        if((rotate_IZ != rotate_kIz)) { liftRotateController.setIZone(rotate_IZ); rotate_kIz = rotate_IZ; }
-        if((rotate_FF != rotate_kFF)) { liftRotateController.setFF(rotate_FF); rotate_kFF = rotate_FF; }
-        if((rotate_MaxO != rotate_kMaxOutput) || (rotate_MinO != rotate_kMinOutput)) { 
-          liftRotateController.setOutputRange(rotate_MinO, rotate_MaxO); 
-          rotate_kMinOutput = rotate_MinO; rotate_kMaxOutput = rotate_MaxO; 
-        }
-
-        if((extend_P != extend_kP)) { liftExtendController.setP(extend_P); extend_kP = extend_P; }
-        if((extend_I != extend_kI)) { liftExtendController.setI(extend_I); extend_kI = extend_I; }
-        if((extend_D != extend_kD)) { liftExtendController.setD(extend_D); extend_kD = extend_D; }
-        if((extend_IZ != extend_kIz)) { liftExtendController.setIZone(extend_IZ); extend_kIz = extend_IZ; }
-        if((extend_FF != extend_kFF)) { liftExtendController.setFF(extend_FF); extend_kFF = extend_FF; }
-        if((extend_MaxO != extend_kMaxOutput) || (extend_MinO != extend_kMinOutput)) { 
-          liftExtendController.setOutputRange(extend_MinO, extend_MaxO); 
-          extend_kMinOutput = extend_MinO; extend_kMaxOutput = extend_MaxO; 
-        }
 
         /*
         if(zeroLimit.get()){
@@ -219,34 +186,34 @@ public class Lift extends SubsystemBase {
           liftExtendEncoder.setPosition(0.0);
         }
         */
+        if(!manualControl){
+            liftExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
+            liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
+            liftRotate.enableSoftLimit(SoftLimitDirection.kForward, true);
+            liftRotate.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
-        /*
-        if(liftRotate.getEncoder().getPosition() < Constants.LIFT_ROTATE_CLEAR_POSITION){
-          liftExtend.setSoftLimit(SoftLimitDirection.kForward, ((float)Constants.LIFT_EXTEND_CLEAR_POSITION));
+            if(atExtendSetpoint()){
+              liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
+            }
+            else{
+              liftRotateController.setReference(getLiftRotatePosition(), CANSparkMax.ControlType.kPosition);
+            }
+            if(atRotateSetpoint()){
+              liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);
+            }
+            else{
+              liftExtendController.setReference(Constants.LIFT_EXTEND_POSITION_0, CANSparkMax.ControlType.kPosition);
+            }
+            
         }
         else{
-          liftExtend.setSoftLimit(SoftLimitDirection.kForward, ((float)Constants.LIFT_EXTEND_FORWARD_LIMIT));
+            liftExtend.enableSoftLimit(SoftLimitDirection.kForward, false);
+            liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, false);
+            liftRotate.enableSoftLimit(SoftLimitDirection.kForward, false);
+            liftRotate.enableSoftLimit(SoftLimitDirection.kReverse, false);
         }
         
-        if(liftExtend.getEncoder().getPosition() > Constants.LIFT_EXTEND_CLEAR_POSITION){
-          liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_CLEAR_POSITION));
-        }
-        else{
-          liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_REVERSE_LIMIT));
-        }
-        */
-        if(getLiftExtendPosition() < 1.0){
-          liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
-        }
-        else{
-          liftRotateController.setReference(getLiftRotatePosition(), CANSparkMax.ControlType.kPosition);
-        }
-        if(atRotateSetpoint()){
-          liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);
-        }
-        else{
-          liftExtendController.setReference(Constants.LIFT_EXTEND_POSITION_0, CANSparkMax.ControlType.kPosition);
-        }
+        
 
         rotatePositionEntry.setDouble(getLiftRotatePosition());
         extendPositionEntry.setDouble(getLiftExtendPosition());

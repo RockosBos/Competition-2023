@@ -34,6 +34,8 @@ public class Grabber extends SubsystemBase {
   GenericEntry setPoint = Constants.grabberDebugTab.add("Set Point", 0).getEntry();
   GenericEntry rotationEntry = Constants.grabberDebugTab.add("Rotations", 0).getEntry();
 
+  boolean manualControl = false;
+
   public Grabber() {
       grabberMotor.restoreFactoryDefaults();
       grabberMotor.setIdleMode(IdleMode.kBrake);
@@ -66,12 +68,20 @@ public class Grabber extends SubsystemBase {
 
   }
 
+  public void setManualControl(){
+      manualControl = true;
+  }
+
+  public void setAutoControl(){
+      manualControl = false;
+  }
+
   public void setPosition(double pos){
       rotations = pos;
   }
 
-  public void grabberManual(double speed){
-     grabberMotor.set(speed);
+  public void grabberManual(double voltage){
+     grabberMotor.setVoltage(voltage);
   }
 
   public boolean atSetpoint(){
@@ -83,33 +93,18 @@ public class Grabber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*
-    double p = pGainEntry.getDouble(0);
-    double i = iGainEntry.getDouble(0);
-    double d = dGainEntry.getDouble(0);
-    double iz = iZGainEntry.getDouble(0);
-    //double ff = pGainEntry.getDouble(0);
-    double max = maxOGainEntry.getDouble(0);
-    double min = minOGainEntry.getDouble(0);
-    //double rotations = SmartDashboard.getNumber("Set Rotations", 0);
-
-     // if PID coefficients on SmartDashboard have changed, write new values to controller
-     if((p != kP)) { m_pidController.setP(p); kP = p; }
-     if((i != kI)) { m_pidController.setI(i); kI = i; }
-     if((d != kD)) { m_pidController.setD(d); kD = d; }
-     if((iz != kIz)) { m_pidController.setIZone(iz); kIz = iz; }
-     //if((ff != kFF)) { m_pidController.setFF(ff); kFF = ff; }
-     if((max != kMaxOutput) || (min != kMinOutput)) { 
-       m_pidController.setOutputRange(min, max); 
-       kMinOutput = min; kMaxOutput = max; 
-     }
-     */
-    
-     m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+    if(!manualControl){
+      grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+      grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+      m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+    }
+    else{
+      grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+      grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    }
     
      setPoint.setDouble(rotations);
      rotationEntry.setDouble(m_encoder.getPosition());
 
-    // This method will be called once per scheduler run
   }
 }
