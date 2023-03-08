@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Grabber extends SubsystemBase {
   /** Creates a new Grabber. */
@@ -35,6 +36,7 @@ public class Grabber extends SubsystemBase {
   GenericEntry rotationEntry = Constants.grabberDebugTab.add("Rotations", 0).getEntry();
 
   boolean manualControl = false;
+  double grabberVoltage = 0.0;
 
   public Grabber() {
       grabberMotor.restoreFactoryDefaults();
@@ -68,20 +70,12 @@ public class Grabber extends SubsystemBase {
 
   }
 
-  public void setManualControl(){
-      manualControl = true;
-  }
-
-  public void setAutoControl(){
-      manualControl = false;
-  }
-
   public void setPosition(double pos){
       rotations = pos;
   }
 
   public void grabberManual(double voltage){
-     grabberMotor.setVoltage(voltage);
+     grabberVoltage = voltage;
   }
 
   public boolean atSetpoint(){
@@ -93,12 +87,13 @@ public class Grabber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(!manualControl){
+    if(RobotContainer.modeSelector.getSelected() == "Auto"){
       grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
       grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
       m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
     }
     else{
+      grabberMotor.setVoltage(grabberVoltage);
       grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
       grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     }

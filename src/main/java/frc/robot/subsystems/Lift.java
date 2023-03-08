@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.Intake.ExtendIntake;
 
 public class Lift extends SubsystemBase {
@@ -57,7 +58,7 @@ public class Lift extends SubsystemBase {
     private DigitalInput zeroLimit;
     private boolean manualControl;
     private int setpointLevel;
-    private double lastExtendSetpoint;
+    private double manualRotateVoltage, manualExtendVoltage;
 
     public Lift() {
       liftRotate.restoreFactoryDefaults();
@@ -123,7 +124,6 @@ public class Lift extends SubsystemBase {
 
     public void setPosition(double rotateSetpoint, double extendSetpoint){
 
-        lastExtendSetpoint = this.extendSetpoint;
         this.rotateSetpoint = rotateSetpoint;
         this.extendSetpoint = extendSetpoint;
 
@@ -162,20 +162,12 @@ public class Lift extends SubsystemBase {
       return false;
     }
 
-    public void setManualControl(){
-        manualControl = true;
-    }
-
-    public void setAutoControl(){
-        manualControl = false;
-    }
-
     public void setManualExtendVoltage(double voltage){
-        liftExtend.setVoltage(voltage);
+        manualExtendVoltage = voltage;
     }
     public void setManualRotateVoltage(double voltage){
-        liftRotate.setVoltage(voltage);
-  }
+        manualRotateVoltage = voltage;
+    }
 
     @Override
     public void periodic() {
@@ -186,7 +178,7 @@ public class Lift extends SubsystemBase {
           liftExtendEncoder.setPosition(0.0);
         }
         */
-        if(!manualControl){
+        if(RobotContainer.modeSelector.getSelected() == "Auto"){
             liftExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
             liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
             liftRotate.enableSoftLimit(SoftLimitDirection.kForward, true);
@@ -207,6 +199,8 @@ public class Lift extends SubsystemBase {
             
         }
         else{
+            liftExtend.setVoltage(manualExtendVoltage);
+            liftRotate.setVoltage(manualRotateVoltage);
             liftExtend.enableSoftLimit(SoftLimitDirection.kForward, false);
             liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, false);
             liftRotate.enableSoftLimit(SoftLimitDirection.kForward, false);

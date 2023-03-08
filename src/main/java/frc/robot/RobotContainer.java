@@ -36,6 +36,7 @@ import frc.robot.commands.Swerve.TeleopSwerve;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -70,30 +71,22 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driveController, XboxController.Button.kY.value);
-    private final JoystickButton robotCentric = new JoystickButton(driveController, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton intakelessToggle = new JoystickButton(driveController, XboxController.Button.kRightBumper.value);
+    private final JoystickButton driverY_Button = new JoystickButton(driveController, XboxController.Button.kY.value);
+    private final JoystickButton driverLB_Button = new JoystickButton(driveController, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton driverRB_Button = new JoystickButton(driveController, XboxController.Button.kRightBumper.value);
 
     /* Operator Buttons */
-    private final JoystickButton conveyorManualForward = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton intakeManualRetract = new JoystickButton(driveController, XboxController.Button.kY.value);
-    private final JoystickButton intakeManualExtend = new JoystickButton(driveController, XboxController.Button.kA.value);
-    private final JoystickButton SetLiftPosition0 = new JoystickButton(operatorController, XboxController.Button.kA.value);
-    private final JoystickButton SetLiftPosition1 = new JoystickButton(operatorController, XboxController.Button.kX.value);
-    private final JoystickButton SetLiftPosition2 = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
-    private final JoystickButton GrabberDropCube = new JoystickButton(operatorController, XboxController.Axis.kRightTrigger.value);
-    private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
-
-    //Manual buttons//
-    private final JoystickButton ManualLiftRotateUp = new JoystickButton(operatorController, XboxController.Button.kY.value);
-    private final JoystickButton ManualLiftExtendOut = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    private final JoystickButton ManualLiftRetractIn = new JoystickButton(operatorController, XboxController.Button.kX.value);
-    private final JoystickButton ManualLiftrotateDown = new JoystickButton(operatorController, XboxController.Button.kA.value);
-    private final JoystickButton ManualOpenGrabber = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton ManualCloseGrabber = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+    //private final JoystickButton conveyorManualForward = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    //private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton operatorLB_Button = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
+    //private final JoystickButton intakeManualRetract = new JoystickButton(driveController, XboxController.Button.kY.value);
+    //private final JoystickButton intakeManualExtend = new JoystickButton(driveController, XboxController.Button.kA.value);
+    private final JoystickButton operatorA_Button = new JoystickButton(operatorController, XboxController.Button.kA.value);
+    private final JoystickButton operatorX_Button = new JoystickButton(operatorController, XboxController.Button.kX.value);
+    private final JoystickButton operatorB_Button = new JoystickButton(operatorController, XboxController.Button.kB.value);
+    private final JoystickButton operatorY_Button = new JoystickButton(operatorController, XboxController.Button.kY.value);
+    private final JoystickButton operatorRT_Button = new JoystickButton(operatorController, XboxController.Axis.kRightTrigger.value);
+    private final JoystickButton operatorRB_Button = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -112,12 +105,13 @@ public class RobotContainer {
     private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
-    private final SendableChooser<String> modeSelector = new SendableChooser<String>();
+    public static final SendableChooser<String> modeSelector = new SendableChooser<String>();
 
-    private String controlMode = "Auto";
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+
+        CameraServer.startAutomaticCapture();
 
         //SET DEFAULT COMMANDS  
         s_Swerve.setDefaultCommand(
@@ -126,7 +120,7 @@ public class RobotContainer {
                 () -> -driveController.getRawAxis(translationAxis), 
                 () -> -driveController.getRawAxis(strafeAxis), 
                 () -> -driveController.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
+                () -> driverLB_Button.getAsBoolean()
             )
         );
 
@@ -163,67 +157,28 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        driverY_Button.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
-        controlMode = modeSelector.getSelected();
-        switch(controlMode){
-            case "Auto":
-                s_Lift.setAutoControl();
-                s_Grabber.setAutoControl();
-                intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
-                intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
-                SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
-                SetLiftPosition1.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition1(s_Lift)));
-                SetLiftPosition2.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition2(s_Lift)));
-                SetLiftPosition3.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition3(s_Lift)));
-                //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
-                GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
-            break;
-            case "Intakeless":
-                SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
-                SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
-                SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
-                SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
-                intakeRun.onTrue(new SetPositionIntake(s_Lift));
+        //operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
+        operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
+        operatorY_Button.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
+        operatorX_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition1(s_Lift)));
+        operatorB_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition2(s_Lift)));
+        operatorA_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition3(s_Lift)));
+        //operatorRB_Button.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+        operatorRT_Button.onTrue(new OpenGrabber(s_Grabber));
 
-                GrabberDropCube.toggleOnTrue(new OpenGrabber(s_Grabber));
-                GrabberDropCube.toggleOnFalse(new CloseGrabber(s_Grabber));
-                //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.get()));
-            break;
-            case "Manual":
-                s_Lift.setManualControl();
-                s_Grabber.setAutoControl();
-                ManualLiftExtendOut.onTrue(new InstantCommand(() -> {s_Lift.setManualExtendVoltage(Constants.LIFT_EXTEND_FORWARD_SPEED_VOLTS_);}));
-                ManualLiftRetractIn.onTrue(new InstantCommand(() -> {s_Lift.setManualExtendVoltage(Constants.LIFT_EXTEND_REVERSE_SPEED_VOLTS);}));
-                ManualLiftRotateUp.onTrue(new InstantCommand(() -> {s_Lift.setManualRotateVoltage(Constants.LIFT_ROTATE_FORWARD_SPEED_VOLTS);}));
-                ManualLiftrotateDown.onTrue(new InstantCommand(() -> {s_Lift.setManualRotateVoltage(Constants.LIFT_ROTATE_REVERSE_SPEED_VOLTS);}));
-                ManualOpenGrabber.onTrue(new InstantCommand(() -> {s_Grabber.grabberManual(Constants.GRABBER_FORWARD_SPEED_VOLTS);}));
-                ManualOpenGrabber.onTrue(new InstantCommand(() -> {s_Grabber.grabberManual(Constants.GRABBER_REVERSE_SPEED_VOLTS);}));
-            break;
-            default:
+        //Manual Buttons
 
-            break;
-        }
         
-        //Special Conditional Commands
-
-        /*
-        if(!s_Intake.isIntakeRetracted()){
-            s_Lift.run(() -> new SetPosition0(s_Lift));
-        }
-
-        if(!s_Lift.isLiftRetracted()){
-            s_Intake.run(() -> new RetractIntake(s_Intake));
-        }
-        */
     }
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-      return autonomousSelector.getSelected();
-  }
+    public Command getAutonomousCommand() {
+        // An example command will be run in autonomous
+        return autonomousSelector.getSelected();
+    }
 
-  public void putDashboard(){
-      SmartDashboard.putData("Autonomous Mode", autonomousSelector);
-        SmartDashboard.putString("Control Mode", controlMode);
+    public void putDashboard(){
+        SmartDashboard.putData("Autonomous Mode", autonomousSelector);
+        SmartDashboard.putData("Control Mode", modeSelector);
     }
 }
