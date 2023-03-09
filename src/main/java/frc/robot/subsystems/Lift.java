@@ -69,6 +69,7 @@ public class Lift extends SubsystemBase {
       liftRotate.enableSoftLimit(SoftLimitDirection.kReverse, true);
       liftExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
       liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
+      
       liftExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.LIFT_EXTEND_FORWARD_LIMIT);
       liftExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.LIFT_EXTEND_REVERSE_LIMIT);
       liftRotate.setSoftLimit(SoftLimitDirection.kForward, Constants.LIFT_ROTATE_FORWARD_LIMIT);
@@ -114,7 +115,7 @@ public class Lift extends SubsystemBase {
       liftExtendController.setOutputRange(extend_kMinOutput, extend_kMaxOutput);
 
       rotatePositionEntry = Constants.liftDebugTab.add("Lift Rotate Current Position", 0).getEntry();
-      extendPositionEntry = Constants.liftDebugTab.add("Extend Rotate Current Position", 0).getEntry();
+      extendPositionEntry = Constants.liftDebugTab.add("Lift Extend Current Position", 0).getEntry();
       rotateSetPointEntry = Constants.liftDebugTab.add("Lift Rotate Set Point", 0).getEntry();
       extendSetPointEntry = Constants.liftDebugTab.add("Lift Extend Set Point", 0).getEntry();
 
@@ -142,7 +143,7 @@ public class Lift extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftRotatePosition()) < 1.0){
+      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftExtendPosition()) < 1.0){
           return true;
       }
       return false;
@@ -179,6 +180,7 @@ public class Lift extends SubsystemBase {
         }
         */
         if(RobotContainer.modeSelector.getSelected() == "Auto"){
+          System.out.println(rotateSetpoint + " | " + extendSetpoint +  " | " + liftExtend.getSoftLimit(SoftLimitDirection.kForward) + liftExtend.getSoftLimit(SoftLimitDirection.kReverse));
             liftExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
             liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
             liftRotate.enableSoftLimit(SoftLimitDirection.kForward, true);

@@ -12,7 +12,6 @@ import frc.robot.subsystems.Lift;
 public class SetPosition0 extends CommandBase {
 
   private Lift s_Lift;
-  private Grabber s_Grabber;
   /** Creates a new SetPosition3. */
   public SetPosition0(Lift s_Lift) {
     this.s_Lift = s_Lift;
