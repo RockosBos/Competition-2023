@@ -161,7 +161,7 @@ public class Lift extends SubsystemBase {
     }
 
     public boolean atRotateSetpoint(){
-      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0){
+      if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 3.0){
           return true;
       }
       return false;

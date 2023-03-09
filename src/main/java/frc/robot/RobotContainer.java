@@ -155,14 +155,14 @@ public class RobotContainer {
         if(!intakeLess){
             //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
             //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-            intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
+            //intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
             intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
             //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
             //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
             SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
-            SetLiftPosition1.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition1(s_Lift)));
-            SetLiftPosition2.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition2(s_Lift)));
-            SetLiftPosition3.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition3(s_Lift)));
+            SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
+            SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
+            SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
             //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
             GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         }

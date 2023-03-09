@@ -38,7 +38,7 @@ public final class Constants {
     public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -0.5;
     public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
     public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
-    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -0.9;
+    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -1.0;
     public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * 0.2;
     public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * 0.2;
 
@@ -48,17 +48,17 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
     public static final double LIFT_EXTEND_POSITION_1 = 70.0; //Level 1 Scoring Position
     public static final double LIFT_ROTATE_POSITION_1 = 30.0;
-    public static final double LIFT_EXTEND_POSITION_2 = 130.0; //Level 2 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_2 = 130.0;
+    public static final double LIFT_EXTEND_POSITION_2 = 100.0; //Level 2 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_2 = 110.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_3 = 140.0;
+    public static final double LIFT_ROTATE_POSITION_3 = 120.0;
     public static final double LIFT_EXTEND_POSITION_INTAKE = 120.0; //Intake Position
     public static final double LIFT_ROTATE_POSITION_INTAKE = 0.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 17.0;
+    public static final double GRABBER_CLOSED_POSITION = 14.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     

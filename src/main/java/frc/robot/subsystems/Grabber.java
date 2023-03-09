@@ -75,7 +75,7 @@ public class Grabber extends SubsystemBase {
   }
 
   public boolean atSetpoint(){
-    if(Math.abs(rotations - this.grabberMotor.getEncoder().getPosition()) < 1.0){
+    if(Math.abs(rotations - this.grabberMotor.getEncoder().getPosition()) < 4.0){
         return true;
     }
     return false;

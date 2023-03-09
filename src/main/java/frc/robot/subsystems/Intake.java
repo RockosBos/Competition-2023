@@ -75,7 +75,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void SetIntakeExtension(double voltage){
-      intakeExtend.setVoltage(voltage);
+      //intakeExtend.setVoltage(voltage);
   }
 
   public void SetIntakeExtensionManual(double voltage){
@@ -93,7 +93,7 @@ public class Intake extends SubsystemBase {
       //intakeExtend.getEncoder().setPosition(0.0);
     }
 
-    extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
+    //extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
     intakeZeroLimitEntry.setBoolean(intakeZeroLimit.get());
 
   }
