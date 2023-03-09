@@ -2,21 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake;
+package frc.robot.commands.Grabber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Grabber;
 
-public class ExtendIntake extends CommandBase {
-  /** Creates a new ExtendIntake. */
-  private Intake s_Intake;
-  private boolean liftExtended;
-
-  public ExtendIntake(Intake s_Intake, boolean liftExtended) {
-    this.s_Intake = s_Intake;
-    this.liftExtended = liftExtended;
-    addRequirements(this.s_Intake);
+public class AutoCloseGrabber extends CommandBase {
+  Grabber s_Grabber;
+  public AutoCloseGrabber(Grabber s_Grabber) {
+    this.s_Grabber = s_Grabber;
+    addRequirements(s_Grabber);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -27,10 +23,7 @@ public class ExtendIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!liftExtended){
-      this.s_Intake.SetIntakeExtension(Constants.INTAKE_EXTENTION_SPEED_VOLTS);
-    }
-    this.s_Intake.SetIntakeRollers(Constants.INTAKE_ROLLER_SPEED_VOLTS);
+      this.s_Grabber.setPosition(Constants.GRABBER_CLOSED_POSITION);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,7 +33,6 @@ public class ExtendIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return this.s_Grabber.atSetpoint();
   }
 }
-

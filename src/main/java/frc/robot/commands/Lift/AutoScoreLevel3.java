@@ -2,22 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake;
+package frc.robot.commands.Lift;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lift;
 
-public class ExtendIntake extends CommandBase {
-  /** Creates a new ExtendIntake. */
-  private Intake s_Intake;
-  private boolean liftExtended;
-
-  public ExtendIntake(Intake s_Intake, boolean liftExtended) {
-    this.s_Intake = s_Intake;
-    this.liftExtended = liftExtended;
-    addRequirements(this.s_Intake);
-    // Use addRequirements() here to declare subsystem dependencies.
+public class AutoScoreLevel3 extends CommandBase {
+  
+  private Lift s_Lift;
+  /** Creates a new AutoScoreLevel3. */
+  public AutoScoreLevel3(Lift s_Lift) {
+      this.s_Lift = s_Lift;
+      addRequirements(this.s_Lift);
   }
 
   // Called when the command is initially scheduled.
@@ -27,10 +24,7 @@ public class ExtendIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!liftExtended){
-      this.s_Intake.SetIntakeExtension(Constants.INTAKE_EXTENTION_SPEED_VOLTS);
-    }
-    this.s_Intake.SetIntakeRollers(Constants.INTAKE_ROLLER_SPEED_VOLTS);
+      s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_ROTATE_POSITION_3);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,7 +34,6 @@ public class ExtendIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return s_Lift.atSetpoint();
   }
 }
-

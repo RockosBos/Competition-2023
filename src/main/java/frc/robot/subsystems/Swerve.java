@@ -9,8 +9,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import static com.pathplanner.lib.PathPlannerTrajectory.transformStateForAlliance;
+
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -18,12 +22,17 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,6 +40,12 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+
+    public final GenericEntry poseXEntry;
+    public final GenericEntry poseYEntry;
+    public final GenericEntry angleEntry;
+    public final GenericEntry pitchEntry;
+    public final GenericEntry rollEntry;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
@@ -45,6 +60,14 @@ public class Swerve extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
+
+        poseXEntry = Constants.swerveDebugTab.add("Pose X", 0).getEntry();
+        poseYEntry = Constants.swerveDebugTab.add("Pose Y", 0).getEntry();
+        angleEntry = Constants.swerveDebugTab.add("Angle", 0).getEntry();
+        pitchEntry = Constants.swerveDebugTab.add("Pitch", 0).getEntry();
+        rollEntry = Constants.swerveDebugTab.add("Roll", 0).getEntry();
+
+        
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -109,11 +132,30 @@ public class Swerve extends SubsystemBase {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
 
+    public double getRoll(){
+        return gyro.getRoll();
+    }
+
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
 
+        DriverStation.refreshData();
+        //PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
+        //PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+
+        PathPlannerState myState =  PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), DriverStation.getAlliance());
+        PathPlannerTrajectory myTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+
         return new SequentialCommandGroup(
-             new PPSwerveControllerCommand(
-                 traj, 
+            
+            new InstantCommand(() -> {
+                
+                if(isFirstPath){
+                    this.resetOdometry(myState.poseMeters);
+                    //this.resetOdometry(traj.getInitialHolonomicPose());
+                }
+            }),
+            new PPSwerveControllerCommand(
+                 myTraj, 
                  this::getPose, // Pose supplier
                  Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
                  new PIDController(AutoConstants.kPXController, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
@@ -133,15 +175,10 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
 
-        for(SwerveModule mod : mSwerveMods){
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            Constants.swerveDebugTab.add("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        }
-
-        Constants.swerveDebugTab.add("Pose X", getPose().getX());
-        Constants.swerveDebugTab.add("Pose Y", getPose().getY());
-        Constants.swerveDebugTab.add("Angle", getYaw().getDegrees());
-
+        poseXEntry.setDouble(getPose().getX());
+        poseYEntry.setDouble(getPose().getY());
+        angleEntry.setDouble(getYaw().getDegrees());
+        pitchEntry.setDouble(gyro.getPitch());
+        rollEntry.setDouble(gyro.getRoll());
     }
 }

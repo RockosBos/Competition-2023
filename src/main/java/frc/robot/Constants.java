@@ -14,33 +14,53 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+    public static final double MAX_VOLTS = 12.0;
 
     //Motor ID's
 
     public static final int conveyorID = 15;
-    public static final int intakeRollerID = 16;
-    public static final int intakeExtendID = 17;
-    public static final int liftRotateID = 18;
+    public static final int intakeRollerTopID = 16;
+    public static final int liftRotateID = 17;
+    public static final int intakeExtendID = 18;
     public static final int liftExtendID = 19;
     public static final int grabberID = 20;
-    public static final int extraMotor1ID = 21;
-    public static final int extraMotor2ID = 22;
+    public static final int intakeRollerBottomID = 21;
 
     //Sensor ID's
 
-    public static final int conveyorFrontPhotoEyeID = 0;
-    public static final int conveyorBackPhotoEyeID = 1;
-    public static final int intakeExtendLimitID = 2;
-    public static final int intakeRetractLimitID = 3;
-    public static final int liftZeroPositionLimitID = 4;
+    public static final int conveyorPhotoEyeID = 0;
+    public static final int intakeZeroLimitID = 1;
+    public static final int liftZeroPositionLimitID = 3;
 
     //Speeds
 
-    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = 5.0;
-    public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = -5.0;
-    public static final double INTAKE_EXTENTION_SPEED = 3.0;
-    public static final double INTAKE_RETRACTION_SPEED = -3.0;
-    public static final double INTAKE_ROLLER_SPEED = 6.0;
+    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 0.5;
+    public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -0.5;
+    public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
+    public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
+    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -1.0;
+    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * 0.2;
+    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * 0.2;
+
+    //Motor Position
+
+    public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
+    public static final double LIFT_ROTATE_POSITION_0 = 0.0;
+    public static final double LIFT_EXTEND_POSITION_1 = 70.0; //Level 1 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_1 = 30.0;
+    public static final double LIFT_EXTEND_POSITION_2 = 100.0; //Level 2 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_2 = 110.0;
+    public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_3 = 120.0;
+    public static final double LIFT_EXTEND_POSITION_INTAKE = 120.0; //Intake Position
+    public static final double LIFT_ROTATE_POSITION_INTAKE = 0.0;
+    public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
+    public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
+
+    public static final double GRABBER_OPEN_POSITION = 0.0;
+    public static final double GRABBER_CLOSED_POSITION = 14.0;
+
+    public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     
 
     //Ramp Rates
@@ -55,12 +75,25 @@ public final class Constants {
     public static final double INTAKE_EXTEND_MAX_CURRENT = 40.0;
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
+    //Software Limits
+
+    public static final float GRABBER_FORWARD_LIMIT = 15.0f;
+    public static final float GRABBER_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_EXTEND_FORWARD_LIMIT = 150.0f;
+    public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_ROTATE_FORWARD_LIMIT = 200.0f;
+    public static final float LIFT_ROTATE_REVERSE_LIMIT = 0.0f;
+    public static final float INTAKE_EXTEND_FORWARD_LIMIT = 97.0f;
+    public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
+
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
     public static final ShuffleboardTab conveyorDebugTab = Shuffleboard.getTab("Conveyor Debug");
     public static final ShuffleboardTab intakeDebugTab = Shuffleboard.getTab("Intake Debug");
     public static final ShuffleboardTab liftDebugTab = Shuffleboard.getTab("Lift Debug");
     public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
+    public static final ShuffleboardTab limelightDebugTab = Shuffleboard.getTab("Limelight Debug");
+    public static final ShuffleboardTab pidConfigTab = Shuffleboard.getTab("PID Config");
 
     public static final class Swerve {
         public static final int pigeonID = 14;
@@ -142,37 +175,37 @@ public final class Constants {
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 6;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(273.3);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(270.3); //273.3
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
         public static final class FrontRightMod { 
-            public static final int driveMotorID = 8;
-            public static final int angleMotorID = 10;
-            public static final int canCoderID = 9;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(3.7);
+            public static final int driveMotorID = 11;
+            public static final int angleMotorID = 13;
+            public static final int canCoderID = 12;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(167.7);   //3.7
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
         /* Back Left Module - Module 2 */
         public static final class BackLeftMod { 
-            public static final int driveMotorID = 2;
-            public static final int angleMotorID = 4;
-            public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(329.7);
+            public static final int driveMotorID = 8;
+            public static final int angleMotorID = 10;
+            public static final int canCoderID = 9;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(183.0); //329.7
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Back Right Module - Module 3 */
         public static final class BackRightMod { 
-            public static final int driveMotorID = 11;
-            public static final int angleMotorID = 13;
-            public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(258.5);
+            public static final int driveMotorID = 2;
+            public static final int angleMotorID = 4;
+            public static final int canCoderID = 3;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(241.0); //258.5
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }

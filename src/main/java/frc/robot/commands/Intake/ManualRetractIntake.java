@@ -8,16 +8,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
-public class ExtendIntake extends CommandBase {
-  /** Creates a new ExtendIntake. */
+public class ManualRetractIntake extends CommandBase {
+
   private Intake s_Intake;
   private boolean liftExtended;
 
-  public ExtendIntake(Intake s_Intake, boolean liftExtended) {
+  public ManualRetractIntake(Intake s_Intake, boolean liftExtended) {
     this.s_Intake = s_Intake;
     this.liftExtended = liftExtended;
     addRequirements(this.s_Intake);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -28,9 +27,8 @@ public class ExtendIntake extends CommandBase {
   @Override
   public void execute() {
     if(!liftExtended){
-      this.s_Intake.SetIntakeExtension(Constants.INTAKE_EXTENTION_SPEED_VOLTS);
+        this.s_Intake.SetIntakeExtensionManual(Constants.INTAKE_RETRACTION_SPEED_VOLTS);
     }
-    this.s_Intake.SetIntakeRollers(Constants.INTAKE_ROLLER_SPEED_VOLTS);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,4 +41,3 @@ public class ExtendIntake extends CommandBase {
     return false;
   }
 }
-
