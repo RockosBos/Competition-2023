@@ -90,7 +90,13 @@ public class Grabber extends SubsystemBase {
     if(RobotContainer.modeSelector.getSelected() == "Auto"){
       grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
       grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-      m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+      /*if(RobotContainer.photoEye.get() && rotations == Constants.GRABBER_OPEN_POSITION){
+          m_pidController.setReference(Constants.GRABBER_CLOSED_POSITION, CANSparkMax.ControlType.kPosition);
+      }
+      else{*/
+          m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+      //}
+      
     }
     else{
       grabberMotor.setVoltage(grabberVoltage);
@@ -98,8 +104,8 @@ public class Grabber extends SubsystemBase {
       grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     }
     
-     setPoint.setDouble(rotations);
-     rotationEntry.setDouble(m_encoder.getPosition());
+    setPoint.setDouble(rotations);
+    rotationEntry.setDouble(m_encoder.getPosition());
 
   }
 }

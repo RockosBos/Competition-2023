@@ -163,16 +163,17 @@ public class RobotContainer {
 
         //operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
         operatorLB_Button.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new ConveyorOn(s_Conveyor)));
-        operatorY_Button.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
-        operatorX_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition1(s_Lift)));
-        operatorB_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition2(s_Lift)));
-        operatorA_Button.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition3(s_Lift)));
+        operatorA_Button.onTrue(new ParallelCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
+        operatorX_Button.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
+        operatorB_Button.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
+        operatorY_Button.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
         //operatorRB_Button.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
         operatorRT_Button.onTrue(new OpenGrabber(s_Grabber));
 
         //Manual Buttons
 
         //operatorLB_Button.onTrue();
+        /*
         operatorY_Button.onTrue(new InstantCommand(() -> s_Lift.setManualRotateVoltage(Constants.LIFT_ROTATE_FORWARD_SPEED_VOLTS)));
         operatorY_Button.onFalse(new InstantCommand(() -> s_Lift.setManualRotateVoltage(0.0)));
         operatorA_Button.onTrue(new InstantCommand(() -> s_Lift.setManualRotateVoltage(Constants.LIFT_ROTATE_REVERSE_SPEED_VOLTS)));
@@ -185,7 +186,7 @@ public class RobotContainer {
         operatorRB_Button.onFalse(new InstantCommand(() -> s_Grabber.grabberManual(0.0)));
         operatorRT_Button.onTrue(new InstantCommand(() -> s_Grabber.grabberManual(Constants.GRABBER_REVERSE_SPEED_VOLTS)));
         operatorRT_Button.onFalse(new InstantCommand(() -> s_Grabber.grabberManual(0.0)));
-        
+        */
     }
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous

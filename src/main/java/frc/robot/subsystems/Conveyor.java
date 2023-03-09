@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 //This class will control the conveyor belt that serves the purpose of positioning cubes and cones so that they can be grabbed by the lift.
 
@@ -41,10 +42,8 @@ import frc.robot.Constants;
 
 public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
-    private DigitalInput conveyorSensor = new DigitalInput(Constants.conveyorPhotoEyeID);
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean runConveyor = false;
-    private GenericEntry sensorEntry;
 
     private boolean errorFlag;
     private String errorMessage;
@@ -54,12 +53,10 @@ public class Conveyor extends SubsystemBase {
         conveyorMotor.clearFaults();
         conveyorMotor.restoreFactoryDefaults();
         conveyorMotor.setOpenLoopRampRate(Constants.CONVEYOR_RAMP_RATE);
-
-        sensorEntry = Constants.conveyorDebugTab.add("Intake Sensor", conveyorSensor.get()).getEntry();
     }
 
     public void setConveyor(double voltage){
-        if(!conveyorSensor.get()){
+        if(!RobotContainer.photoEye.get()){
             conveyorMotor.setVoltage(voltage);
         }
         else{
@@ -82,7 +79,7 @@ public class Conveyor extends SubsystemBase {
     }
 
     public boolean getSensor(){
-        return this.conveyorSensor.get();
+        return RobotContainer.photoEye.get();
     }
 
     public void clearErrors(){
@@ -98,8 +95,6 @@ public class Conveyor extends SubsystemBase {
         else{
             conveyorMotor.stopMotor();
         }
-
-        sensorEntry.setBoolean(conveyorSensor.get());
 
         if(errorFlag){
             System.out.println(errorMessage);
