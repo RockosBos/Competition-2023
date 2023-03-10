@@ -37,6 +37,7 @@ import frc.robot.commands.Swerve.TeleopSwerve;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -105,12 +106,13 @@ public class RobotContainer {
     private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
+    private final SendableChooser<String> modeSelector = new SendableChooser<String>();
 
-    private boolean intakeLess = false;
 
     private SlewRateLimiter translationLimiter = new SlewRateLimiter(0.5);
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
     private SlewRateLimiter rotationLimiter = new SlewRateLimiter(0.5);
+
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -159,8 +161,7 @@ public class RobotContainer {
         
         //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
-        intakeRun.onFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
+        intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
         //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
         //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));

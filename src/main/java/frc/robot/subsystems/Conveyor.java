@@ -41,10 +41,9 @@ import frc.robot.Constants;
 
 public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
-    private DigitalInput conveyorSensor = new DigitalInput(Constants.conveyorPhotoEyeID);
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean runConveyor = false;
-    private GenericEntry sensorEntry;
+    private GenericEntry sensorEntry1, sensorEntry2;
 
     private boolean errorFlag;
     private String errorMessage;
@@ -55,11 +54,12 @@ public class Conveyor extends SubsystemBase {
         conveyorMotor.restoreFactoryDefaults();
         conveyorMotor.setOpenLoopRampRate(Constants.CONVEYOR_RAMP_RATE);
 
-        sensorEntry = Constants.conveyorDebugTab.add("Intake Sensor", conveyorSensor.get()).getEntry();
+        sensorEntry1 = Constants.conveyorDebugTab.add("Photoeye 1", Constants.Sensors.photoeye1.get()).getEntry();
+        sensorEntry2 = Constants.conveyorDebugTab.add("Photoeye 2", Constants.Sensors.photoeye2.get()).getEntry();
     }
 
     public void setConveyor(double voltage){
-        if(!conveyorSensor.get()){
+        if(!Constants.Sensors.photoeye1.get()){
             conveyorMotor.setVoltage(voltage);
         }
         else{
@@ -82,7 +82,7 @@ public class Conveyor extends SubsystemBase {
     }
 
     public boolean getSensor(){
-        return this.conveyorSensor.get();
+        return Constants.Sensors.photoeye1.get();
     }
 
     public void clearErrors(){
@@ -99,7 +99,8 @@ public class Conveyor extends SubsystemBase {
             conveyorMotor.stopMotor();
         }
 
-        sensorEntry.setBoolean(conveyorSensor.get());
+        sensorEntry1.setBoolean(Constants.Sensors.photoeye1.get());
+        sensorEntry2.setBoolean(Constants.Sensors.photoeye2.get());
 
         if(errorFlag){
             System.out.println(errorMessage);

@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -45,12 +46,13 @@ public class Intake extends SubsystemBase {
   private CANSparkMax intakeExtend = new CANSparkMax(Constants.intakeExtendID, MotorType.kBrushless);
   private CANSparkMax intakeRollerTop = new CANSparkMax(Constants.intakeRollerTopID, MotorType.kBrushless);
   private CANSparkMax IntakeRollerBottom = new CANSparkMax(Constants.intakeRollerBottomID,MotorType.kBrushless);
-  private DigitalInput intakeZeroLimit = new DigitalInput(Constants.intakeZeroLimitID);
   private GenericEntry extensionPositionEntry, intakeZeroLimitEntry;
 
   private SparkMaxPIDController m_pidController = intakeExtend.getPIDController();
   private RelativeEncoder m_encoder = intakeExtend.getEncoder();
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, pos;
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, pos;
+  private Timer intakeDelayTimer;
+  
 
   public Intake() {
     intakeExtend.clearFaults();
@@ -72,6 +74,8 @@ public class Intake extends SubsystemBase {
     IntakeRollerBottom.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
     IntakeRollerBottom.follow(intakeRollerTop);
 
+    intakeDelayTimer.start();
+
     // PID coefficients
     kP = 1; 
     kI = 0;
@@ -91,7 +95,7 @@ public class Intake extends SubsystemBase {
     
 
     extensionPositionEntry = Constants.intakeDebugTab.add("Extension Rotate Position", 0).getEntry();
-    intakeZeroLimitEntry = Constants.intakeDebugTab.add("Intake Zero Limit", intakeZeroLimit.get()).getEntry();
+    //intakeZeroLimitEntry = Constants.intakeDebugTab.add("Intake Zero Limit", intakeZeroLimit.get()).getEntry();
 
     pos = 0.0;
   } 
@@ -109,20 +113,21 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean isIntakeRetracted(){
-    return intakeZeroLimit.get();
+    //return intakeZeroLimit.get();
+    return true;
   }
 
   @Override
   public void periodic() {
 
-    if(intakeZeroLimit.get()){
+    //if(intakeZeroLimit.get()){
       //intakeExtend.getEncoder().setPosition(0.0);
-    }
+    //}
 
     m_pidController.setReference(pos, CANSparkMax.ControlType.kPosition);
 
     extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
-    intakeZeroLimitEntry.setBoolean(intakeZeroLimit.get());
+    //intakeZeroLimitEntry.setBoolean(intakeZeroLimit.get());
 
   }
 }

@@ -25,14 +25,18 @@ public class RetractIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      
+      timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      s_Intake.SetIntakePosition(Constants.INTAKE_RETRACT_POSITION);
+      if(timer.get() > Constants.INTAKE_DELAY_TIMER){
+        s_Intake.SetIntakePosition(Constants.INTAKE_RETRACT_POSITION);
+      }
+
       s_Intake.SetIntakeRollers(0.0);
+      
   }
 
   // Called once the command ends or is interrupted.

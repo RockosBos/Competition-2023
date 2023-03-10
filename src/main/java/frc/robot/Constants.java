@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.lib.util.COTSFalconSwerveConstants;
@@ -28,9 +29,12 @@ public final class Constants {
 
     //Sensor ID's
 
-    public static final int conveyorPhotoEyeID = 0;
-    public static final int intakeZeroLimitID = 1;
-    public static final int liftZeroPositionLimitID = 3;
+    public static final int photoEyeID1 = 0;
+    public static final int photoEyeID2 = 1;
+    public static final int intakeZeroID = 2;
+    public static final int liftRotateZeroID = 3;
+    public static final int liftExtendZeroID = 4;
+    public static final int grabberZeroID = 5;
 
     //Speeds
 
@@ -91,6 +95,11 @@ public final class Constants {
     public static final float INTAKE_EXTEND_FORWARD_LIMIT = 97.0f;
     public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
 
+    //Timers
+
+    public static final double INTAKE_DELAY_TIMER = 1.0;
+    public static final double CONVEYOR_DELAY_TIMER = 1.0;
+
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
     public static final ShuffleboardTab conveyorDebugTab = Shuffleboard.getTab("Conveyor Debug");
@@ -99,6 +108,15 @@ public final class Constants {
     public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
     public static final ShuffleboardTab limelightDebugTab = Shuffleboard.getTab("Limelight Debug");
     public static final ShuffleboardTab pidConfigTab = Shuffleboard.getTab("PID Config");
+
+    public static final class Sensors{
+        public static DigitalInput photoeye1 = new DigitalInput(Constants.photoEyeID1);
+        public static DigitalInput photoeye2 = new DigitalInput(Constants.photoEyeID2);
+        public static DigitalInput intakeZero = new DigitalInput(Constants.intakeZeroID);
+        public static DigitalInput liftRotateZero = new DigitalInput(Constants.liftRotateZeroID);
+        public static DigitalInput liftExtendZero = new DigitalInput(Constants.liftExtendZeroID);
+        public static DigitalInput grabberZero = new DigitalInput(Constants.grabberZeroID);
+    }
 
     public static final class Swerve {
         public static final int pigeonID = 14;
