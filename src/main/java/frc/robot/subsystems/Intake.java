@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -46,14 +48,18 @@ public class Intake extends SubsystemBase {
   private DigitalInput intakeZeroLimit = new DigitalInput(Constants.intakeZeroLimitID);
   private GenericEntry extensionPositionEntry, intakeZeroLimitEntry;
 
+  private SparkMaxPIDController m_pidController = intakeExtend.getPIDController();
+  private RelativeEncoder m_encoder = intakeExtend.getEncoder();
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, pos;
+
   public Intake() {
     intakeExtend.clearFaults();
     intakeExtend.restoreFactoryDefaults();
     intakeExtend.setOpenLoopRampRate(Constants.INTAKE_EXTEND_RAMP_RATE);
     intakeExtend.enableSoftLimit(SoftLimitDirection.kForward, true);
     intakeExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_EXTEND_FORWARD_LIMIT);
-    intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_EXTEND_REVERSE_LIMIT);
+    intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_FORWARD_LIMIT);
+    intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_REVERSE_LIMIT);
     intakeExtend.setInverted(true);
 
     intakeRollerTop.clearFaults();
@@ -66,16 +72,36 @@ public class Intake extends SubsystemBase {
     IntakeRollerBottom.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
     IntakeRollerBottom.follow(intakeRollerTop);
 
+    // PID coefficients
+    kP = 1; 
+    kI = 0;
+    kD = 0; 
+    kIz = 0; 
+    kFF = 0; 
+    kMaxOutput = 0.5; 
+    kMinOutput = -0.5;
+
+    // set PID coefficients
+    m_pidController.setP(kP);
+    m_pidController.setI(kI);
+    m_pidController.setD(kD);
+    m_pidController.setIZone(kIz);
+    m_pidController.setFF(kFF);
+    m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+    
+
     extensionPositionEntry = Constants.intakeDebugTab.add("Extension Rotate Position", 0).getEntry();
     intakeZeroLimitEntry = Constants.intakeDebugTab.add("Intake Zero Limit", intakeZeroLimit.get()).getEntry();
+
+    pos = 0.0;
   } 
 
   public void SetIntakeRollers(double voltage) {
     intakeRollerTop.setVoltage(voltage);
   }
 
-  public void SetIntakeExtension(double voltage){
-      //intakeExtend.setVoltage(voltage);
+  public void SetIntakePosition(double pos){
+      this.pos = pos;
   }
 
   public void SetIntakeExtensionManual(double voltage){
@@ -93,7 +119,9 @@ public class Intake extends SubsystemBase {
       //intakeExtend.getEncoder().setPosition(0.0);
     }
 
-    //extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
+    m_pidController.setReference(pos, CANSparkMax.ControlType.kPosition);
+
+    extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
     intakeZeroLimitEntry.setBoolean(intakeZeroLimit.get());
 
   }

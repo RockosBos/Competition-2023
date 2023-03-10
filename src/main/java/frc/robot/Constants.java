@@ -43,6 +43,8 @@ public final class Constants {
     public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * 0.2;
 
     //Motor Position
+    public static final double INTAKE_EXTEND_POSITION = 10.0;
+    public static final double INTAKE_RETRACT_POSITION = 0.0;
 
     public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
@@ -76,9 +78,12 @@ public final class Constants {
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
     //Software Limits
+    public static final float INTAKE_FORWARD_LIMIT = 15.0f;
+    public static final float INTAKE_REVERSE_LIMIT = 0.0f;
 
     public static final float GRABBER_FORWARD_LIMIT = 15.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
+    
     public static final float LIFT_EXTEND_FORWARD_LIMIT = 150.0f;
     public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
     public static final float LIFT_ROTATE_FORWARD_LIMIT = 200.0f;

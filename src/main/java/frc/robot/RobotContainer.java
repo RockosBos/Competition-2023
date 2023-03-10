@@ -36,6 +36,7 @@ import frc.robot.commands.Swerve.TeleopSwerve;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -107,6 +108,10 @@ public class RobotContainer {
 
     private boolean intakeLess = false;
 
+    private SlewRateLimiter translationLimiter = new SlewRateLimiter(0.5);
+    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
+    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(0.5);
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
 
@@ -114,15 +119,15 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
-                () -> -driveController.getRawAxis(translationAxis), 
-                () -> -driveController.getRawAxis(strafeAxis), 
-                () -> -driveController.getRawAxis(rotationAxis), 
+                () -> translationLimiter.calculate(-driveController.getRawAxis(translationAxis)), 
+                () -> strafeLimiter.calculate(-driveController.getRawAxis(strafeAxis)), 
+                () -> rotationLimiter.calculate(-driveController.getRawAxis(rotationAxis)), 
                 () -> robotCentric.getAsBoolean()
             )
         );
 
         
-        s_Conveyor.setDefaultCommand(new SetConveyorDefault(s_Conveyor));
+        s_Conveyor.setDefaultCommand(new TurnOffConveyor(s_Conveyor));
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
@@ -152,31 +157,18 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         
-        if(!intakeLess){
-            //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
-            //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-            //intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, s_Lift.isLiftRetracted()), new TurnOnConveyor(s_Conveyor)));
-            intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
-            //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
-            //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
-            SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
-            SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
-            SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
-            SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
-            //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
-            GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
-        }
-        else{
-            SetLiftPosition0.onTrue(new SetPosition0(s_Lift));
-            SetLiftPosition1.onTrue(new SetPosition1(s_Lift));
-            SetLiftPosition2.onTrue(new SetPosition2(s_Lift));
-            SetLiftPosition3.onTrue(new SetPosition3(s_Lift));
-            intakeRun.onTrue(new SetPositionIntake(s_Lift));
-
-            GrabberDropCube.toggleOnTrue(new OpenGrabber(s_Grabber));
-            GrabberDropCube.toggleOnFalse(new CloseGrabber(s_Grabber));
-            //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.get()));
-        }
+        //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
+        //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
+        intakeRun.onTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
+        intakeRun.onFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
+        //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
+        //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
+        SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
+        SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
+        SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
+        SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
+        //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+        GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
         
         
