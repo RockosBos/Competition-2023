@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -25,12 +26,6 @@ public class Grabber extends SubsystemBase {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
   public double rotations = 0;
 
-  GenericEntry pGainEntry = Constants.grabberDebugTab.add("P Gain", 0).getEntry();
-  GenericEntry iGainEntry = Constants.grabberDebugTab.add("I Gain", 0).getEntry();
-  GenericEntry dGainEntry = Constants.grabberDebugTab.add("D Gain", 0).getEntry();
-  GenericEntry iZGainEntry = Constants.grabberDebugTab.add("I Zone", 0).getEntry();
-  GenericEntry maxOGainEntry = Constants.grabberDebugTab.add("Max Output", 0).getEntry();
-  GenericEntry minOGainEntry = Constants.grabberDebugTab.add("Min Output", 0).getEntry();
   GenericEntry setPoint = Constants.grabberDebugTab.add("Set Point", 0).getEntry();
   GenericEntry rotationEntry = Constants.grabberDebugTab.add("Rotations", 0).getEntry();
 
@@ -47,7 +42,7 @@ public class Grabber extends SubsystemBase {
     m_encoder = grabberMotor.getEncoder();
 
     // PID coefficients
-    kP = 0.1; 
+    kP = 1; 
     kI = 0;
     kD = 0; 
     kIz = 0; 
@@ -71,7 +66,7 @@ public class Grabber extends SubsystemBase {
   }
 
   public void grabberManual(double speed){
-     grabberMotor.set(speed);
+     //grabberMotor.set(speed);
   }
 
   public boolean atSetpoint(){
@@ -83,29 +78,9 @@ public class Grabber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*
-    double p = pGainEntry.getDouble(0);
-    double i = iGainEntry.getDouble(0);
-    double d = dGainEntry.getDouble(0);
-    double iz = iZGainEntry.getDouble(0);
-    //double ff = pGainEntry.getDouble(0);
-    double max = maxOGainEntry.getDouble(0);
-    double min = minOGainEntry.getDouble(0);
-    //double rotations = SmartDashboard.getNumber("Set Rotations", 0);
-
-     // if PID coefficients on SmartDashboard have changed, write new values to controller
-     if((p != kP)) { m_pidController.setP(p); kP = p; }
-     if((i != kI)) { m_pidController.setI(i); kI = i; }
-     if((d != kD)) { m_pidController.setD(d); kD = d; }
-     if((iz != kIz)) { m_pidController.setIZone(iz); kIz = iz; }
-     //if((ff != kFF)) { m_pidController.setFF(ff); kFF = ff; }
-     if((max != kMaxOutput) || (min != kMinOutput)) { 
-       m_pidController.setOutputRange(min, max); 
-       kMinOutput = min; kMaxOutput = max; 
-     }
-     */
+  
     
-     m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+     m_pidController.setReference(rotations, ControlType.kPosition);
     
      setPoint.setDouble(rotations);
      rotationEntry.setDouble(m_encoder.getPosition());

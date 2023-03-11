@@ -54,7 +54,7 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
     public static final double LIFT_EXTEND_POSITION_1 = 70.0; //Level 1 Scoring Position
     public static final double LIFT_ROTATE_POSITION_1 = 30.0;
-    public static final double LIFT_EXTEND_POSITION_2 = 100.0; //Level 2 Scoring Position
+    public static final double LIFT_EXTEND_POSITION_2 = 50.0; //Level 2 Scoring Position
     public static final double LIFT_ROTATE_POSITION_2 = 110.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 120.0;
@@ -64,7 +64,7 @@ public final class Constants {
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 20.0;
+    public static final double GRABBER_CLOSED_POSITION = 25.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     
@@ -85,13 +85,13 @@ public final class Constants {
     public static final float INTAKE_FORWARD_LIMIT = 15.0f;
     public static final float INTAKE_REVERSE_LIMIT = 0.0f;
 
-    public static final float GRABBER_FORWARD_LIMIT = 15.0f;
+    public static final float GRABBER_FORWARD_LIMIT = 25.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
     
     public static final float LIFT_EXTEND_FORWARD_LIMIT = 150.0f;
     public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
     public static final float LIFT_ROTATE_FORWARD_LIMIT = 200.0f;
-    public static final float LIFT_ROTATE_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_ROTATE_REVERSE_LIMIT = -10.0f;
     public static final float INTAKE_EXTEND_FORWARD_LIMIT = 97.0f;
     public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
 

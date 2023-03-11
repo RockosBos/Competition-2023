@@ -101,12 +101,6 @@ public class Conveyor extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(runConveyor == true){
-            setConveyor(Constants.CONVEYOR_FORWARD_SPEED_VOLTS);
-        }
-        else{
-            conveyorMotor.stopMotor();
-        }
 
         sensorEntry1.setBoolean(Constants.Sensors.photoeye1.get());
         sensorEntry2.setBoolean(Constants.Sensors.photoeye2.get());

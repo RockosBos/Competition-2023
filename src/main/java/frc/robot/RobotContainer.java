@@ -112,9 +112,9 @@ public class RobotContainer {
     private final SendableChooser<String> modeSelector = new SendableChooser<String>();
 
 
-    private SlewRateLimiter translationLimiter = new SlewRateLimiter(0.5);
-    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
-    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(0.5);
+    private SlewRateLimiter translationLimiter = new SlewRateLimiter(1);
+    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(1);
+    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(1);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -165,6 +165,7 @@ public class RobotContainer {
         //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
         intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
+        intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
         //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
         //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
         SetLiftPosition0.onTrue(new ParallelCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
@@ -174,7 +175,7 @@ public class RobotContainer {
         //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
         GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
-        photoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
+        //photoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
         
         //Special Conditional Commands
 
