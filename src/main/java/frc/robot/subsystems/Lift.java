@@ -235,7 +235,7 @@ public class Lift extends SubsystemBase {
           liftRotate.setSoftLimit(SoftLimitDirection.kReverse, ((float)Constants.LIFT_ROTATE_REVERSE_LIMIT));
         }
         */
-        if(getLiftExtendPosition() < 1.0){
+        if(atExtendSetpoint()){
           liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
         }
         else{

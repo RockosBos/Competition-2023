@@ -64,7 +64,7 @@ public final class Constants {
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 14.0;
+    public static final double GRABBER_CLOSED_POSITION = 20.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     

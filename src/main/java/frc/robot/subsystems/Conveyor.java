@@ -90,6 +90,15 @@ public class Conveyor extends SubsystemBase {
         errorMessage = "";
     }
 
+    public boolean bothEyesBlocked(){
+        if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     @Override
     public void periodic() {
         if(runConveyor == true){

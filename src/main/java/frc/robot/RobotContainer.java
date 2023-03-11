@@ -51,6 +51,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -87,6 +88,8 @@ public class RobotContainer {
     private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
     private final JoystickButton GrabberDropCube = new JoystickButton(operatorController, XboxController.Axis.kRightTrigger.value);
     private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+
+    private final Trigger photoEyesBlocked;
 
 
     /* Subsystems */
@@ -134,7 +137,7 @@ public class RobotContainer {
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
         
-
+        photoEyesBlocked = new Trigger(() -> s_Conveyor.bothEyesBlocked());
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
         autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
@@ -164,14 +167,14 @@ public class RobotContainer {
         intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
         //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
         //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
-        SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
-        SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
-        SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
-        SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
+        SetLiftPosition0.onTrue(new ParallelCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
+        SetLiftPosition1.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
+        SetLiftPosition2.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
+        SetLiftPosition3.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
         //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
         GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
-        
+        photoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
         
         //Special Conditional Commands
 

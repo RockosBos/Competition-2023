@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -51,7 +52,7 @@ public class Intake extends SubsystemBase {
   private SparkMaxPIDController m_pidController = intakeExtend.getPIDController();
   private RelativeEncoder m_encoder = intakeExtend.getEncoder();
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, pos;
-  private Timer intakeDelayTimer;
+  private Timer intakeDelayTimer = new Timer();
   
 
   public Intake() {
@@ -62,7 +63,8 @@ public class Intake extends SubsystemBase {
     intakeExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
     intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_FORWARD_LIMIT);
     intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_REVERSE_LIMIT);
-    intakeExtend.setInverted(true);
+    intakeExtend.setInverted(false);
+    intakeExtend.setIdleMode(IdleMode.kBrake);
 
     intakeRollerTop.clearFaults();
     intakeRollerTop.restoreFactoryDefaults();
