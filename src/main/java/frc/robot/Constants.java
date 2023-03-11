@@ -38,7 +38,7 @@ public final class Constants {
 
     //Speeds
 
-    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 0.5;
+    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 1.0;
     public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -0.5;
     public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
     public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
@@ -54,8 +54,8 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
     public static final double LIFT_EXTEND_POSITION_1 = 70.0; //Level 1 Scoring Position
     public static final double LIFT_ROTATE_POSITION_1 = 30.0;
-    public static final double LIFT_EXTEND_POSITION_2 = 50.0; //Level 2 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_2 = 110.0;
+    public static final double LIFT_EXTEND_POSITION_2 = 30.0; //Level 2 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_2 = 100.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 120.0;
     public static final double LIFT_EXTEND_POSITION_INTAKE = 120.0; //Intake Position

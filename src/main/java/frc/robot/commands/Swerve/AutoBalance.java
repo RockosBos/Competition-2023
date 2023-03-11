@@ -7,6 +7,7 @@ package frc.robot.commands.Swerve;
 import java.lang.Math;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -28,6 +29,8 @@ public class AutoBalance extends CommandBase {
     private double strafe;
     private double rotation;
 
+    private String state;
+
     public AutoBalance(Swerve s_Swerve) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
@@ -38,19 +41,21 @@ public class AutoBalance extends CommandBase {
     public void initialize() {
         timer.start();
         prevRollSample = this.s_Swerve.getRoll();
+        state = "Balanced";
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         roll = this.s_Swerve.getRoll();
+        
         if(timer.get() > 0.5){
             if(timer.get() < 0.75){
                 if(roll > balancedThreshold){
-                    translation = -driveSpeed;
+                    translation = driveSpeed;
                 }
                 else if(roll < -balancedThreshold){
-                    translation = driveSpeed;
+                    translation = -driveSpeed;
                 }
                 else{
                     timer.reset();
@@ -67,9 +72,35 @@ public class AutoBalance extends CommandBase {
         }
 
         prevRollSample = s_Swerve.gyro.getRoll();
+        
 
+        /*
+        if(roll > 9.0){
+            translation = 0.15;
+        }
+        else if(roll > 1.0){
+            translation = 0.09;
+        }
+        else if(roll > -1.0){
+            translation = 0.0;
+        }
+        else if(roll > -9.0){
+            translation = -0.09;
+        }
+        else{
+            translation = 0.15;
+        }
+        */
+        if(DriverStation.getMatchTime() < 0.1){
+            translation = 0.0;
+            strafe = 0.1;
+        }
+        else{
+            strafe = 0;
+        }
+        
         s_Swerve.drive(
-            new Translation2d(translation, strafe).times(Constants.Swerve.maxSpeed),
+            new Translation2d(-translation, strafe).times(Constants.Swerve.maxSpeed),
             rotation * Constants.Swerve.maxAngularVelocity,
             false,
             true

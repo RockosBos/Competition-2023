@@ -52,6 +52,7 @@ public class Conveyor extends SubsystemBase {
     public Conveyor() {
         conveyorMotor.clearFaults();
         conveyorMotor.restoreFactoryDefaults();
+        conveyorMotor.setInverted(true);
         conveyorMotor.setOpenLoopRampRate(Constants.CONVEYOR_RAMP_RATE);
 
         sensorEntry1 = Constants.conveyorDebugTab.add("Photoeye 1", Constants.Sensors.photoeye1.get()).getEntry();
@@ -59,12 +60,12 @@ public class Conveyor extends SubsystemBase {
     }
 
     public void setConveyor(double voltage){
-        if(!Constants.Sensors.photoeye1.get()){
-            conveyorMotor.setVoltage(voltage);
+        if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
+            
+            conveyorMotor.stopMotor();
         }
         else{
-            conveyorMotor.stopMotor();
-            runConveyor = false;
+            conveyorMotor.setVoltage(voltage);
         }
         
     }

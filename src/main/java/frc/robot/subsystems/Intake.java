@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase {
     intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_FORWARD_LIMIT);
     intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_REVERSE_LIMIT);
     intakeExtend.setInverted(false);
-    intakeExtend.setIdleMode(IdleMode.kBrake);
+    //intakeExtend.setIdleMode(IdleMode.kBrake);
 
     intakeRollerTop.clearFaults();
     intakeRollerTop.restoreFactoryDefaults();
