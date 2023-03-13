@@ -24,7 +24,7 @@ public class AutoScoreLevel3 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_ROTATE_POSITION_3);
+      s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_3, Constants.LIFT_EXTEND_POSITION_3);
   }
 
   // Called once the command ends or is interrupted.

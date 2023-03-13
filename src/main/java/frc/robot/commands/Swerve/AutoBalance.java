@@ -7,6 +7,7 @@ package frc.robot.commands.Swerve;
 import java.lang.Math;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -16,7 +17,7 @@ public class AutoBalance extends CommandBase {
   
     private Swerve s_Swerve;
     private double prevRollSample;
-    private double roll;
+    private double roll, prevRoll;
     private double samplePeriod = 0.25;  //Frequency (in seconds) of checking samples
     private double sampleDifferenceThreshold = 1;   //Degree threshold that will determine if charging station is in motion
     private double balancedThreshold = 2;           //Degree threshold for the charge station to be considered threshold
@@ -37,20 +38,22 @@ public class AutoBalance extends CommandBase {
     @Override
     public void initialize() {
         timer.start();
-        prevRollSample = this.s_Swerve.getRoll();
+        prevRoll = this.s_Swerve.getRoll();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         roll = this.s_Swerve.getRoll();
+        
+        /*
         if(timer.get() > 0.5){
             if(timer.get() < 0.75){
                 if(roll > balancedThreshold){
-                    translation = -driveSpeed;
+                    translation = driveSpeed;
                 }
                 else if(roll < -balancedThreshold){
-                    translation = driveSpeed;
+                    translation = -driveSpeed;
                 }
                 else{
                     timer.reset();
@@ -67,9 +70,41 @@ public class AutoBalance extends CommandBase {
         }
 
         prevRollSample = s_Swerve.gyro.getRoll();
+        */
+        if(timer.get() > 0.1){
+            prevRoll = roll;
+            timer.reset();
+        }
 
+        
+        if(roll > 9.0){
+            translation = 0.12;
+        }
+        else if(roll < -9.0){
+            translation = -0.12;
+        }
+        else{
+            translation = 0.0;
+        }
+        /* 
+        if(this.s_Swerve.getRoll() - prevRollSample > 0.5){
+            translation = 0.15;
+        }
+        else if(this.s_Swerve.getRoll() - prevRollSample < -0.5){
+            translation = -0.15;
+        }
+         */
+        
+        if(DriverStation.getMatchTime() < 0.1){
+            translation = 0.0;
+            strafe = 0.1;
+        }
+        else{
+            strafe = 0;
+        }
+        
         s_Swerve.drive(
-            new Translation2d(translation, strafe).times(Constants.Swerve.maxSpeed),
+            new Translation2d(-translation, strafe).times(Constants.Swerve.maxSpeed),
             rotation * Constants.Swerve.maxAngularVelocity,
             false,
             true

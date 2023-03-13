@@ -7,11 +7,11 @@ package frc.robot.commands.Conveyor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Conveyor;
 
-public class SetConveyorDefault extends CommandBase {
+public class TurnOffConveyor extends CommandBase {
     private Conveyor s_Conveyor; 
 
     /** Creates a new Conveyor. */
-    public SetConveyorDefault(Conveyor s_Conveyor) {
+    public TurnOffConveyor(Conveyor s_Conveyor) {
       this.s_Conveyor = s_Conveyor;
       addRequirements(this.s_Conveyor);
       // Use addRequirements() here to declare subsystem dependencies.
@@ -24,6 +24,7 @@ public class SetConveyorDefault extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+      this.s_Conveyor.setConveyor(0.0);
     }
 
     // Called once the command ends or is interrupted.

@@ -5,6 +5,7 @@
 package frc.robot.commands.Conveyor;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Conveyor;
 
 public class TurnOnConveyor extends CommandBase {
@@ -24,7 +25,7 @@ public class TurnOnConveyor extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      this.s_Conveyor.setConveyorState(true);
+      this.s_Conveyor.setConveyor(Constants.CONVEYOR_FORWARD_SPEED_VOLTS);
     }
 
     // Called once the command ends or is interrupted.

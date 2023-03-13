@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.lib.util.COTSFalconSwerveConstants;
@@ -28,37 +29,42 @@ public final class Constants {
 
     //Sensor ID's
 
-    public static final int conveyorPhotoEyeID = 0;
-    public static final int intakeZeroLimitID = 1;
-    public static final int liftZeroPositionLimitID = 3;
+    public static final int photoEyeID1 = 0;
+    public static final int photoEyeID2 = 1;
+    public static final int liftExtendZeroID = 2;
+    public static final int intakeZeroID = 4;
+    public static final int liftRotateZeroID = 3;
+    public static final int grabberZeroID = 5;
 
     //Speeds
 
-    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 0.5;
+    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 1.0;
     public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -0.5;
     public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
     public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
-    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -1.0;
-    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * 0.2;
-    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * 0.2;
+    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -0.4;
+    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * -0.2;
+    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * -0.5;
 
     //Motor Position
+    public static final double INTAKE_EXTEND_POSITION = 56.0;
+    public static final double INTAKE_RETRACT_POSITION = -4.0;
 
     public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
     public static final double LIFT_EXTEND_POSITION_1 = 70.0; //Level 1 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_1 = 30.0;
-    public static final double LIFT_EXTEND_POSITION_2 = 100.0; //Level 2 Scoring Position
+    public static final double LIFT_ROTATE_POSITION_1 = 50.0;
+    public static final double LIFT_EXTEND_POSITION_2 = 30.0; //Level 2 Scoring Position
     public static final double LIFT_ROTATE_POSITION_2 = 110.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 120.0;
-    public static final double LIFT_EXTEND_POSITION_INTAKE = 120.0; //Intake Position
-    public static final double LIFT_ROTATE_POSITION_INTAKE = 0.0;
+    public static final double LIFT_EXTEND_POSITION_INTAKE = 0.0; //Intake Position
+    public static final double LIFT_ROTATE_POSITION_INTAKE = 90.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 14.0;
+    public static final double GRABBER_CLOSED_POSITION = 26.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     
@@ -76,15 +82,23 @@ public final class Constants {
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
     //Software Limits
+    public static final float INTAKE_FORWARD_LIMIT = 56.0f;
+    public static final float INTAKE_REVERSE_LIMIT = -4.0f;
 
-    public static final float GRABBER_FORWARD_LIMIT = 15.0f;
+    public static final float GRABBER_FORWARD_LIMIT = 30.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
+    
     public static final float LIFT_EXTEND_FORWARD_LIMIT = 150.0f;
-    public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_EXTEND_REVERSE_LIMIT = -30.0f;
     public static final float LIFT_ROTATE_FORWARD_LIMIT = 200.0f;
-    public static final float LIFT_ROTATE_REVERSE_LIMIT = 0.0f;
-    public static final float INTAKE_EXTEND_FORWARD_LIMIT = 97.0f;
-    public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_ROTATE_REVERSE_LIMIT = -30.0f;
+    //public static final float INTAKE_EXTEND_FORWARD_LIMIT = 46.0f;
+    //public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
+
+    //Timers
+
+    public static final double INTAKE_DELAY_TIMER = 1.0;
+    public static final double CONVEYOR_DELAY_TIMER = 1.0;
 
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
@@ -94,6 +108,15 @@ public final class Constants {
     public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
     public static final ShuffleboardTab limelightDebugTab = Shuffleboard.getTab("Limelight Debug");
     public static final ShuffleboardTab pidConfigTab = Shuffleboard.getTab("PID Config");
+
+    public static final class Sensors{
+        public static DigitalInput photoeye1 = new DigitalInput(Constants.photoEyeID1);
+        public static DigitalInput photoeye2 = new DigitalInput(Constants.photoEyeID2);
+        public static DigitalInput intakeZero = new DigitalInput(Constants.intakeZeroID);
+        public static DigitalInput liftRotateZero = new DigitalInput(Constants.liftRotateZeroID);
+        public static DigitalInput liftExtendZero = new DigitalInput(Constants.liftExtendZeroID);
+        public static DigitalInput grabberZero = new DigitalInput(Constants.grabberZeroID);
+    }
 
     public static final class Swerve {
         public static final int pigeonID = 14;
