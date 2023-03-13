@@ -64,17 +64,17 @@ public class Intake extends SubsystemBase {
     intakeExtend.setSoftLimit(SoftLimitDirection.kForward, Constants.INTAKE_FORWARD_LIMIT);
     intakeExtend.setSoftLimit(SoftLimitDirection.kReverse, Constants.INTAKE_REVERSE_LIMIT);
     intakeExtend.setInverted(false);
-    //intakeExtend.setIdleMode(IdleMode.kBrake);
+    intakeExtend.setIdleMode(IdleMode.kBrake);
 
     intakeRollerTop.clearFaults();
     intakeRollerTop.restoreFactoryDefaults();
-    intakeRollerTop.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
+    //intakeRollerTop.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
 
     IntakeRollerBottom.clearFaults();
     IntakeRollerBottom.restoreFactoryDefaults();
-    IntakeRollerBottom.setInverted(true);
-    IntakeRollerBottom.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
-    IntakeRollerBottom.follow(intakeRollerTop);
+    IntakeRollerBottom.setInverted(false);
+    //IntakeRollerBottom.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
+    //IntakeRollerBottom.follow(intakeRollerTop);
 
     intakeDelayTimer.start();
 
@@ -84,8 +84,8 @@ public class Intake extends SubsystemBase {
     kD = 0; 
     kIz = 0; 
     kFF = 0; 
-    kMaxOutput = 0.5; 
-    kMinOutput = -0.5;
+    kMaxOutput = 0.4; 
+    kMinOutput = -0.4;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -103,7 +103,14 @@ public class Intake extends SubsystemBase {
   } 
 
   public void SetIntakeRollers(double voltage) {
-    intakeRollerTop.setVoltage(voltage);
+    if(Math.abs(intakeExtend.getEncoder().getPosition() - Constants.INTAKE_EXTEND_POSITION) < 3.0){
+        intakeRollerTop.setVoltage(voltage);
+        IntakeRollerBottom.setVoltage(voltage);
+    }
+    else{
+      intakeRollerTop.setVoltage(0.0);
+      IntakeRollerBottom.setVoltage(0.0);
+    }
   }
 
   public void SetIntakePosition(double pos){
@@ -126,6 +133,7 @@ public class Intake extends SubsystemBase {
       //intakeExtend.getEncoder().setPosition(0.0);
     //}
 
+    
     m_pidController.setReference(pos, CANSparkMax.ControlType.kPosition);
 
     extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());

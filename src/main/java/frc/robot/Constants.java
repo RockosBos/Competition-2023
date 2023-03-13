@@ -31,9 +31,9 @@ public final class Constants {
 
     public static final int photoEyeID1 = 0;
     public static final int photoEyeID2 = 1;
-    public static final int intakeZeroID = 2;
+    public static final int liftExtendZeroID = 2;
+    public static final int intakeZeroID = 4;
     public static final int liftRotateZeroID = 3;
-    public static final int liftExtendZeroID = 4;
     public static final int grabberZeroID = 5;
 
     //Speeds
@@ -42,29 +42,29 @@ public final class Constants {
     public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -0.5;
     public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
     public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
-    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -1.0;
-    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * 0.2;
-    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * 0.2;
+    public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -0.4;
+    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * -0.2;
+    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * -0.5;
 
     //Motor Position
-    public static final double INTAKE_EXTEND_POSITION = 10.0;
-    public static final double INTAKE_RETRACT_POSITION = 0.0;
+    public static final double INTAKE_EXTEND_POSITION = 56.0;
+    public static final double INTAKE_RETRACT_POSITION = -4.0;
 
     public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
     public static final double LIFT_ROTATE_POSITION_0 = 0.0;
     public static final double LIFT_EXTEND_POSITION_1 = 70.0; //Level 1 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_1 = 30.0;
+    public static final double LIFT_ROTATE_POSITION_1 = 50.0;
     public static final double LIFT_EXTEND_POSITION_2 = 30.0; //Level 2 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_2 = 100.0;
+    public static final double LIFT_ROTATE_POSITION_2 = 110.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
     public static final double LIFT_ROTATE_POSITION_3 = 120.0;
-    public static final double LIFT_EXTEND_POSITION_INTAKE = 120.0; //Intake Position
-    public static final double LIFT_ROTATE_POSITION_INTAKE = 0.0;
+    public static final double LIFT_EXTEND_POSITION_INTAKE = 0.0; //Intake Position
+    public static final double LIFT_ROTATE_POSITION_INTAKE = 90.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 25.0;
+    public static final double GRABBER_CLOSED_POSITION = 26.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     
@@ -82,18 +82,18 @@ public final class Constants {
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
     //Software Limits
-    public static final float INTAKE_FORWARD_LIMIT = 15.0f;
-    public static final float INTAKE_REVERSE_LIMIT = 0.0f;
+    public static final float INTAKE_FORWARD_LIMIT = 56.0f;
+    public static final float INTAKE_REVERSE_LIMIT = -4.0f;
 
-    public static final float GRABBER_FORWARD_LIMIT = 25.0f;
+    public static final float GRABBER_FORWARD_LIMIT = 30.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
     
     public static final float LIFT_EXTEND_FORWARD_LIMIT = 150.0f;
-    public static final float LIFT_EXTEND_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_EXTEND_REVERSE_LIMIT = -30.0f;
     public static final float LIFT_ROTATE_FORWARD_LIMIT = 200.0f;
-    public static final float LIFT_ROTATE_REVERSE_LIMIT = -10.0f;
-    public static final float INTAKE_EXTEND_FORWARD_LIMIT = 97.0f;
-    public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
+    public static final float LIFT_ROTATE_REVERSE_LIMIT = -30.0f;
+    //public static final float INTAKE_EXTEND_FORWARD_LIMIT = 46.0f;
+    //public static final float INTAKE_EXTEND_REVERSE_LIMIT = 0.0f;
 
     //Timers
 

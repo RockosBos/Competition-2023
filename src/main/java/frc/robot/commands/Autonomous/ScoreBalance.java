@@ -6,6 +6,7 @@ package frc.robot.commands.Autonomous;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Grabber.AutoCloseGrabber;
 import frc.robot.commands.Grabber.AutoOpenGrabber;
@@ -33,11 +34,9 @@ public class ScoreBalance extends SequentialCommandGroup {
     addCommands(
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
-        new AutoOpenGrabber(s_Grabber), 
-        new AutoScoreLevel0(s_Lift),
+        new ParallelCommandGroup(new SequentialCommandGroup(new AutoOpenGrabber(s_Grabber), new AutoScoreLevel0(s_Lift)), s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalance", 1, 1), true)),
         
-      s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalance", 1, 1), true),
-      new AutoBalance(s_Swerve)
+        new AutoBalance(s_Swerve)
     );
   }
 }

@@ -17,7 +17,7 @@ public class AutoBalance extends CommandBase {
   
     private Swerve s_Swerve;
     private double prevRollSample;
-    private double roll;
+    private double roll, prevRoll;
     private double samplePeriod = 0.25;  //Frequency (in seconds) of checking samples
     private double sampleDifferenceThreshold = 1;   //Degree threshold that will determine if charging station is in motion
     private double balancedThreshold = 2;           //Degree threshold for the charge station to be considered threshold
@@ -29,8 +29,6 @@ public class AutoBalance extends CommandBase {
     private double strafe;
     private double rotation;
 
-    private String state;
-
     public AutoBalance(Swerve s_Swerve) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
@@ -40,8 +38,7 @@ public class AutoBalance extends CommandBase {
     @Override
     public void initialize() {
         timer.start();
-        prevRollSample = this.s_Swerve.getRoll();
-        state = "Balanced";
+        prevRoll = this.s_Swerve.getRoll();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -49,6 +46,7 @@ public class AutoBalance extends CommandBase {
     public void execute() {
         roll = this.s_Swerve.getRoll();
         
+        /*
         if(timer.get() > 0.5){
             if(timer.get() < 0.75){
                 if(roll > balancedThreshold){
@@ -72,25 +70,31 @@ public class AutoBalance extends CommandBase {
         }
 
         prevRollSample = s_Swerve.gyro.getRoll();
-        
+        */
+        if(timer.get() > 0.1){
+            prevRoll = roll;
+            timer.reset();
+        }
 
-        /*
+        
         if(roll > 9.0){
-            translation = 0.15;
+            translation = 0.12;
         }
-        else if(roll > 1.0){
-            translation = 0.09;
-        }
-        else if(roll > -1.0){
-            translation = 0.0;
-        }
-        else if(roll > -9.0){
-            translation = -0.09;
+        else if(roll < -9.0){
+            translation = -0.12;
         }
         else{
+            translation = 0.0;
+        }
+        /* 
+        if(this.s_Swerve.getRoll() - prevRollSample > 0.5){
             translation = 0.15;
         }
-        */
+        else if(this.s_Swerve.getRoll() - prevRollSample < -0.5){
+            translation = -0.15;
+        }
+         */
+        
         if(DriverStation.getMatchTime() < 0.1){
             translation = 0.0;
             strafe = 0.1;

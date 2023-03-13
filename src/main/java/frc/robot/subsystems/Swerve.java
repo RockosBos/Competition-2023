@@ -134,6 +134,7 @@ public class Swerve extends SubsystemBase {
 
     public double getRoll(){
         return gyro.getRoll();
+        
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {

@@ -70,7 +70,7 @@ public class Grabber extends SubsystemBase {
   }
 
   public boolean atSetpoint(){
-    if(Math.abs(rotations - this.grabberMotor.getEncoder().getPosition()) < 4.0){
+    if(Math.abs(rotations - this.grabberMotor.getEncoder().getPosition()) < 10.0){
         return true;
     }
     return false;
@@ -79,6 +79,9 @@ public class Grabber extends SubsystemBase {
   @Override
   public void periodic() {
   
+    if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
+      rotations = Constants.GRABBER_CLOSED_POSITION;
+    }
     
      m_pidController.setReference(rotations, ControlType.kPosition);
     

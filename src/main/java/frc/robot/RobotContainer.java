@@ -16,8 +16,10 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.commands.Autonomous.Mobility;
 import frc.robot.commands.Autonomous.Score2Adjacent;
 import frc.robot.commands.Autonomous.Score2Opposite;
+import frc.robot.commands.Autonomous.ScoreBalance;
 import frc.robot.commands.Autonomous.ScoreBalanceAdjacent;
 import frc.robot.commands.Autonomous.ScoreBalanceOpposite;
+import frc.robot.commands.Autonomous.SetZeroPoints;
 import frc.robot.commands.Conveyor.*;
 import frc.robot.commands.Grabber.CloseGrabber;
 import frc.robot.commands.Grabber.OpenGrabber;
@@ -75,19 +77,20 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driveController, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driveController, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton setZeroPoints = new JoystickButton(driveController, XboxController.Button.kRightBumper.value);
 
     /* Operator Buttons */
     //private final JoystickButton conveyorManualForward = new JoystickButton(operatorController, XboxController.Button.kB.value);
     //private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kB.value);
     private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton intakeManualRetract = new JoystickButton(driveController, XboxController.Button.kY.value);
-    private final JoystickButton intakeManualExtend = new JoystickButton(driveController, XboxController.Button.kA.value);
+    //private final JoystickButton intakeManualRetract = new JoystickButton(driveController, XboxController.Button.kY.value);
+    //private final JoystickButton intakeManualExtend = new JoystickButton(driveController, XboxController.Button.kA.value);
     private final JoystickButton SetLiftPosition0 = new JoystickButton(operatorController, XboxController.Button.kA.value);
     private final JoystickButton SetLiftPosition1 = new JoystickButton(operatorController, XboxController.Button.kX.value);
     private final JoystickButton SetLiftPosition2 = new JoystickButton(operatorController, XboxController.Button.kB.value);
     private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
-    private final JoystickButton GrabberDropCube = new JoystickButton(operatorController, XboxController.Axis.kRightTrigger.value);
-    private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+    private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+    //private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
 
     private final Trigger photoEyesBlocked;
 
@@ -106,15 +109,16 @@ public class RobotContainer {
     private final ScoreBalanceOpposite c_ScoreBalanceOpposite = new ScoreBalanceOpposite(s_Swerve, s_Lift, s_Grabber);
     private final Score2Adjacent c_Score2Adjacent = new Score2Adjacent(s_Swerve, s_Lift, s_Intake, s_Grabber);
     private final Score2Opposite c_Score2Opposite = new Score2Opposite(s_Swerve, s_Lift, s_Intake, s_Grabber);
+    private final ScoreBalance c_ScoreBalance = new ScoreBalance(s_Swerve, s_Lift, s_Grabber);
     private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
     private final SendableChooser<String> modeSelector = new SendableChooser<String>();
 
 
-    private SlewRateLimiter translationLimiter = new SlewRateLimiter(1);
-    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(1);
-    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(1);
+    private SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
+    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
+    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -144,6 +148,7 @@ public class RobotContainer {
         autonomousSelector.addOption("Score Balance Opposite", c_ScoreBalanceOpposite);
         autonomousSelector.addOption("Score 2 Adjacent", c_Score2Adjacent);
         autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
+        autonomousSelector.addOption("Score Balance", c_ScoreBalance);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
 
         // Configure the button bindings
@@ -161,6 +166,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         
         //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
         //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
@@ -168,26 +174,16 @@ public class RobotContainer {
         intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
         //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
         //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
-        SetLiftPosition0.onTrue(new ParallelCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
-        SetLiftPosition1.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
-        SetLiftPosition2.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));
-        SetLiftPosition3.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift)));
-        //GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
-        GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
+        SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
+        SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        //GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
         //photoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
         
         //Special Conditional Commands
-
-        /*
-        if(!s_Intake.isIntakeRetracted()){
-            s_Lift.run(() -> new SetPosition0(s_Lift));
-        }
-
-        if(!s_Lift.isLiftRetracted()){
-            s_Intake.run(() -> new RetractIntake(s_Intake));
-        }
-        */
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
