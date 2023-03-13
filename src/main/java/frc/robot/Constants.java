@@ -36,6 +36,11 @@ public final class Constants {
     public static final int liftRotateZeroID = 3;
     public static final int grabberZeroID = 5;
 
+    //PWM
+
+    public static final int leftLEDStripID = 0;
+    public static final int rightLEDStripID = 1;
+
     //Speeds
 
     public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 1.0;

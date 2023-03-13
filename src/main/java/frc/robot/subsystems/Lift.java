@@ -191,15 +191,6 @@ public class Lift extends SubsystemBase {
     @Override
     public void periodic() {
 
-      /*
-      if(!Constants.Sensors.liftExtendZero.get()){
-        liftExtend.getEncoder().setPosition(0.0);
-      }
-      else if(Constants.Sensors.liftRotateZero.get()){
-        liftRotate.getEncoder().setPosition(0.0);
-      }
-      */
-
       if(positionControl){
           if(Math.abs(liftExtend.getEncoder().getPosition()) < 3.0 || Math.abs(liftRotate.getEncoder().getPosition() - rotateSetpoint) < 10){
             liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);

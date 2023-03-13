@@ -13,6 +13,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
+import frc.robot.commands.Autonomous.Delay;
 import frc.robot.commands.Autonomous.Mobility;
 import frc.robot.commands.Autonomous.Score2Adjacent;
 import frc.robot.commands.Autonomous.Score2Opposite;
@@ -92,8 +93,14 @@ public class RobotContainer {
     private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
     //private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
 
-    private final Trigger photoEyesBlocked;
+    private final Trigger bothPhotoEyesBlocked = new Trigger(() -> {
+        return (Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get());
+    });
 
+    private final Trigger onePhotoEyeBlocked = new Trigger(() -> {
+      //One eye is blocked but both eyes are not
+      return ((Constants.Sensors.photoeye1.get() || Constants.Sensors.photoeye2.get()) && (Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()));
+    });
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -140,8 +147,6 @@ public class RobotContainer {
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
-        
-        photoEyesBlocked = new Trigger(() -> s_Conveyor.bothEyesBlocked());
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
         autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
@@ -168,12 +173,8 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         
-        //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
-        //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
         intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
         intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
-        //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
-        //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
         SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
@@ -181,7 +182,8 @@ public class RobotContainer {
         SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
         //GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
         
-        //photoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
+        bothPhotoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
+        onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new Delay(1.0), new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor))));
         
         //Special Conditional Commands
     }
