@@ -60,14 +60,18 @@ public class Conveyor extends SubsystemBase {
     }
 
     public void setConveyor(double voltage){
-        if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
-            
-            conveyorMotor.stopMotor();
+        if(voltage != 0.0){
+            runConveyor = true;
         }
         else{
-            conveyorMotor.setVoltage(voltage);
+            runConveyor = false;
         }
+        conveyorMotor.setVoltage(voltage);
         
+    }
+
+    public boolean getConveyorState(){
+        return runConveyor;
     }
 
     public void setConveyorManual(double speed){

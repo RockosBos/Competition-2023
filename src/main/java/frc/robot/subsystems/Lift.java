@@ -147,6 +147,14 @@ public class Lift extends SubsystemBase {
       return this.liftExtend.getEncoder().getPosition();
     }
 
+    public double getLiftRotateSetpoint(){
+      return this.rotateSetpoint;
+    }
+
+    public double getLiftExtendSetpoint(){
+      return this.extendSetpoint;
+    }
+
     public boolean atSetpoint(){
       if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftExtendPosition()) < 1.0){
           return true;

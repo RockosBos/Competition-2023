@@ -74,5 +74,6 @@ public class LED extends SubsystemBase {
 
           break;
       }
+      setLEDStrip();
   }
 }
