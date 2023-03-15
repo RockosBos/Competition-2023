@@ -72,6 +72,8 @@ public class Lift extends SubsystemBase {
       liftRotate.setSoftLimit(SoftLimitDirection.kReverse, Constants.LIFT_ROTATE_REVERSE_LIMIT);
       liftExtend.setInverted(true);
       liftRotate.setInverted(true);
+      liftRotate.setSmartCurrentLimit(10, 40);
+      liftExtend.setSmartCurrentLimit(10, 40);
 
       liftRotateController = liftRotate.getPIDController();
       liftExtendController = liftExtend.getPIDController();
@@ -215,6 +217,7 @@ public class Lift extends SubsystemBase {
           }
       }
       else{
+      
         if(!Constants.Sensors.liftRotateZero.get()){
           liftRotate.setVoltage(rotateVoltage);
         }

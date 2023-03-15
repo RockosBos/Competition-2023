@@ -46,6 +46,9 @@ public class RetractIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(s_Intake.atSetpoint()){
+      return true;
+    }
     return false;
   }
 }

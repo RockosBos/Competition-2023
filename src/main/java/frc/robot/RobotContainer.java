@@ -179,12 +179,12 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         
-        intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
+        intakeRun.whileTrue(new SequentialCommandGroup(new SetPosition0(s_Lift), new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor))));
         intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake)));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
-        SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition1.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition2.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition3.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
         GrabberDropCone.onTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX())));
         
