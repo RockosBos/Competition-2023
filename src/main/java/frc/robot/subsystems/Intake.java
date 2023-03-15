@@ -68,6 +68,7 @@ public class Intake extends SubsystemBase {
 
     intakeRollerTop.clearFaults();
     intakeRollerTop.restoreFactoryDefaults();
+    intakeRollerTop.setInverted(true);
     //intakeRollerTop.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
 
     IntakeRollerBottom.clearFaults();

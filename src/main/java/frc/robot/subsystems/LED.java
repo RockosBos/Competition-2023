@@ -42,6 +42,7 @@ public class LED extends SubsystemBase {
       this.saturation = saturation;
       this.value = value;
       this.pattern = pattern;
+      this.useHSV = true;
   }
 
   public void setStateRGB(int r, int g, int b, String pattern){
@@ -49,6 +50,7 @@ public class LED extends SubsystemBase {
       this.g = g;
       this.b = b;
       this.pattern = pattern;
+      this.useHSV = false;
   }
   private void setLEDStrip(){
       leftLEDStrip.setData(leftLedBuffer);

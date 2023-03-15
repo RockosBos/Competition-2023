@@ -37,6 +37,8 @@ import frc.robot.commands.Lift.SetPosition1;
 import frc.robot.commands.Lift.SetPosition2;
 import frc.robot.commands.Lift.SetPosition3;
 import frc.robot.commands.Lift.SetPositionIntake;
+import frc.robot.commands.Limelight.LimeLightSearchOff;
+import frc.robot.commands.Limelight.LimeLightSearchOn;
 import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.commands.Swerve.TeleopSwerve;
 
@@ -148,6 +150,7 @@ public class RobotContainer {
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
+        s_Limelight.setDefaultCommand(new LimeLightSearchOff(s_Limelight));
         s_LED.setDefaultCommand(new SetLEDOnDriverStation(s_LED));
         
 
@@ -183,7 +186,7 @@ public class RobotContainer {
         SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        GrabberDropCone.onTrue(new OpenGrabberSearch(s_Grabber, s_Limelight.getX()));
+        GrabberDropCone.onTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX())));
         
         bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
         onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new Delay(2.0), new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor))));
