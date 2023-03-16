@@ -72,6 +72,8 @@ public class Lift extends SubsystemBase {
       liftRotate.setSoftLimit(SoftLimitDirection.kReverse, Constants.LIFT_ROTATE_REVERSE_LIMIT);
       liftExtend.setInverted(true);
       liftRotate.setInverted(true);
+      liftRotate.setSmartCurrentLimit(10, 40);
+      liftExtend.setSmartCurrentLimit(10, 40);
 
       liftRotateController = liftRotate.getPIDController();
       liftExtendController = liftExtend.getPIDController();
@@ -147,6 +149,14 @@ public class Lift extends SubsystemBase {
       return this.liftExtend.getEncoder().getPosition();
     }
 
+    public double getLiftRotateSetpoint(){
+      return this.rotateSetpoint;
+    }
+
+    public double getLiftExtendSetpoint(){
+      return this.extendSetpoint;
+    }
+
     public boolean atSetpoint(){
       if(Math.abs(rotateSetpoint - this.getLiftRotatePosition()) < 1.0 && Math.abs(extendSetpoint - this.getLiftExtendPosition()) < 1.0){
           return true;
@@ -191,15 +201,6 @@ public class Lift extends SubsystemBase {
     @Override
     public void periodic() {
 
-      /*
-      if(!Constants.Sensors.liftExtendZero.get()){
-        liftExtend.getEncoder().setPosition(0.0);
-      }
-      else if(Constants.Sensors.liftRotateZero.get()){
-        liftRotate.getEncoder().setPosition(0.0);
-      }
-      */
-
       if(positionControl){
           if(Math.abs(liftExtend.getEncoder().getPosition()) < 3.0 || Math.abs(liftRotate.getEncoder().getPosition() - rotateSetpoint) < 10){
             liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
@@ -215,6 +216,7 @@ public class Lift extends SubsystemBase {
           }
       }
       else{
+      
         if(!Constants.Sensors.liftRotateZero.get()){
           liftRotate.setVoltage(rotateVoltage);
         }

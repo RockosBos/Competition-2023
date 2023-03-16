@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -25,6 +26,7 @@ public class Grabber extends SubsystemBase {
   private RelativeEncoder m_encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
   public double rotations = 0;
+  public Timer coneDelayTimer = new Timer();
 
   GenericEntry setPoint = Constants.grabberDebugTab.add("Set Point", 0).getEntry();
   GenericEntry rotationEntry = Constants.grabberDebugTab.add("Rotations", 0).getEntry();
@@ -79,9 +81,9 @@ public class Grabber extends SubsystemBase {
   @Override
   public void periodic() {
   
-    if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
-      rotations = Constants.GRABBER_CLOSED_POSITION;
-    }
+    //if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
+      //rotations = Constants.GRABBER_CLOSED_POSITION;
+    //}
     
      m_pidController.setReference(rotations, ControlType.kPosition);
     

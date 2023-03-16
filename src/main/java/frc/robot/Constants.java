@@ -36,6 +36,11 @@ public final class Constants {
     public static final int liftRotateZeroID = 3;
     public static final int grabberZeroID = 5;
 
+    //PWM
+
+    public static final int leftLEDStripID = 9;
+    public static final int rightLEDStripID = 1;
+
     //Speeds
 
     public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 1.0;
@@ -47,7 +52,7 @@ public final class Constants {
     public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * -0.5;
 
     //Motor Position
-    public static final double INTAKE_EXTEND_POSITION = 56.0;
+    public static final double INTAKE_EXTEND_POSITION = 58.0;
     public static final double INTAKE_RETRACT_POSITION = -4.0;
 
     public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
@@ -57,14 +62,14 @@ public final class Constants {
     public static final double LIFT_EXTEND_POSITION_2 = 30.0; //Level 2 Scoring Position
     public static final double LIFT_ROTATE_POSITION_2 = 110.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_3 = 120.0;
-    public static final double LIFT_EXTEND_POSITION_INTAKE = 0.0; //Intake Position
+    public static final double LIFT_ROTATE_POSITION_3 = 140.0;
+    public static final double LIFT_EXTEND_POSITION_INTAKE = 30.0; //Intake Position
     public static final double LIFT_ROTATE_POSITION_INTAKE = 90.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 26.0;
+    public static final double GRABBER_CLOSED_POSITION = 34.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
     
@@ -82,10 +87,10 @@ public final class Constants {
     public static final double INTAKE_ROLLER_MAX_CURRENT = 40.0;
 
     //Software Limits
-    public static final float INTAKE_FORWARD_LIMIT = 56.0f;
+    public static final float INTAKE_FORWARD_LIMIT = 58.0f;
     public static final float INTAKE_REVERSE_LIMIT = -4.0f;
 
-    public static final float GRABBER_FORWARD_LIMIT = 30.0f;
+    public static final float GRABBER_FORWARD_LIMIT = 34.0f;
     public static final float GRABBER_REVERSE_LIMIT = 0.0f;
     
     public static final float LIFT_EXTEND_FORWARD_LIMIT = 150.0f;
@@ -198,7 +203,7 @@ public final class Constants {
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 6;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(270.3); //273.3
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0); //273.3
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }

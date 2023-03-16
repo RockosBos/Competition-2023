@@ -68,6 +68,7 @@ public class Intake extends SubsystemBase {
 
     intakeRollerTop.clearFaults();
     intakeRollerTop.restoreFactoryDefaults();
+    intakeRollerTop.setInverted(false);
     //intakeRollerTop.setOpenLoopRampRate(Constants.INTAKE_ROLLER_RAMP_RATE);
 
     IntakeRollerBottom.clearFaults();
@@ -121,9 +122,13 @@ public class Intake extends SubsystemBase {
     intakeExtend.setVoltage(voltage);
   }
 
-  public boolean isIntakeRetracted(){
-    //return intakeZeroLimit.get();
-    return true;
+  public boolean atSetpoint(){
+    if(Math.abs(intakeExtend.getEncoder().getPosition() - pos) < 3.0){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   @Override

@@ -2,32 +2,28 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Lift;
+package frc.robot.commands.Autonomous;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.Grabber;
-import frc.robot.subsystems.Lift;
 
-public class SetPosition0 extends CommandBase {
+public class Delay extends CommandBase {
+  Timer timer = new Timer();
+  double delay;
 
-  private Lift s_Lift;
-  private Grabber s_Grabber;
-  /** Creates a new SetPosition3. */
-  public SetPosition0(Lift s_Lift) {
-    this.s_Lift = s_Lift;
-    addRequirements(this.s_Lift);
+  public Delay(double delay) {
+    this.delay = delay;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-      this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_0, Constants.LIFT_EXTEND_POSITION_0);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -36,6 +32,9 @@ public class SetPosition0 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return s_Lift.atSetpoint();
+    if(timer.get() > delay){
+      return true;
+    }
+    return false;
   }
 }

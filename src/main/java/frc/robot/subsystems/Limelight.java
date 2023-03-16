@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Limelight extends SubsystemBase {
   
   private NetworkTable table;
-  private NetworkTableEntry tx, ty, tv;
+  private NetworkTableEntry tx, ty, tv, ledState, exposureState;
   private NetworkTableEntry botPose;
   private double translationX, translationY, translationZ, roll, pitch, yaw;
 
@@ -26,6 +26,8 @@ public class Limelight extends SubsystemBase {
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     tv = table.getEntry("tv");
+    ledState = table.getEntry("ledMode");
+    exposureState = table.getEntry("camMode");
     botPose = table.getEntry("botpose");
     pipeline = 0;
   }
@@ -44,11 +46,29 @@ public class Limelight extends SubsystemBase {
   }
 
   public double getY(){
-    return ty.getDouble(0.0);
+      return ty.getDouble(0.0);
   }
 
   public void setPipeline(int pipeline){
       this.pipeline = pipeline;
+  }
+
+  public void setLEDOnState(boolean state){
+      if(state){
+        this.ledState.setInteger(3);
+      }
+      else{
+        this.ledState.setInteger(0);
+      }
+  }
+
+  public void setLowExposure(boolean state){
+      if(state){
+        this.exposureState.setInteger(0);
+      }
+      else{
+        this.exposureState.setInteger(1);
+      }
   }
 
   public int getPipeline(){
@@ -58,11 +78,11 @@ public class Limelight extends SubsystemBase {
   //Apriltag and 3D Functions
 
   public Pose2d getPose(){
-    return new Pose2d(translationX, translationY, new Rotation2d(yaw));
+      return new Pose2d(translationX, translationY, new Rotation2d(yaw));
   }
 
   @Override
   public void periodic() {
-    
+      
   }
 }

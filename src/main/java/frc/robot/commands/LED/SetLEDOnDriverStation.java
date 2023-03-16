@@ -2,21 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Lift;
+package frc.robot.commands.LED;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.Grabber;
-import frc.robot.subsystems.Lift;
+import frc.robot.subsystems.LED;
 
-public class SetPosition0 extends CommandBase {
-
-  private Lift s_Lift;
-  private Grabber s_Grabber;
-  /** Creates a new SetPosition3. */
-  public SetPosition0(Lift s_Lift) {
-    this.s_Lift = s_Lift;
-    addRequirements(this.s_Lift);
+public class SetLEDOnDriverStation extends CommandBase {
+  private LED s_LED;
+  
+  public SetLEDOnDriverStation(LED s_LED) {
+    this.s_LED = s_LED;
+    addRequirements(this.s_LED);
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +24,15 @@ public class SetPosition0 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      this.s_Lift.setPosition(Constants.LIFT_ROTATE_POSITION_0, Constants.LIFT_EXTEND_POSITION_0);
+    if(DriverStation.getAlliance() == Alliance.Red){
+        s_LED.setStateRGB(255, 0, 0, "Solid");
+    }
+    else if(DriverStation.getAlliance() == Alliance.Blue){
+        s_LED.setStateRGB(0, 0, 255, "Solid");
+    }
+    else{
+        s_LED.setStateRGB(255, 255, 255, "Solid");
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +42,6 @@ public class SetPosition0 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return s_Lift.atSetpoint();
+    return false;
   }
 }

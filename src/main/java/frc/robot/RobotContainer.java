@@ -10,9 +10,11 @@ package frc.robot;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
+import frc.robot.commands.Autonomous.Delay;
 import frc.robot.commands.Autonomous.Mobility;
 import frc.robot.commands.Autonomous.Score2Adjacent;
 import frc.robot.commands.Autonomous.Score2Opposite;
@@ -24,22 +26,28 @@ import frc.robot.commands.Conveyor.*;
 import frc.robot.commands.Grabber.CloseGrabber;
 import frc.robot.commands.Grabber.OpenGrabber;
 import frc.robot.commands.Grabber.OpenGrabberSearch;
+import frc.robot.commands.Grabber.Position0GrabberControl;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.ManualExtendIntake;
 import frc.robot.commands.Intake.ManualRetractIntake;
 import frc.robot.commands.Intake.RetractIntake;
+import frc.robot.commands.LED.SetLEDOnDriverStation;
 import frc.robot.commands.Lift.SetPosition0;
 import frc.robot.commands.Lift.SetPosition1;
 import frc.robot.commands.Lift.SetPosition2;
 import frc.robot.commands.Lift.SetPosition3;
 import frc.robot.commands.Lift.SetPositionIntake;
+import frc.robot.commands.Limelight.LimeLightSearchOff;
+import frc.robot.commands.Limelight.LimeLightSearchOn;
 import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.commands.Swerve.TeleopSwerve;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -68,6 +76,15 @@ public class RobotContainer {
     //private final Joystick driver = new Joystick(0);
     private final XboxController driveController = new XboxController(0);
     private final XboxController operatorController = new XboxController(1);
+    
+    /* Subsystems */
+    private final Swerve s_Swerve = new Swerve();
+    private final Conveyor s_Conveyor = new Conveyor();
+    private final Intake s_Intake = new Intake();
+    private final Lift s_Lift = new Lift();
+    private final Grabber s_Grabber = new Grabber();
+    private final Limelight s_Limelight = new Limelight();
+    //private final LED s_LED = new LED();
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -80,28 +97,22 @@ public class RobotContainer {
     private final JoystickButton setZeroPoints = new JoystickButton(driveController, XboxController.Button.kRightBumper.value);
 
     /* Operator Buttons */
-    //private final JoystickButton conveyorManualForward = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    //private final JoystickButton conveyorManualBackward = new JoystickButton(operatorController, XboxController.Button.kB.value);
     private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
-    //private final JoystickButton intakeManualRetract = new JoystickButton(driveController, XboxController.Button.kY.value);
-    //private final JoystickButton intakeManualExtend = new JoystickButton(driveController, XboxController.Button.kA.value);
     private final JoystickButton SetLiftPosition0 = new JoystickButton(operatorController, XboxController.Button.kA.value);
     private final JoystickButton SetLiftPosition1 = new JoystickButton(operatorController, XboxController.Button.kX.value);
     private final JoystickButton SetLiftPosition2 = new JoystickButton(operatorController, XboxController.Button.kB.value);
     private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
     private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
-    //private final JoystickButton GrabberDropCone = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+    private final Trigger GrabberDropCone = new Trigger(() -> operatorController.getRawAxis(3) > 0.9);
 
-    private final Trigger photoEyesBlocked;
+    private final Trigger bothPhotoEyesBlocked = new Trigger(() -> {
+        return (s_Conveyor.getConveyorState() && Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get());
+    });
 
-
-    /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
-    private final Conveyor s_Conveyor = new Conveyor();
-    private final Intake s_Intake = new Intake();
-    private final Lift s_Lift = new Lift();
-    private final Grabber s_Grabber = new Grabber();
-    //private final Limelight s_Limelight = new Limelight();
+    private final Trigger onePhotoEyeBlocked = new Trigger(() -> {
+      //One eye is blocked but both eyes are not
+      return (s_Conveyor.getConveyorState() && (Constants.Sensors.photoeye1.get() || Constants.Sensors.photoeye2.get()) && (Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()));
+    });
 
     /* Auto Commands */
     private final Mobility c_Mobility = new Mobility(s_Swerve);
@@ -140,8 +151,9 @@ public class RobotContainer {
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
+        s_Limelight.setDefaultCommand(new LimeLightSearchOff(s_Limelight));
+        //s_LED.setDefaultCommand(new SetLEDOnDriverStation(s_LED));
         
-        photoEyesBlocked = new Trigger(() -> s_Conveyor.bothEyesBlocked());
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
         autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
@@ -150,6 +162,8 @@ public class RobotContainer {
         autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
         autonomousSelector.addOption("Score Balance", c_ScoreBalance);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
+
+        CameraServer.startAutomaticCapture();
 
         // Configure the button bindings
         configureButtonBindings();
@@ -168,20 +182,17 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         
-        //conveyorManualBackward.onTrue(new SetConveyorManualBackward(s_Conveyor));
-        //conveyorManualForward.onTrue(new SetConveyorManualForward(s_Conveyor));
-        intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor)));
-        intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
-        //intakeManualExtend.onTrue(new ManualExtendIntake(s_Intake, false));
-        //intakeManualRetract.onTrue(new ManualRetractIntake(s_Intake, false));
-        SetLiftPosition0.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift)));
-        SetLiftPosition1.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPosition2.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPosition3.onTrue(new SequentialCommandGroup(new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        intakeRun.whileTrue(new SequentialCommandGroup(new SetPosition0(s_Lift), new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor))));
+        intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake)));
+        SetLiftPosition0.onTrue(new SequentialCommandGroup(new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
+        SetLiftPosition1.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new OpenGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition2.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition3.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        //GrabberDropCone.onTrue(new OpenGrabber(s_Grabber));
+        GrabberDropCone.whileTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX())));
         
-        //photoEyesBlocked.onTrue(new CloseGrabber(s_Grabber));
+        bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
+        onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new Delay(2.0), new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor))));
         
         //Special Conditional Commands
     }
