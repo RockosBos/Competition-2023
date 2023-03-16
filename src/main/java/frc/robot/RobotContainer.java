@@ -44,6 +44,7 @@ import frc.robot.commands.Swerve.TeleopSwerve;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -83,7 +84,7 @@ public class RobotContainer {
     private final Lift s_Lift = new Lift();
     private final Grabber s_Grabber = new Grabber();
     private final Limelight s_Limelight = new Limelight();
-    private final LED s_LED = new LED();
+    //private final LED s_LED = new LED();
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -102,7 +103,7 @@ public class RobotContainer {
     private final JoystickButton SetLiftPosition2 = new JoystickButton(operatorController, XboxController.Button.kB.value);
     private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
     private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
-    private final Trigger GrabberDropCone = new Trigger(() -> operatorController.getRawAxis(3) > 0.5);
+    private final Trigger GrabberDropCone = new Trigger(() -> operatorController.getRawAxis(3) > 0.9);
 
     private final Trigger bothPhotoEyesBlocked = new Trigger(() -> {
         return (s_Conveyor.getConveyorState() && Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get());
@@ -151,7 +152,7 @@ public class RobotContainer {
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
         s_Limelight.setDefaultCommand(new LimeLightSearchOff(s_Limelight));
-        s_LED.setDefaultCommand(new SetLEDOnDriverStation(s_LED));
+        //s_LED.setDefaultCommand(new SetLEDOnDriverStation(s_LED));
         
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
@@ -161,6 +162,8 @@ public class RobotContainer {
         autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
         autonomousSelector.addOption("Score Balance", c_ScoreBalance);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
+
+        CameraServer.startAutomaticCapture();
 
         // Configure the button bindings
         configureButtonBindings();
@@ -182,11 +185,11 @@ public class RobotContainer {
         intakeRun.whileTrue(new SequentialCommandGroup(new SetPosition0(s_Lift), new ParallelCommandGroup(new ExtendIntake(s_Intake, false), new TurnOnConveyor(s_Conveyor))));
         intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake)));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
-        SetLiftPosition1.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition1.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new OpenGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPosition2.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPosition3.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
         SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        GrabberDropCone.onTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX())));
+        GrabberDropCone.whileTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX())));
         
         bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
         onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new Delay(2.0), new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor))));

@@ -54,11 +54,21 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setLEDOnState(boolean state){
-      ledState.setBoolean(state);
+      if(state){
+        this.ledState.setInteger(3);
+      }
+      else{
+        this.ledState.setInteger(0);
+      }
   }
 
   public void setLowExposure(boolean state){
-      exposureState.setBoolean(state);
+      if(state){
+        this.exposureState.setInteger(0);
+      }
+      else{
+        this.exposureState.setInteger(1);
+      }
   }
 
   public int getPipeline(){

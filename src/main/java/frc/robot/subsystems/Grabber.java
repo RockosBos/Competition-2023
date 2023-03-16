@@ -81,9 +81,9 @@ public class Grabber extends SubsystemBase {
   @Override
   public void periodic() {
   
-    if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
-      rotations = Constants.GRABBER_CLOSED_POSITION;
-    }
+    //if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
+      //rotations = Constants.GRABBER_CLOSED_POSITION;
+    //}
     
      m_pidController.setReference(rotations, ControlType.kPosition);
     

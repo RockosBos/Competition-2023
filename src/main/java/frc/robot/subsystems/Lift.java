@@ -201,7 +201,6 @@ public class Lift extends SubsystemBase {
     @Override
     public void periodic() {
 
-      System.out.println("Rotate Setpoint: " + rotateSetpoint + " Extend Setpoint: " + extendSetpoint + " positioncontrol: " + positionControl);
       if(positionControl){
           if(Math.abs(liftExtend.getEncoder().getPosition()) < 3.0 || Math.abs(liftRotate.getEncoder().getPosition() - rotateSetpoint) < 10){
             liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
