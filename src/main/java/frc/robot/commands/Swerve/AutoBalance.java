@@ -77,10 +77,10 @@ public class AutoBalance extends CommandBase {
         }
 
         
-        if(roll > 9.0){
+        if(roll > 7.5){
             translation = 0.12;
         }
-        else if(roll < -9.0){
+        else if(roll < -7.5){
             translation = -0.12;
         }
         else{

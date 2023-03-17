@@ -130,8 +130,8 @@ public class Conveyor extends SubsystemBase {
     }
 
     public boolean stopConveyorDelay(){
-        if(photoEye2BlockedValid()){
-            if(stopConveyorDelay.get() > 2.0){
+        if(photoEye1BlockedValid()){
+            if(stopConveyorDelay.get() > 3.0){
                 return true;
             }
         }

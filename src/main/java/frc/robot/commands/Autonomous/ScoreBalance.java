@@ -35,7 +35,7 @@ public class ScoreBalance extends SequentialCommandGroup {
         new SetZeroPoints(s_Lift),
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
-        new ParallelCommandGroup(new SequentialCommandGroup(new AutoOpenGrabber(s_Grabber), new AutoScoreLevel0(s_Lift)), s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalance", 1, 1), true)),
+        new ParallelCommandGroup(new SequentialCommandGroup(new AutoOpenGrabber(s_Grabber), new AutoScoreLevel0(s_Lift)), s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalance", 1.25, 1.25), true)),
         
         new AutoBalance(s_Swerve)
     );

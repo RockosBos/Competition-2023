@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Grabber.AutoCloseGrabber;
 import frc.robot.commands.Grabber.AutoOpenGrabber;
 import frc.robot.commands.Intake.ExtendIntake;
+import frc.robot.commands.Intake.RetractIntake;
 import frc.robot.commands.Lift.AutoScoreLevel0;
 import frc.robot.commands.Lift.AutoScoreLevel3;
 import frc.robot.subsystems.Grabber;
@@ -37,14 +38,18 @@ public class Score2Adjacent extends SequentialCommandGroup {
         new SetZeroPoints(s_Lift),
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
-        new AutoOpenGrabber(s_Grabber),
-        new AutoScoreLevel0(s_Lift),
         new ParallelCommandGroup(
-            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent", 1, 1), true), 
-            s_Intake.run(() -> new ExtendIntake(s_Intake))
+            new AutoOpenGrabber(s_Grabber),
+            new AutoScoreLevel0(s_Lift),
+            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent", 3, 3), true), 
+            new ExtendIntake(s_Intake)
         ),
-        new AutoCloseGrabber(s_Grabber),
-        new AutoScoreLevel3(s_Lift),
+        new ParallelCommandGroup(
+            new RetractIntake(s_Intake),
+            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent_2", 1, 1), false),
+            new AutoCloseGrabber(s_Grabber),
+            new AutoScoreLevel3(s_Lift)
+        ),
         new AutoOpenGrabber(s_Grabber)
     );
   }
