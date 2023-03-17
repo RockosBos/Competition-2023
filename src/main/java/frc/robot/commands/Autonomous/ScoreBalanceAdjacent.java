@@ -32,6 +32,7 @@ public class ScoreBalanceAdjacent extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+        new SetZeroPoints(s_Lift),
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
         new AutoOpenGrabber(s_Grabber), 

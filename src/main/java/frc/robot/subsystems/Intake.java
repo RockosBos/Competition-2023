@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
   private CANSparkMax intakeExtend = new CANSparkMax(Constants.intakeExtendID, MotorType.kBrushless);
   private CANSparkMax intakeRollerTop = new CANSparkMax(Constants.intakeRollerTopID, MotorType.kBrushless);
   private CANSparkMax IntakeRollerBottom = new CANSparkMax(Constants.intakeRollerBottomID,MotorType.kBrushless);
-  private GenericEntry extensionPositionEntry, intakeZeroLimitEntry;
+  private GenericEntry extensionPositionEntry, intakeZeroLimitEntry, intakeSetpointEntry;
 
   private SparkMaxPIDController m_pidController = intakeExtend.getPIDController();
   private RelativeEncoder m_encoder = intakeExtend.getEncoder();
@@ -82,11 +82,11 @@ public class Intake extends SubsystemBase {
     // PID coefficients
     kP = 1; 
     kI = 0;
-    kD = 0; 
+    kD = 0.1; 
     kIz = 0; 
     kFF = 0; 
-    kMaxOutput = 0.4; 
-    kMinOutput = -0.4;
+    kMaxOutput = 0.3; 
+    kMinOutput = -0.3;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -98,6 +98,7 @@ public class Intake extends SubsystemBase {
     
 
     extensionPositionEntry = Constants.intakeDebugTab.add("Extension Rotate Position", 0).getEntry();
+    intakeSetpointEntry = Constants.intakeDebugTab.add("Intake Setpoint", 0).getEntry();
     //intakeZeroLimitEntry = Constants.intakeDebugTab.add("Intake Zero Limit", intakeZeroLimit.get()).getEntry();
 
     pos = 0.0;
@@ -142,6 +143,7 @@ public class Intake extends SubsystemBase {
     m_pidController.setReference(pos, CANSparkMax.ControlType.kPosition);
 
     extensionPositionEntry.setDouble(intakeExtend.getEncoder().getPosition());
+    intakeSetpointEntry.setDouble(this.pos);
     //intakeZeroLimitEntry.setBoolean(intakeZeroLimit.get());
 
   }

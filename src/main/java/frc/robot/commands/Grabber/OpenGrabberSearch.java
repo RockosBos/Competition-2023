@@ -26,6 +26,7 @@ public class OpenGrabberSearch extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Translation: " + translationX);
       if(Math.abs(translationX) < 0.5){
           s_Grabber.setPosition(Constants.GRABBER_OPEN_POSITION);
       }

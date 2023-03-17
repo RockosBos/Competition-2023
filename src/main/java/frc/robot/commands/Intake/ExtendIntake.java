@@ -13,7 +13,7 @@ public class ExtendIntake extends CommandBase {
   private Intake s_Intake;
   private boolean liftExtended;
 
-  public ExtendIntake(Intake s_Intake, boolean liftExtended) {
+  public ExtendIntake(Intake s_Intake) {
     this.s_Intake = s_Intake;
     this.liftExtended = liftExtended;
     addRequirements(this.s_Intake);
@@ -38,6 +38,9 @@ public class ExtendIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(s_Intake.atSetpoint()){
+      return true;
+    }
     return false;
   }
 }

@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,10 +44,14 @@ public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private boolean runConveyor = false;
-    private GenericEntry sensorEntry1, sensorEntry2;
+    private GenericEntry sensorEntry1, sensorEntry2, sensorEntryValid1, sensorEntryValid2;
 
     private boolean errorFlag;
     private String errorMessage;
+
+    private Timer photoeye1ValidityTimer = new Timer();
+    private Timer photoeye2ValidityTimer = new Timer();
+    private Timer stopConveyorDelay = new Timer();
 
 
     public Conveyor() {
@@ -57,6 +62,11 @@ public class Conveyor extends SubsystemBase {
 
         sensorEntry1 = Constants.conveyorDebugTab.add("Photoeye 1", Constants.Sensors.photoeye1.get()).getEntry();
         sensorEntry2 = Constants.conveyorDebugTab.add("Photoeye 2", Constants.Sensors.photoeye2.get()).getEntry();
+        sensorEntryValid1 = Constants.conveyorDebugTab.add("Photoeye 1 Valid", Constants.Sensors.photoeye1.get()).getEntry();
+        sensorEntryValid2 = Constants.conveyorDebugTab.add("Photoeye 2 Valid", Constants.Sensors.photoeye2.get()).getEntry();
+        photoeye1ValidityTimer.start();
+        photoeye2ValidityTimer.start();
+        stopConveyorDelay.start();
     }
 
     public void setConveyor(double voltage){
@@ -95,20 +105,52 @@ public class Conveyor extends SubsystemBase {
         errorMessage = "";
     }
 
-    public boolean bothEyesBlocked(){
-        if(Constants.Sensors.photoeye1.get() && Constants.Sensors.photoeye2.get()){
-            return true;
+    public boolean photoEye1BlockedValid(){
+        if(Constants.Sensors.photoeye1.get()){
+            if(photoeye1ValidityTimer.get() > 0.25){
+                return true;
+            }
         }
         else{
-            return false;
+            photoeye1ValidityTimer.reset();
         }
+        return false;
     }
+
+    public boolean photoEye2BlockedValid(){
+        if(Constants.Sensors.photoeye2.get()){
+            if(photoeye2ValidityTimer.get() > 0.25){
+                return true;
+            }
+        }
+        else{
+            photoeye2ValidityTimer.reset();
+        }
+        return false;
+    }
+
+    public boolean stopConveyorDelay(){
+        if(photoEye2BlockedValid()){
+            if(stopConveyorDelay.get() > 2.0){
+                return true;
+            }
+        }
+        else{
+            stopConveyorDelay.reset();
+        }
+        return false;
+    }
+
 
     @Override
     public void periodic() {
 
         sensorEntry1.setBoolean(Constants.Sensors.photoeye1.get());
         sensorEntry2.setBoolean(Constants.Sensors.photoeye2.get());
+        sensorEntryValid1.setBoolean(photoEye1BlockedValid());
+        sensorEntryValid2.setBoolean(photoEye2BlockedValid());
+
+
 
         if(errorFlag){
             System.out.println(errorMessage);

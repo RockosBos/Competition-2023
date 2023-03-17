@@ -40,7 +40,7 @@ public class Score2Opposite extends SequentialCommandGroup {
       new AutoScoreLevel0(s_Lift),
       new ParallelCommandGroup(
             s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Opposite", 1, 1), true), 
-            s_Intake.run(() -> new ExtendIntake(s_Intake, !s_Lift.isLiftRetracted()))
+            s_Intake.run(() -> new ExtendIntake(s_Intake))
         ),
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),

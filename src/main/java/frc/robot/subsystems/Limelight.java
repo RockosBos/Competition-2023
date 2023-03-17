@@ -7,10 +7,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Limelight extends SubsystemBase {
   
@@ -18,6 +20,8 @@ public class Limelight extends SubsystemBase {
   private NetworkTableEntry tx, ty, tv, ledState, exposureState;
   private NetworkTableEntry botPose;
   private double translationX, translationY, translationZ, roll, pitch, yaw;
+
+  private GenericEntry xEntry, yEntry, vEntry, ledStateEntry, exposureStateEntry;
 
   private int pipeline;
 
@@ -29,7 +33,14 @@ public class Limelight extends SubsystemBase {
     ledState = table.getEntry("ledMode");
     exposureState = table.getEntry("camMode");
     botPose = table.getEntry("botpose");
-    pipeline = 0;
+
+    xEntry = Constants.limelightDebugTab.add("X Entry", 0).getEntry();
+    yEntry = Constants.limelightDebugTab.add("Y Entry", 0).getEntry();
+    vEntry = Constants.limelightDebugTab.add("V Entry", 0).getEntry();
+    ledStateEntry = Constants.limelightDebugTab.add("LED State Entry", 0).getEntry();
+    exposureStateEntry = Constants.limelightDebugTab.add("Exposure State Entry", 0).getEntry();
+
+    //pipeline = 0;
   }
 
   public boolean isValidTargetFound(){
@@ -50,24 +61,24 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setPipeline(int pipeline){
-      this.pipeline = pipeline;
+      //this.pipeline = pipeline;
   }
 
   public void setLEDOnState(boolean state){
       if(state){
-        this.ledState.setInteger(3);
+        this.ledState.setNumber(3);
       }
       else{
-        this.ledState.setInteger(0);
+        this.ledState.setNumber(0);
       }
   }
 
   public void setLowExposure(boolean state){
       if(state){
-        this.exposureState.setInteger(0);
+        this.exposureState.setNumber(0);
       }
       else{
-        this.exposureState.setInteger(1);
+        this.exposureState.setNumber(1);
       }
   }
 
@@ -83,6 +94,11 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-      
+      xEntry.setDouble(tx.getDouble(Constants.LIMELIGHT_OFFSET_POSITION));
+      yEntry.setDouble(ty.getDouble(0));
+      vEntry.setDouble(tv.getDouble(0));
+      ledStateEntry.setInteger(ledState.getInteger(-1));
+      exposureStateEntry.setInteger(exposureState.getInteger(-1));
+
   }
 }
