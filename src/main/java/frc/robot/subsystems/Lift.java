@@ -198,6 +198,16 @@ public class Lift extends SubsystemBase {
         liftRotate.getEncoder().setPosition(0.0);
     }
 
+    public boolean emergencyStop(){
+      if(liftRotate.getOutputCurrent() > Constants.LIFT_EXTEND_CURRENT_EMERGENCY_STOP){
+          System.out.println("Lift Rotate Current Draw Exceeded: " + liftRotate.getOutputCurrent());
+      }
+      if(liftExtend.getOutputCurrent() > Constants.LIFT_ROTATE_CURRENT_EMERGENCY_STOP){
+          System.out.println("Lift Extend Current Draw Exceeded: " + liftExtend.getOutputCurrent());
+      }
+      return false;
+    }
+
     @Override
     public void periodic() {
 

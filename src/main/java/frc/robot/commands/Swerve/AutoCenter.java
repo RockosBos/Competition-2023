@@ -18,6 +18,7 @@ public class AutoCenter extends CommandBase {
       this.s_Swerve = s_Swerve;
       this.translationX = translationX;
       driveSpeed = 0;
+      addRequirements(s_Swerve);
   }
 
   // Called when the command is initially scheduled.
@@ -31,10 +32,10 @@ public class AutoCenter extends CommandBase {
           driveSpeed = 0.0;
       }
       else if(translationX > 0.5){
-          driveSpeed = 0.20;
+          driveSpeed = 0.10;
       }
       else{
-          driveSpeed = -0.20;
+          driveSpeed = -0.10;
       }
 
       this.s_Swerve.drive(

@@ -27,7 +27,7 @@ public class Position0GrabberControl extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if(s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_INTAKE && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_INTAKE){
+      if((s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_INTAKE && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_INTAKE) || (s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_1 && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_1)){
         s_Grabber.setPosition(Constants.GRABBER_CLOSED_POSITION);
       }
       else{
