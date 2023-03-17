@@ -34,13 +34,14 @@ public class Score2Adjacent extends SequentialCommandGroup {
     this.s_Intake = s_Intake;
     this.s_Grabber = s_Grabber;
     addCommands(
+        new SetZeroPoints(s_Lift),
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
         new AutoOpenGrabber(s_Grabber),
         new AutoScoreLevel0(s_Lift),
         new ParallelCommandGroup(
             s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent", 1, 1), true), 
-            s_Intake.run(() -> new ExtendIntake(s_Intake, !s_Lift.isLiftRetracted()))
+            s_Intake.run(() -> new ExtendIntake(s_Intake))
         ),
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
