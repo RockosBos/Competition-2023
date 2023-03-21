@@ -185,7 +185,7 @@ public class RobotContainer {
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         runConveyor.whileTrue(new TurnOnConveyor(s_Conveyor));
         
-        intakeRun.onTrue(new SequentialCommandGroup(new SetPosition0(s_Lift), new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor))));
+        intakeRun.onTrue(new SequentialCommandGroup(/*new SetPosition0(s_Lift), */new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor))));
         intakeRun.onFalse(new RetractIntake(s_Intake));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
         SetLiftPosition1.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new OpenGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
@@ -195,7 +195,7 @@ public class RobotContainer {
         GrabberDropCone.whileTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX()), new AutoCenter(s_Swerve, s_Limelight.getX())));
         
         bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
-        onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetPositionGrab(s_Lift), new TurnOffConveyor(s_Conveyor)), new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
+        //onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetPositionGrab(s_Lift), new TurnOffConveyor(s_Conveyor)), new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
         
         //Special Conditional Commands
     }
