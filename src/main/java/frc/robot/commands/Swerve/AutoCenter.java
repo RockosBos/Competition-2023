@@ -6,17 +6,20 @@ package frc.robot.commands.Swerve;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 public class AutoCenter extends CommandBase {
 
   private Swerve s_Swerve;
+  private Limelight s_Limelight;
   private double translationX;
   private double driveSpeed;
 
-  public AutoCenter(Swerve s_Swerve, double translationX) {
+  public AutoCenter(Swerve s_Swerve, Limelight s_Limelight) {
       this.s_Swerve = s_Swerve;
-      this.translationX = translationX;
+      this.s_Limelight = s_Limelight;
       driveSpeed = 0;
       addRequirements(s_Swerve);
   }
@@ -28,20 +31,23 @@ public class AutoCenter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if(Math.abs(translationX) < 0.5){
-          driveSpeed = 0.0;
+      translationX = s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET;
+
+      if(translationX > Constants.LIMELIGHT_STRAFE_ERROR_MARGIN){
+          driveSpeed = -0.10;
       }
-      else if(translationX > 0.5){
+      else if(translationX < -Constants.LIMELIGHT_STRAFE_ERROR_MARGIN){
           driveSpeed = 0.10;
       }
       else{
-          driveSpeed = -0.10;
+          driveSpeed = -0.0;
       }
+      System.out.println(driveSpeed);
 
       this.s_Swerve.drive(
-        new Translation2d(driveSpeed, 0.0), 
+        new Translation2d(0.0, -driveSpeed).times(Constants.Swerve.maxSpeed), 
         0.0, 
-        true,
+        false,
         true
       );
   }
@@ -53,6 +59,6 @@ public class AutoCenter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET) < Constants.LIMELIGHT_STRAFE_ERROR_MARGIN;
   }
 }

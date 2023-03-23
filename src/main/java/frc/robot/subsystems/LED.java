@@ -13,10 +13,10 @@ import frc.robot.Constants;
 public class LED extends SubsystemBase {
   
   AddressableLED leftLEDStrip = new AddressableLED(Constants.leftLEDStripID);
-  AddressableLED rightLEDStrip = new AddressableLED(Constants.rightLEDStripID);
+  //AddressableLED rightLEDStrip = new AddressableLED(Constants.rightLEDStripID);
 
   AddressableLEDBuffer leftLedBuffer = new AddressableLEDBuffer(32);
-  AddressableLEDBuffer rightLedBuffer = new AddressableLEDBuffer(32);
+  //AddressableLEDBuffer rightLedBuffer = new AddressableLEDBuffer(32);
 
   int hue, saturation, value;
   int r, g, b;
@@ -25,7 +25,7 @@ public class LED extends SubsystemBase {
 
   public LED() {
     leftLEDStrip.setLength(leftLedBuffer.getLength());
-    rightLEDStrip.setLength(rightLedBuffer.getLength());
+    //rightLEDStrip.setLength(rightLedBuffer.getLength());
 
     hue = 0;
     saturation = 0;
@@ -34,6 +34,8 @@ public class LED extends SubsystemBase {
     r = 0;
     g = 0;
     b = 0;
+
+    pattern = "Solid";
 
   }
 
@@ -54,7 +56,7 @@ public class LED extends SubsystemBase {
   }
   private void setLEDStrip(){
       leftLEDStrip.setData(leftLedBuffer);
-      rightLEDStrip.setData(rightLedBuffer);
+      //rightLEDStrip.setData(rightLedBuffer);
   }
 
   @Override
@@ -64,11 +66,11 @@ public class LED extends SubsystemBase {
               for(int i = 0; i < leftLedBuffer.getLength(); i++){
                   if(useHSV){
                       leftLedBuffer.setHSV(i, hue, saturation, value);
-                      rightLedBuffer.setHSV(i, hue, saturation, value);
+                      //rightLedBuffer.setHSV(i, hue, saturation, value);
                   }
                   else{
                       leftLedBuffer.setRGB(i, r, g, b);
-                      rightLedBuffer.setRGB(i, r, g, b);
+                      //rightLedBuffer.setRGB(i, r, g, b);
                   }       
               } 
           break;

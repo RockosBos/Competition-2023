@@ -39,7 +39,7 @@ public final class Constants {
     //PWM
 
     public static final int leftLEDStripID = 9;
-    public static final int rightLEDStripID = 1;
+    public static final int rightLEDStripID = 8;
 
     //Speeds
 
@@ -50,8 +50,6 @@ public final class Constants {
     public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -0.4;
     public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * -0.5;
     public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * -0.5;
-
-    public static final double LIMELIGHT_OFFSET_POSITION = 0.0;
 
     //Motor Position
     public static final double INTAKE_EXTEND_POSITION = 58.0;
@@ -72,6 +70,9 @@ public final class Constants {
     public static final double LIFT_ROTATE_POSITION_GRAB = 0.0;
     public static final double LIFT_EXTEND_POSITION_GRAB = 7.0;
 
+    public static final double LIFT_SETPOINT_DROP_LIMIT = 90.0;
+    public static final double LIFT_SETPOINT_DROP = 15.0;
+
     public static final double GRABBER_OPEN_POSITION = 0.0;
     public static final double GRABBER_CLOSED_POSITION = 32.0;
 
@@ -79,6 +80,11 @@ public final class Constants {
 
     public static final double LIFT_ROTATE_CURRENT_EMERGENCY_STOP = 0.0;
     public static final double LIFT_EXTEND_CURRENT_EMERGENCY_STOP = 0.0;
+
+    //Servo Positions
+
+    public static final double CONVEYOR_SERVO_HIGH_POSITION = 180.0;
+    public static final double CONVEYOR_SERVO_LOW_POSITION = 0.0;
     
 
     //Ramp Rates
@@ -112,6 +118,13 @@ public final class Constants {
     public static final double INTAKE_DELAY_TIMER = 1.0;
     public static final double CONVEYOR_DELAY_TIMER = 1.0;
 
+    //Limelight
+
+    public static final double LIMELIGHT_TX_OFFSET = -10.0;
+    public static final double LIMELIGHT_STRAFE_ERROR_MARGIN = 0.5;
+
+    //Shuffleboard Tabs
+
     public static final ShuffleboardTab matchTab = Shuffleboard.getTab("Match");
     public static final ShuffleboardTab swerveDebugTab = Shuffleboard.getTab("Swerve Debug");
     public static final ShuffleboardTab conveyorDebugTab = Shuffleboard.getTab("Conveyor Debug");
@@ -120,6 +133,7 @@ public final class Constants {
     public static final ShuffleboardTab grabberDebugTab = Shuffleboard.getTab("Grabber Debug");
     public static final ShuffleboardTab limelightDebugTab = Shuffleboard.getTab("Limelight Debug");
     public static final ShuffleboardTab pidConfigTab = Shuffleboard.getTab("PID Config");
+
 
     public static final class Sensors{
         public static DigitalInput photoeye1 = new DigitalInput(Constants.photoEyeID1);

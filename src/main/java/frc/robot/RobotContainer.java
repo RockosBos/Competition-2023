@@ -24,17 +24,21 @@ import frc.robot.commands.Autonomous.SetZeroPoints;
 import frc.robot.commands.Conveyor.*;
 import frc.robot.commands.Grabber.CloseGrabber;
 import frc.robot.commands.Grabber.OpenGrabber;
-import frc.robot.commands.Grabber.OpenGrabberSearch;
 import frc.robot.commands.Grabber.Position0GrabberControl;
 import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.ManualExtendIntake;
 import frc.robot.commands.Intake.ManualRetractIntake;
 import frc.robot.commands.Intake.RetractIntake;
 import frc.robot.commands.LED.SetLEDOnDriverStation;
+import frc.robot.commands.Lift.ManualControlExtend;
+import frc.robot.commands.Lift.ManualControlRetract;
+import frc.robot.commands.Lift.ManualControlRotateDown;
+import frc.robot.commands.Lift.ManualControlRotateUp;
 import frc.robot.commands.Lift.SetPosition0;
 import frc.robot.commands.Lift.SetPosition1;
 import frc.robot.commands.Lift.SetPosition2;
 import frc.robot.commands.Lift.SetPosition3;
+import frc.robot.commands.Lift.SetPositionDrop;
 import frc.robot.commands.Lift.SetPositionGrab;
 import frc.robot.commands.Lift.SetPositionIntake;
 import frc.robot.commands.Limelight.LimeLightSearchOff;
@@ -85,7 +89,7 @@ public class RobotContainer {
     private final Lift s_Lift = new Lift();
     private final Grabber s_Grabber = new Grabber();
     private final Limelight s_Limelight = new Limelight();
-    //private final LED s_LED = new LED();
+    private final LED s_LED = new LED();
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -106,6 +110,11 @@ public class RobotContainer {
     private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
     private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
     private final Trigger GrabberDropCone = new Trigger(() -> operatorController.getRawAxis(3) > 0.9);
+
+    private final Trigger ManualRaiseArm = new Trigger(() -> operatorController.getPOV() == 0);
+    private final Trigger ManualLowerArm = new Trigger(() -> operatorController.getPOV() == 0);
+    private final Trigger ManualExtendArm = new Trigger(() -> operatorController.getPOV() == 0);
+    private final Trigger ManualRetractArm = new Trigger(() -> operatorController.getPOV() == 0);
 
     private final Trigger bothPhotoEyesBlocked = new Trigger(() -> {
         return (s_Conveyor.getConveyorState() && s_Conveyor.photoEye1BlockedValid() && s_Conveyor.photoEye2BlockedValid());
@@ -129,9 +138,9 @@ public class RobotContainer {
     private final SendableChooser<String> modeSelector = new SendableChooser<String>();
 
 
-    private SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
-    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
-    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
+    private SlewRateLimiter translationLimiter = new SlewRateLimiter(5);
+    private SlewRateLimiter strafeLimiter = new SlewRateLimiter(5);
+    private SlewRateLimiter rotationLimiter = new SlewRateLimiter(5);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -153,8 +162,8 @@ public class RobotContainer {
         s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
-        s_Limelight.setDefaultCommand(new LimeLightSearchOff(s_Limelight));
-        //s_LED.setDefaultCommand(new SetLEDOnDriverStation(s_LED));
+        s_Limelight.setDefaultCommand(null);
+        s_LED.setDefaultCommand(new SetLEDOnDriverStation(s_LED));
         
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
@@ -185,19 +194,22 @@ public class RobotContainer {
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         runConveyor.whileTrue(new TurnOnConveyor(s_Conveyor));
         
-        intakeRun.onTrue(new SequentialCommandGroup(/*new SetPosition0(s_Lift), */new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor))));
+        intakeRun.onTrue(new SequentialCommandGroup(new SetServoHigh(s_Conveyor), new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor))));
         intakeRun.onFalse(new RetractIntake(s_Intake));
-        SetLiftPosition0.onTrue(new SequentialCommandGroup(new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
-        SetLiftPosition1.onTrue(new SequentialCommandGroup(new RetractIntake(s_Intake), new OpenGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPosition2.onTrue(new SequentialCommandGroup(new SetPositionGrab(s_Lift), new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPosition3.onTrue(new SequentialCommandGroup(new SetPositionGrab(s_Lift), new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
-        GrabberDropCone.whileTrue(new ParallelCommandGroup(new LimeLightSearchOn(s_Limelight), new OpenGrabberSearch(s_Grabber, s_Limelight.getX()), new AutoCenter(s_Swerve, s_Limelight.getX())));
-        
+        SetLiftPosition0.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
+        SetLiftPosition1.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new RetractIntake(s_Intake), new OpenGrabber(s_Grabber), new SetPosition1(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition2.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new SetPositionGrab(s_Lift), new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition2(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPosition3.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new SetPositionGrab(s_Lift), new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition3(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
+        GrabberDropCone.whileTrue(new SequentialCommandGroup(new LimeLightSearchOn(s_Limelight), new AutoCenter(s_Swerve, s_Limelight), /*new SetPositionDrop(s_Lift),*/ new ParallelCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift))));
+        GrabberDropCone.whileFalse(new LimeLightSearchOff(s_Limelight));
         bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
         //onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetPositionGrab(s_Lift), new TurnOffConveyor(s_Conveyor)), new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
         
-        //Special Conditional Commands
+        //ManualRaiseArm.whileTrue(new ManualControlRotateUp(s_Lift));
+        //ManualLowerArm.whileTrue(new ManualControlRotateDown(s_Lift));
+        //ManualExtendArm.whileTrue(new ManualControlExtend(s_Lift));
+        //ManualRetractArm.whileTrue(new ManualControlRetract(s_Lift));
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous

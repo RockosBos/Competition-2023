@@ -21,9 +21,11 @@ public class Limelight extends SubsystemBase {
   private NetworkTableEntry botPose;
   private double translationX, translationY, translationZ, roll, pitch, yaw;
 
-  private GenericEntry xEntry, yEntry, vEntry, ledStateEntry, exposureStateEntry;
+  private GenericEntry xEntry, yEntry, vEntry, ledStateEntry, exposureStateEntry, sampleAverageEntry;
 
   private int pipeline;
+
+  private double[] sampleX = new double[10];
 
   public Limelight() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -39,7 +41,11 @@ public class Limelight extends SubsystemBase {
     vEntry = Constants.limelightDebugTab.add("V Entry", 0).getEntry();
     ledStateEntry = Constants.limelightDebugTab.add("LED State Entry", 0).getEntry();
     exposureStateEntry = Constants.limelightDebugTab.add("Exposure State Entry", 0).getEntry();
+    sampleAverageEntry = Constants.limelightDebugTab.add("Sample Average Entry", 0).getEntry();
 
+
+    setLEDOnState(false);
+    setLowExposure(false);
     //pipeline = 0;
   }
 
@@ -66,19 +72,19 @@ public class Limelight extends SubsystemBase {
 
   public void setLEDOnState(boolean state){
       if(state){
-        this.ledState.setNumber(3);
+        this.ledState.setDouble(3);
       }
       else{
-        this.ledState.setNumber(0);
+        this.ledState.setDouble(1);
       }
   }
 
   public void setLowExposure(boolean state){
       if(state){
-        this.exposureState.setNumber(0);
+        this.exposureState.setDouble(0);
       }
       else{
-        this.exposureState.setNumber(1);
+        this.exposureState.setDouble(1);
       }
   }
 
@@ -91,14 +97,30 @@ public class Limelight extends SubsystemBase {
   public Pose2d getPose(){
       return new Pose2d(translationX, translationY, new Rotation2d(yaw));
   }
+  
+  public double getSampleAverage(){
+    double sum = 0;
+    for(int i = 0; i < sampleX.length; i++){
+        sum = sum + sampleX[i];
+    }
+    return sum / sampleX.length;
+  }
 
   @Override
   public void periodic() {
-      xEntry.setDouble(tx.getDouble(Constants.LIMELIGHT_OFFSET_POSITION));
+
+      if(tv.getInteger(0) == 1){
+          for(int i = 0; i < sampleX.length; i++){
+              sampleX[i] = tx.getDouble(0.0);
+          }
+      }
+
+      xEntry.setDouble(tx.getDouble(Constants.LIMELIGHT_TX_OFFSET));
       yEntry.setDouble(ty.getDouble(0));
       vEntry.setDouble(tv.getDouble(0));
       ledStateEntry.setInteger(ledState.getInteger(-1));
       exposureStateEntry.setInteger(exposureState.getInteger(-1));
+      sampleAverageEntry.setDouble(getSampleAverage());
 
   }
 }

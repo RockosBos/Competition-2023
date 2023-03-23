@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -43,7 +44,9 @@ import frc.robot.Constants;
 public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
+    private Servo endStopServo = new Servo(0);
     private boolean runConveyor = false;
+    private double servoPosition;
     private GenericEntry sensorEntry1, sensorEntry2, sensorEntryValid1, sensorEntryValid2;
 
     private boolean errorFlag;
@@ -59,6 +62,8 @@ public class Conveyor extends SubsystemBase {
         conveyorMotor.restoreFactoryDefaults();
         conveyorMotor.setInverted(true);
         conveyorMotor.setOpenLoopRampRate(Constants.CONVEYOR_RAMP_RATE);
+
+        servoPosition = Constants.CONVEYOR_SERVO_HIGH_POSITION;
 
         sensorEntry1 = Constants.conveyorDebugTab.add("Photoeye 1", Constants.Sensors.photoeye1.get()).getEntry();
         sensorEntry2 = Constants.conveyorDebugTab.add("Photoeye 2", Constants.Sensors.photoeye2.get()).getEntry();
@@ -141,6 +146,15 @@ public class Conveyor extends SubsystemBase {
         return false;
     }
 
+    public void setServoPosition(double pos){
+        //Sets Servo Position in Degrees
+        servoPosition = pos;
+    }
+
+    public double getServoPosition(){
+        return servoPosition;
+    }
+
 
     @Override
     public void periodic() {
@@ -150,7 +164,7 @@ public class Conveyor extends SubsystemBase {
         sensorEntryValid1.setBoolean(photoEye1BlockedValid());
         sensorEntryValid2.setBoolean(photoEye2BlockedValid());
 
-
+        endStopServo.setAngle(servoPosition);
 
         if(errorFlag){
             System.out.println(errorMessage);
