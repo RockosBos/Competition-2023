@@ -39,11 +39,10 @@ public final class Constants {
     //PWM
 
     public static final int leftLEDStripID = 9;
-    public static final int rightLEDStripID = 8;
 
     //Speeds
 
-    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 1.0;
+    public static final double CONVEYOR_FORWARD_SPEED_VOLTS = MAX_VOLTS * 0.5;
     public static final double CONVEYOR_BACKWARD_SPEED_VOLTS = MAX_VOLTS * -0.5;
     public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
     public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
@@ -56,14 +55,14 @@ public final class Constants {
     public static final double INTAKE_RETRACT_POSITION = -4.0;
 
     public static final double LIFT_EXTEND_POSITION_0 = 0.0; //Conveyor Position
-    public static final double LIFT_ROTATE_POSITION_0 = 0.0;
+    public static final double LIFT_ROTATE_POSITION_0 = -2.0;
     public static final double LIFT_EXTEND_POSITION_1 = 100.0; //Level 1 Scoring Position
     public static final double LIFT_ROTATE_POSITION_1 = 50.0;
     public static final double LIFT_EXTEND_POSITION_2 = 30.0; //Level 2 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_2 = 110.0;
+    public static final double LIFT_ROTATE_POSITION_2 = 120.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_3 = 120.0;
-    public static final double LIFT_EXTEND_POSITION_INTAKE = 30.0; //Intake Position
+    public static final double LIFT_ROTATE_POSITION_3 = 125.0;
+    public static final double LIFT_EXTEND_POSITION_INTAKE = 0.0; //Intake Position
     public static final double LIFT_ROTATE_POSITION_INTAKE = 110.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
     public static final double LIFT_EXTEND_CLEAR_POSITION = 40.0; //Position where rotation can proceed into the lowered position.
@@ -83,8 +82,8 @@ public final class Constants {
 
     //Servo Positions
 
-    public static final double CONVEYOR_SERVO_HIGH_POSITION = 180.0;
-    public static final double CONVEYOR_SERVO_LOW_POSITION = 0.0;
+    public static final double CONVEYOR_SERVO_HIGH_POSITION = 70.0;
+    public static final double CONVEYOR_SERVO_LOW_POSITION = 40.0;
     
 
     //Ramp Rates

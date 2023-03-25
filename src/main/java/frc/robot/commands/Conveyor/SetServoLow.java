@@ -13,7 +13,7 @@ public class SetServoLow extends CommandBase {
   Conveyor s_Conveyor;
   public SetServoLow(Conveyor s_Conveyor) {
     this.s_Conveyor = s_Conveyor;
-    addRequirements(s_Conveyor);
+    //addRequirements(s_Conveyor);
   }
 
   // Called when the command is initially scheduled.
@@ -23,7 +23,8 @@ public class SetServoLow extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      s_Conveyor.setServoPosition(Constants.CONVEYOR_SERVO_LOW_POSITION);
+      this.s_Conveyor.setConveyor(0.0);
+      this.s_Conveyor.setServoPosition(Constants.CONVEYOR_SERVO_LOW_POSITION);
   }
 
   // Called once the command ends or is interrupted.

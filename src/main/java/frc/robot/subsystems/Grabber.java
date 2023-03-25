@@ -49,8 +49,8 @@ public class Grabber extends SubsystemBase {
     kD = 0; 
     kIz = 0; 
     kFF = 0; 
-    kMaxOutput = 0.5; 
-    kMinOutput = -0.5;
+    kMaxOutput = 1.0; 
+    kMinOutput = -1.0;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -69,6 +69,10 @@ public class Grabber extends SubsystemBase {
 
   public void grabberManual(double speed){
      //grabberMotor.set(speed);
+  }
+
+  public double getSetpoint(){
+      return rotations;
   }
 
   public boolean atSetpoint(){

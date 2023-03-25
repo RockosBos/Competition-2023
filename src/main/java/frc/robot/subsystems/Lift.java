@@ -14,7 +14,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -49,11 +51,14 @@ public class Lift extends SubsystemBase {
 
     private CANSparkMax liftRotate = new CANSparkMax(Constants.liftRotateID, MotorType.kBrushless);
     private CANSparkMax liftExtend = new CANSparkMax(Constants.liftExtendID, MotorType.kBrushless);
+
+    private AnalogInput sonicSensor = new AnalogInput(0);
+
     private SparkMaxPIDController liftRotateController;
     private SparkMaxPIDController liftExtendController;
     private double rotate_kP, rotate_kI, rotate_kD, rotate_kIz, rotate_kFF, rotate_kMaxOutput, rotate_kMinOutput;
     private double extend_kP, extend_kI, extend_kD, extend_kIz, extend_kFF, extend_kMaxOutput, extend_kMinOutput;
-    private GenericEntry rotatePositionEntry, extendPositionEntry, rotateSetPointEntry, extendSetPointEntry, extensionZeroEntry, rotationZeroEntry;
+    private GenericEntry rotatePositionEntry, extendPositionEntry, rotateSetPointEntry, extendSetPointEntry, extensionZeroEntry, rotationZeroEntry, sonicSensorEntry;
     private double rotateSetpoint, extendSetpoint, rotateVoltage, extendVoltage;
     private boolean positionControl;
 
@@ -84,19 +89,19 @@ public class Lift extends SubsystemBase {
 
       rotate_kP = 1; 
       rotate_kI = 0;
-      rotate_kD = 0; 
+      rotate_kD = 0.1; 
       rotate_kIz = 0; 
       rotate_kFF = 0; 
-      rotate_kMaxOutput = .9; 
-      rotate_kMinOutput = -.9;
+      rotate_kMaxOutput = 1.0; 
+      rotate_kMinOutput = -1.0;
 
       extend_kP = 1; 
       extend_kI = 0;
       extend_kD = 0; 
       extend_kIz = 0; 
       extend_kFF = 0; 
-      extend_kMaxOutput = 0.9; 
-      extend_kMinOutput = -0.9;
+      extend_kMaxOutput = 1.0; 
+      extend_kMinOutput = -1.0;
 
       liftRotateController.setP(rotate_kP);
       liftRotateController.setI(rotate_kI);
@@ -118,9 +123,14 @@ public class Lift extends SubsystemBase {
       extendSetPointEntry = Constants.liftDebugTab.add("Lift Extend Set Point", 0).getEntry();
       extensionZeroEntry = Constants.liftDebugTab.add("Lift Extension Proxy", false).getEntry();
       rotationZeroEntry = Constants.liftDebugTab.add("Lift Rotate Zero Switch", false).getEntry();
+      sonicSensorEntry = Constants.liftDebugTab.add("Sonic Sensor Distance", 0).getEntry();
 
       rotateSetpoint = 0;
       extendSetpoint = 0;
+    }
+
+    public double getSonicSensorDistance(){
+      return sonicSensor.getVoltage();
     }
 
     public boolean isLiftRetracted(){
@@ -247,6 +257,7 @@ public class Lift extends SubsystemBase {
         extendSetPointEntry.setDouble(extendSetpoint);
         extensionZeroEntry.setBoolean(Constants.Sensors.liftExtendZero.get());
         rotationZeroEntry.setBoolean(Constants.Sensors.liftRotateZero.get());
+        sonicSensorEntry.setDouble(sonicSensor.getVoltage());
 
         
     }

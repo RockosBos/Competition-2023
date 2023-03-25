@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -13,29 +15,42 @@ import frc.robot.Constants;
 public class LED extends SubsystemBase {
   
   AddressableLED leftLEDStrip = new AddressableLED(Constants.leftLEDStripID);
-  //AddressableLED rightLEDStrip = new AddressableLED(Constants.rightLEDStripID);
 
   AddressableLEDBuffer leftLedBuffer = new AddressableLEDBuffer(32);
-  //AddressableLEDBuffer rightLedBuffer = new AddressableLEDBuffer(32);
 
   int hue, saturation, value;
   int r, g, b;
   String color, pattern;
   boolean useHSV;
+  Alliance currentAlliance;
 
   public LED() {
     leftLEDStrip.setLength(leftLedBuffer.getLength());
-    //rightLEDStrip.setLength(rightLedBuffer.getLength());
 
-    hue = 0;
-    saturation = 0;
-    value = 0;
+    hue = 255;
+    saturation = 255;
+    value = 255;
 
-    r = 0;
-    g = 0;
-    b = 0;
+    r = 255;
+    g = 255;
+    b = 255;
+
+    useHSV = false;
 
     pattern = "Solid";
+    if(currentAlliance == DriverStation.getAlliance().Red){
+        setStateRGB(255, 0, 0, "Solid");
+    }else if(currentAlliance == DriverStation.getAlliance().Blue){
+        setStateRGB(0, 0, 255, "Solid");
+    }
+    else{
+        setStateRGB(255, 255, 255, "Solid");
+    }
+    for(int i = 0; i < leftLedBuffer.getLength(); i++){
+        leftLedBuffer.setRGB(i, 255, 255, 255);
+    }
+    leftLEDStrip.setData(leftLedBuffer);
+    leftLEDStrip.start();
 
   }
 
@@ -55,29 +70,29 @@ public class LED extends SubsystemBase {
       this.useHSV = false;
   }
   private void setLEDStrip(){
+    
       leftLEDStrip.setData(leftLedBuffer);
-      //rightLEDStrip.setData(rightLedBuffer);
   }
 
   @Override
   public void periodic() {
-      switch(pattern){
-          case "Solid":
-              for(int i = 0; i < leftLedBuffer.getLength(); i++){
-                  if(useHSV){
-                      leftLedBuffer.setHSV(i, hue, saturation, value);
-                      //rightLedBuffer.setHSV(i, hue, saturation, value);
-                  }
-                  else{
-                      leftLedBuffer.setRGB(i, r, g, b);
-                      //rightLedBuffer.setRGB(i, r, g, b);
-                  }       
-              } 
-          break;
-          default:
+        currentAlliance = DriverStation.getAlliance();
 
-          break;
-      }
-      setLEDStrip();
+        switch(pattern){
+            case "Solid":
+                for(int i = 0; i < leftLedBuffer.getLength(); i++){
+                    if(useHSV){
+                        leftLedBuffer.setHSV(i, hue, saturation, value);
+                    }
+                    else{
+                        leftLedBuffer.setRGB(i, r, g, b);
+                    }       
+                } 
+            break;
+            default:
+
+            break;
+        }
+        setLEDStrip();
   }
 }

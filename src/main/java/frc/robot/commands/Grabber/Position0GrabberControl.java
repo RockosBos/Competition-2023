@@ -13,6 +13,7 @@ public class Position0GrabberControl extends CommandBase {
   /** Creates a new Position0GrabberControl. */
   Grabber s_Grabber;
   Lift s_Lift;
+  double grabberInitialSetPoint;
   public Position0GrabberControl(Grabber s_Grabber, Lift s_Lift) {
     this.s_Grabber = s_Grabber;
     this.s_Lift = s_Lift;
@@ -22,17 +23,28 @@ public class Position0GrabberControl extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    grabberInitialSetPoint = s_Grabber.getSetpoint();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if((s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_INTAKE && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_INTAKE) || (s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_1 && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_1)){
+      if((s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_INTAKE && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_INTAKE)){
         s_Grabber.setPosition(Constants.GRABBER_CLOSED_POSITION);
+      }
+      else if(s_Lift.getLiftExtendSetpoint() == Constants.LIFT_EXTEND_POSITION_0 && s_Lift.getLiftRotateSetpoint() == Constants.LIFT_ROTATE_POSITION_0){
+        if(grabberInitialSetPoint == Constants.GRABBER_OPEN_POSITION){
+          s_Grabber.setPosition(Constants.GRABBER_CLOSED_POSITION);
+        }
+        else{
+          s_Grabber.setPosition(Constants.GRABBER_OPEN_POSITION);
+        }
       }
       else{
         s_Grabber.setPosition(Constants.GRABBER_OPEN_POSITION);
       }
+
   }
 
   // Called once the command ends or is interrupted.

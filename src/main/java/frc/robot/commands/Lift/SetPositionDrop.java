@@ -11,21 +11,24 @@ import frc.robot.subsystems.Lift;
 public class SetPositionDrop extends CommandBase {
   /** Creates a new SetPositionDrop. */
   private Lift s_Lift;
+  private double currentSetpoint, newSetpoint;
   public SetPositionDrop(Lift s_Lift) {
     // Use addRequirements() here to declare subsystem dependencies.
       this.s_Lift = s_Lift;
+      addRequirements(this.s_Lift);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+      currentSetpoint = s_Lift.getLiftRotateSetpoint();
+      newSetpoint = currentSetpoint - Constants.LIFT_SETPOINT_DROP;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      s_Lift.setPosition(s_Lift.getLiftRotateSetpoint() - Constants.LIFT_SETPOINT_DROP, s_Lift.getLiftExtendSetpoint());
+      s_Lift.setPosition(newSetpoint, s_Lift.getLiftExtendSetpoint());
   }
 
   // Called once the command ends or is interrupted.

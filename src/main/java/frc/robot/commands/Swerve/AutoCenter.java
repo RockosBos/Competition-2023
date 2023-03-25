@@ -15,12 +15,13 @@ public class AutoCenter extends CommandBase {
   private Swerve s_Swerve;
   private Limelight s_Limelight;
   private double translationX;
-  private double driveSpeed;
+  private double driveSpeed, rotationSpeed;
 
   public AutoCenter(Swerve s_Swerve, Limelight s_Limelight) {
       this.s_Swerve = s_Swerve;
       this.s_Limelight = s_Limelight;
       driveSpeed = 0;
+      rotationSpeed = 0;
       addRequirements(s_Swerve);
   }
 
@@ -42,11 +43,22 @@ public class AutoCenter extends CommandBase {
       else{
           driveSpeed = -0.0;
       }
-      System.out.println(driveSpeed);
+
+      if(s_Swerve.gyro.getYaw() > 1){
+          rotationSpeed = -0.1;
+          driveSpeed = 0.0;
+      }
+      else if(s_Swerve.gyro.getYaw() < -1){
+          rotationSpeed = 0.1;
+          driveSpeed = 0.0;
+      }
+      else{
+          rotationSpeed = 0.0;
+      }
 
       this.s_Swerve.drive(
         new Translation2d(0.0, -driveSpeed).times(Constants.Swerve.maxSpeed), 
-        0.0, 
+        rotationSpeed * Constants.Swerve.maxAngularVelocity, 
         false,
         true
       );
@@ -59,6 +71,6 @@ public class AutoCenter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET) < Constants.LIMELIGHT_STRAFE_ERROR_MARGIN;
+    return (Math.abs(s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET) < Constants.LIMELIGHT_STRAFE_ERROR_MARGIN && rotationSpeed == 0);
   }
 }

@@ -24,6 +24,7 @@ public class Limelight extends SubsystemBase {
   private GenericEntry xEntry, yEntry, vEntry, ledStateEntry, exposureStateEntry, sampleAverageEntry;
 
   private int pipeline;
+  private boolean ledModeOn, exposureStateLow;
 
   private double[] sampleX = new double[10];
 
@@ -43,9 +44,8 @@ public class Limelight extends SubsystemBase {
     exposureStateEntry = Constants.limelightDebugTab.add("Exposure State Entry", 0).getEntry();
     sampleAverageEntry = Constants.limelightDebugTab.add("Sample Average Entry", 0).getEntry();
 
-
-    setLEDOnState(false);
-    setLowExposure(false);
+    ledModeOn = false;
+    exposureStateLow = false;
     //pipeline = 0;
   }
 
@@ -71,21 +71,11 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setLEDOnState(boolean state){
-      if(state){
-        this.ledState.setDouble(3);
-      }
-      else{
-        this.ledState.setDouble(1);
-      }
+      ledModeOn = state;
   }
 
   public void setLowExposure(boolean state){
-      if(state){
-        this.exposureState.setDouble(0);
-      }
-      else{
-        this.exposureState.setDouble(1);
-      }
+      exposureStateLow = state;
   }
 
   public int getPipeline(){
@@ -113,6 +103,20 @@ public class Limelight extends SubsystemBase {
           for(int i = 0; i < sampleX.length; i++){
               sampleX[i] = tx.getDouble(0.0);
           }
+      }
+
+      if(ledModeOn){
+        this.ledState.setDouble(3);
+      }
+      else{
+        this.ledState.setDouble(1);
+      }
+
+      if(exposureStateLow){
+        this.exposureState.setDouble(0);
+      }
+      else{
+        this.exposureState.setDouble(1);
       }
 
       xEntry.setDouble(tx.getDouble(Constants.LIMELIGHT_TX_OFFSET));

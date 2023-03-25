@@ -112,7 +112,7 @@ public class Conveyor extends SubsystemBase {
 
     public boolean photoEye1BlockedValid(){
         if(Constants.Sensors.photoeye1.get()){
-            if(photoeye1ValidityTimer.get() > 0.25){
+            if(photoeye1ValidityTimer.get() > 0.1){
                 return true;
             }
         }
@@ -124,7 +124,7 @@ public class Conveyor extends SubsystemBase {
 
     public boolean photoEye2BlockedValid(){
         if(Constants.Sensors.photoeye2.get()){
-            if(photoeye2ValidityTimer.get() > 0.25){
+            if(photoeye2ValidityTimer.get() > 0.1){
                 return true;
             }
         }
