@@ -60,7 +60,7 @@ public class Lift extends SubsystemBase {
     private double extend_kP, extend_kI, extend_kD, extend_kIz, extend_kFF, extend_kMaxOutput, extend_kMinOutput;
     private GenericEntry rotatePositionEntry, extendPositionEntry, rotateSetPointEntry, extendSetPointEntry, extensionZeroEntry, rotationZeroEntry, sonicSensorEntry;
     private double rotateSetpoint, extendSetpoint, rotateVoltage, extendVoltage;
-    private boolean positionControl;
+    private boolean positionControl, dropState;
 
     public Lift() {
       liftRotate.restoreFactoryDefaults();
@@ -127,6 +127,12 @@ public class Lift extends SubsystemBase {
 
       rotateSetpoint = 0;
       extendSetpoint = 0;
+
+      dropState = false;
+    }
+
+    public void setDropState(boolean dropState){
+        this.dropState = dropState;
     }
 
     public double getSonicSensorDistance(){
@@ -138,8 +144,10 @@ public class Lift extends SubsystemBase {
     }
 
     public void setPosition(double rotateSetpoint, double extendSetpoint){
+        
         this.rotateSetpoint = rotateSetpoint;
         this.extendSetpoint = extendSetpoint;
+
     }
 
     public void setRotateVoltage(double voltage){
@@ -220,15 +228,27 @@ public class Lift extends SubsystemBase {
 
     @Override
     public void periodic() {
+      if(this.rotateSetpoint < -2){
+          this.rotateSetpoint = -2;
+      }
+      if(this.extendSetpoint < 0){
+          this.extendSetpoint = 0;
+      }
+      if(dropState){
+          liftRotateController.setOutputRange(-0.25, 0.25);
+      }
+      else{
+          liftRotateController.setOutputRange(rotate_kMinOutput, rotate_kMaxOutput);
+      }
 
       if(positionControl){
-          if(Math.abs(liftExtend.getEncoder().getPosition()) < 3.0 || Math.abs(liftRotate.getEncoder().getPosition() - rotateSetpoint) < 10){
+          if(Math.abs(liftExtend.getEncoder().getPosition()) < 3.0 || Math.abs(liftRotate.getEncoder().getPosition() - rotateSetpoint) < 10 || dropState){
             liftRotateController.setReference(rotateSetpoint, CANSparkMax.ControlType.kPosition);
           }
           else{
             liftRotateController.setReference(getLiftRotatePosition(), CANSparkMax.ControlType.kPosition);
           }
-          if(atRotateSetpoint()){
+          if(atRotateSetpoint() || dropState){
             liftExtendController.setReference(extendSetpoint, CANSparkMax.ControlType.kPosition);
           }
           else{

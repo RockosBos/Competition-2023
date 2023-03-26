@@ -23,6 +23,7 @@ public class SetPositionDrop extends CommandBase {
   public void initialize() {
       currentSetpoint = s_Lift.getLiftRotateSetpoint();
       newSetpoint = currentSetpoint - Constants.LIFT_SETPOINT_DROP;
+      s_Lift.setDropState(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +34,9 @@ public class SetPositionDrop extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    s_Lift.setDropState(false);
+  }
 
   // Returns true when the command should end.
   @Override

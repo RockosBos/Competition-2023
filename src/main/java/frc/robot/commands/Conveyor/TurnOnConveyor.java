@@ -20,12 +20,15 @@ public class TurnOnConveyor extends CommandBase {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-      this.s_Conveyor.setConveyor(Constants.CONVEYOR_FORWARD_SPEED_VOLTS);
+      this.s_Conveyor.setServoPosition(Constants.CONVEYOR_SERVO_HIGH_POSITION);
+      this.s_Conveyor.setConveyorState(true);
     }
 
     // Called once the command ends or is interrupted.
@@ -35,6 +38,6 @@ public class TurnOnConveyor extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-      return false;
+      return this.s_Conveyor.getConveyorState();
     }
 }

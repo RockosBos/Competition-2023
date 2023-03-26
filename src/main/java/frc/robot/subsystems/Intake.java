@@ -105,7 +105,8 @@ public class Intake extends SubsystemBase {
   } 
 
   public void SetIntakeRollers(double voltage) {
-    if(Math.abs(intakeExtend.getEncoder().getPosition() - Constants.INTAKE_EXTEND_POSITION) < 3.0){
+    if(Math.abs(intakeExtend.getEncoder().getPosition() - Constants.INTAKE_EXTEND_POSITION) < 5.0){
+        
         intakeRollerTop.setVoltage(voltage);
         IntakeRollerBottom.setVoltage(voltage);
     }
@@ -124,7 +125,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean atSetpoint(){
-    if(Math.abs(intakeExtend.getEncoder().getPosition() - pos) < 3.0){
+    if(Math.abs(intakeExtend.getEncoder().getPosition() - pos) < 5.0){
       return true;
     }
     else{

@@ -12,7 +12,6 @@ import frc.robot.commands.Grabber.AutoCloseGrabber;
 import frc.robot.commands.Grabber.AutoOpenGrabber;
 import frc.robot.commands.Lift.AutoScoreLevel0;
 import frc.robot.commands.Lift.AutoScoreLevel3;
-import frc.robot.commands.Lift.SetPosition0;
 import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Lift;
@@ -21,12 +20,12 @@ import frc.robot.subsystems.Swerve;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreBalance extends SequentialCommandGroup {
+public class ScoreBalanceMobility extends SequentialCommandGroup {
   /** Creates a new ScoreMobility. */
   Swerve s_Swerve;
   Lift s_Lift;
   Grabber s_Grabber;
-  public ScoreBalance(Swerve s_Swerve, Lift s_Lift, Grabber s_Grabber) {
+  public ScoreBalanceMobility(Swerve s_Swerve, Lift s_Lift, Grabber s_Grabber) {
     this.s_Swerve = s_Swerve;
     this.s_Lift = s_Lift;
     this.s_Grabber = s_Grabber;
@@ -37,9 +36,11 @@ public class ScoreBalance extends SequentialCommandGroup {
         new AutoCloseGrabber(s_Grabber),
         new AutoScoreLevel3(s_Lift),
         new ParallelCommandGroup(
-            new AutoOpenGrabber(s_Grabber), 
-            new SetPosition0(s_Lift), 
-            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalance", 1.25, 1.25), true)
+            new SequentialCommandGroup(
+                new AutoOpenGrabber(s_Grabber), 
+                new AutoScoreLevel0(s_Lift)), 
+                s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("ScoreBalanceMobility", 1.25, 1.25), true
+            )
         ),
         
         new AutoBalance(s_Swerve)

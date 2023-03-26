@@ -74,17 +74,6 @@ public class Conveyor extends SubsystemBase {
         stopConveyorDelay.start();
     }
 
-    public void setConveyor(double voltage){
-        if(voltage != 0.0){
-            runConveyor = true;
-        }
-        else{
-            runConveyor = false;
-        }
-        conveyorMotor.setVoltage(voltage);
-        
-    }
-
     public boolean getConveyorState(){
         return runConveyor;
     }
@@ -158,6 +147,12 @@ public class Conveyor extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if(runConveyor){
+            conveyorMotor.setVoltage(Constants.CONVEYOR_FORWARD_SPEED_VOLTS);
+        }
+        else{
+            conveyorMotor.setVoltage(0.0);
+        }
 
         sensorEntry1.setBoolean(Constants.Sensors.photoeye1.get());
         sensorEntry2.setBoolean(Constants.Sensors.photoeye2.get());

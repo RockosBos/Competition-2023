@@ -59,9 +59,9 @@ public final class Constants {
     public static final double LIFT_EXTEND_POSITION_1 = 100.0; //Level 1 Scoring Position
     public static final double LIFT_ROTATE_POSITION_1 = 50.0;
     public static final double LIFT_EXTEND_POSITION_2 = 30.0; //Level 2 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_2 = 120.0;
+    public static final double LIFT_ROTATE_POSITION_2 = 112.0;
     public static final double LIFT_EXTEND_POSITION_3 = 130.0; //Level 3 Scoring Position
-    public static final double LIFT_ROTATE_POSITION_3 = 125.0;
+    public static final double LIFT_ROTATE_POSITION_3 = 130.0;
     public static final double LIFT_EXTEND_POSITION_INTAKE = 0.0; //Intake Position
     public static final double LIFT_ROTATE_POSITION_INTAKE = 110.0;
     public static final double LIFT_ROTATE_CLEAR_POSITION = 40.0; //Position where extension can proceed into the lowered position.
@@ -70,7 +70,7 @@ public final class Constants {
     public static final double LIFT_EXTEND_POSITION_GRAB = 7.0;
 
     public static final double LIFT_SETPOINT_DROP_LIMIT = 90.0;
-    public static final double LIFT_SETPOINT_DROP = 15.0;
+    public static final double LIFT_SETPOINT_DROP = 13.0;
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
     public static final double GRABBER_CLOSED_POSITION = 32.0;
@@ -119,8 +119,8 @@ public final class Constants {
 
     //Limelight
 
-    public static final double LIMELIGHT_TX_OFFSET = -10.0;
-    public static final double LIMELIGHT_STRAFE_ERROR_MARGIN = 0.5;
+    public static final double LIMELIGHT_TX_OFFSET = -12.0;
+    public static final double LIMELIGHT_STRAFE_ERROR_MARGIN = 0.25;
 
     //Shuffleboard Tabs
 
@@ -243,7 +243,7 @@ public final class Constants {
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 10;
             public static final int canCoderID = 9;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(183.0); //329.7
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(186.0); //329.7
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }

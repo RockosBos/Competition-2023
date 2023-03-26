@@ -16,7 +16,7 @@ public class LED extends SubsystemBase {
   
   AddressableLED leftLEDStrip = new AddressableLED(Constants.leftLEDStripID);
 
-  AddressableLEDBuffer leftLedBuffer = new AddressableLEDBuffer(32);
+  AddressableLEDBuffer leftLedBuffer = new AddressableLEDBuffer(28);
 
   int hue, saturation, value;
   int r, g, b;
@@ -37,15 +37,8 @@ public class LED extends SubsystemBase {
 
     useHSV = false;
 
-    pattern = "Solid";
-    if(currentAlliance == DriverStation.getAlliance().Red){
-        setStateRGB(255, 0, 0, "Solid");
-    }else if(currentAlliance == DriverStation.getAlliance().Blue){
-        setStateRGB(0, 0, 255, "Solid");
-    }
-    else{
-        setStateRGB(255, 255, 255, "Solid");
-    }
+    pattern = "Alliance";
+
     for(int i = 0; i < leftLedBuffer.getLength(); i++){
         leftLedBuffer.setRGB(i, 255, 255, 255);
     }
@@ -88,6 +81,20 @@ public class LED extends SubsystemBase {
                         leftLedBuffer.setRGB(i, r, g, b);
                     }       
                 } 
+            break;
+            case "Alliance":
+                if(currentAlliance == DriverStation.Alliance.Red){
+                    setStateRGB(255, 0, 0, "Solid");
+                }else if(currentAlliance == DriverStation.Alliance.Blue){
+                    setStateRGB(0, 0, 255, "Solid");
+                }
+                else{
+                    setStateRGB(255, 255, 255, "Solid");
+                }
+
+            break;
+            case "Blink":
+
             break;
             default:
 

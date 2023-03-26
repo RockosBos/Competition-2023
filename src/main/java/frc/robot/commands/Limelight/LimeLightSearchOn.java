@@ -25,6 +25,7 @@ public class LimeLightSearchOn extends CommandBase {
   public void execute() {
     s_Limelight.setLEDOnState(true);
     s_Limelight.setLowExposure(true);
+    s_Limelight.resetSampleAverage();
     settingsSet = true;
   }
 

@@ -44,7 +44,7 @@ public class AutoCenter extends CommandBase {
           driveSpeed = -0.0;
       }
 
-      if(s_Swerve.gyro.getYaw() > 1){
+      /*if(s_Swerve.gyro.getYaw() > 1){
           rotationSpeed = -0.1;
           driveSpeed = 0.0;
       }
@@ -54,7 +54,7 @@ public class AutoCenter extends CommandBase {
       }
       else{
           rotationSpeed = 0.0;
-      }
+      }*/
 
       this.s_Swerve.drive(
         new Translation2d(0.0, -driveSpeed).times(Constants.Swerve.maxSpeed), 
@@ -71,6 +71,7 @@ public class AutoCenter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET) < Constants.LIMELIGHT_STRAFE_ERROR_MARGIN && rotationSpeed == 0);
+    System.out.println(Math.abs(s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET));
+    return (Math.abs(s_Limelight.getSampleAverage() - Constants.LIMELIGHT_TX_OFFSET) < Constants.LIMELIGHT_STRAFE_ERROR_MARGIN);
   }
 }

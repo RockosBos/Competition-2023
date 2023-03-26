@@ -29,6 +29,8 @@ public class AutoBalance extends CommandBase {
     private double strafe;
     private double rotation;
 
+    private boolean firstPass;
+
     public AutoBalance(Swerve s_Swerve) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
@@ -39,6 +41,7 @@ public class AutoBalance extends CommandBase {
     public void initialize() {
         timer.start();
         prevRoll = this.s_Swerve.getRoll();
+        firstPass = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -78,13 +81,17 @@ public class AutoBalance extends CommandBase {
 
         
         if(roll > 5.0){
-            translation = 0.12;
+            translation = 0.10;
         }
         else if(roll < -5.0){
-            translation = -0.12;
+            translation = -0.10;
         }
         else{
+            firstPass = true;
             translation = 0.0;
+        }
+        if(!firstPass){
+            translation *= 1.5;
         }
         /* 
         if(this.s_Swerve.getRoll() - prevRollSample > 0.5){

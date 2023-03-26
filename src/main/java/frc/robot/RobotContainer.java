@@ -19,6 +19,7 @@ import frc.robot.commands.Autonomous.Score2Adjacent;
 import frc.robot.commands.Autonomous.Score2Opposite;
 import frc.robot.commands.Autonomous.ScoreBalance;
 import frc.robot.commands.Autonomous.ScoreBalanceAdjacent;
+import frc.robot.commands.Autonomous.ScoreBalanceMobility;
 import frc.robot.commands.Autonomous.ScoreBalanceOpposite;
 import frc.robot.commands.Autonomous.SetZeroPoints;
 import frc.robot.commands.Conveyor.*;
@@ -128,9 +129,10 @@ public class RobotContainer {
     private final Mobility c_Mobility = new Mobility(s_Swerve);
     private final ScoreBalanceAdjacent c_ScoreBalanceAdjacent = new ScoreBalanceAdjacent(s_Swerve, s_Lift, s_Grabber);
     private final ScoreBalanceOpposite c_ScoreBalanceOpposite = new ScoreBalanceOpposite(s_Swerve, s_Lift, s_Grabber);
-    private final Score2Adjacent c_Score2Adjacent = new Score2Adjacent(s_Swerve, s_Lift, s_Intake, s_Grabber);
+    private final Score2Adjacent c_Score2Adjacent = new Score2Adjacent(s_Swerve, s_Lift, s_Intake, s_Grabber, s_Limelight, s_Conveyor);
     private final Score2Opposite c_Score2Opposite = new Score2Opposite(s_Swerve, s_Lift, s_Intake, s_Grabber);
     private final ScoreBalance c_ScoreBalance = new ScoreBalance(s_Swerve, s_Lift, s_Grabber);
+    private final ScoreBalanceMobility c_ScoreBalanceMobility = new ScoreBalanceMobility(s_Swerve, s_Lift, s_Grabber);
     private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
@@ -157,8 +159,8 @@ public class RobotContainer {
         );
 
         
-        s_Conveyor.setDefaultCommand(new TurnOffConveyor(s_Conveyor));
-        s_Intake.setDefaultCommand(new RetractIntake(s_Intake));
+        s_Conveyor.setDefaultCommand(null);
+        s_Intake.setDefaultCommand(null);
         s_Lift.setDefaultCommand(null);
         s_Grabber.setDefaultCommand(null);
         s_Limelight.setDefaultCommand(null);
@@ -166,11 +168,12 @@ public class RobotContainer {
         
 
         autonomousSelector.setDefaultOption("Mobility", c_Mobility);
-        autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
-        autonomousSelector.addOption("Score Balance Opposite", c_ScoreBalanceOpposite);
+        //autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
+        //autonomousSelector.addOption("Score Balance Opposite", c_ScoreBalanceOpposite);
         autonomousSelector.addOption("Score 2 Adjacent", c_Score2Adjacent);
-        autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
-        autonomousSelector.addOption("Score Balance", c_ScoreBalance);
+        //autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
+        autonomousSelector.addOption("Score Balance No Mobility", c_ScoreBalance);
+        autonomousSelector.addOption("Score Balance Mobility", c_ScoreBalanceMobility);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
 
         CameraServer.startAutomaticCapture();
@@ -192,9 +195,10 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         runConveyor.whileTrue(new TurnOnConveyor(s_Conveyor));
+        runConveyor.whileFalse(new TurnOffConveyor(s_Conveyor));
         
-        intakeRun.onTrue(new SequentialCommandGroup(new SetServoHigh(s_Conveyor), new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor))));
-        intakeRun.onFalse(new RetractIntake(s_Intake));
+        intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor)));
+        intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
         SetLiftPosition1.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new SetPositionGrab(s_Lift, s_Grabber), new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition1(s_Lift)));
         SetLiftPosition2.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new SetPositionGrab(s_Lift, s_Grabber), new RetractIntake(s_Intake), new CloseGrabber(s_Grabber), new SetPosition2(s_Lift)));

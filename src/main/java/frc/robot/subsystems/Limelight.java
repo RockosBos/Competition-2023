@@ -96,6 +96,12 @@ public class Limelight extends SubsystemBase {
     return sum / sampleX.length;
   }
 
+  public void resetSampleAverage(){
+      for(int i = 0; i < sampleX.length; i++){
+        sampleX[i] = -100 ;
+      }
+  }
+
   @Override
   public void periodic() {
 
