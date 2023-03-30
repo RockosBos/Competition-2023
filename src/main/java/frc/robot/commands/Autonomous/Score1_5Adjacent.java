@@ -35,7 +35,7 @@ import frc.robot.subsystems.Swerve;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Score2Opposite extends SequentialCommandGroup {
+public class Score1_5Adjacent extends SequentialCommandGroup {
   /** Creates a new Score2Right. */
   Swerve s_Swerve;
   Lift s_Lift;
@@ -44,7 +44,7 @@ public class Score2Opposite extends SequentialCommandGroup {
   Limelight s_Limelight;
   Conveyor s_Conveyor;
 
-  public Score2Opposite(Swerve s_Swerve, Lift s_Lift, Intake s_Intake, Grabber s_Grabber, Limelight s_Limelight, Conveyor s_Conveyor) {
+  public Score1_5Adjacent(Swerve s_Swerve, Lift s_Lift, Intake s_Intake, Grabber s_Grabber, Limelight s_Limelight, Conveyor s_Conveyor) {
     this.s_Swerve = s_Swerve;
     this.s_Lift = s_Lift;
     this.s_Intake = s_Intake;
@@ -67,18 +67,10 @@ public class Score2Opposite extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new SetPosition0(s_Lift),
             new LimeLightSearchOff(s_Limelight),
-            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Opposite", 5, 2.5), true), 
+            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent", 5, 2.5), true), 
             new ExtendIntake(s_Intake),
             new TurnOnConveyor(s_Conveyor)
-        ),
-        new ParallelCommandGroup(
-            new RetractIntake(s_Intake),
-            new TurnOffConveyor(s_Conveyor),
-            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Opposite_2", 1, 1), false),
-            new AutoCloseGrabber(s_Grabber),
-            new AutoScoreLevel3(s_Lift)
-        ),
-        new AutoOpenGrabber(s_Grabber)
+        )
     );
   }
 }

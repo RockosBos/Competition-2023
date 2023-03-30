@@ -45,6 +45,7 @@ import frc.robot.commands.Limelight.LimeLightSearchOff;
 import frc.robot.commands.Limelight.LimeLightSearchOn;
 import frc.robot.commands.Swerve.AutoBalance;
 import frc.robot.commands.Swerve.AutoCenter;
+import frc.robot.commands.Swerve.DoubleSubstationDriveUp;
 import frc.robot.commands.Swerve.TeleopSwerve;
 
 import com.pathplanner.lib.PathPlanner;
@@ -101,6 +102,7 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driveController, XboxController.Button.kLeftBumper.value);
     private final JoystickButton setZeroPoints = new JoystickButton(driveController, XboxController.Button.kRightBumper.value);
     private final JoystickButton runConveyor = new JoystickButton(driveController, XboxController.Button.kX.value);
+    private final JoystickButton runConveyorReverse = new JoystickButton(driveController, XboxController.Button.kB.value);
 
     /* Operator Buttons */
     private final JoystickButton intakeRun = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
@@ -110,6 +112,7 @@ public class RobotContainer {
     private final JoystickButton SetLiftPosition3 = new JoystickButton(operatorController, XboxController.Button.kY.value);
     private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
     private final Trigger GrabberDropCone = new Trigger(() -> operatorController.getRawAxis(3) > 0.9);
+    private final Trigger DoubleSubstationTargeting = new Trigger(() -> operatorController.getRawAxis(2) > 0.9);
 
     private final Trigger ManualRaiseArm = new Trigger(() -> operatorController.getPOV() == 0);
     private final Trigger ManualLowerArm = new Trigger(() -> operatorController.getPOV() == 0);
@@ -130,9 +133,9 @@ public class RobotContainer {
     private final ScoreBalanceAdjacent c_ScoreBalanceAdjacent = new ScoreBalanceAdjacent(s_Swerve, s_Lift, s_Grabber);
     private final ScoreBalanceOpposite c_ScoreBalanceOpposite = new ScoreBalanceOpposite(s_Swerve, s_Lift, s_Grabber);
     private final Score2Adjacent c_Score2Adjacent = new Score2Adjacent(s_Swerve, s_Lift, s_Intake, s_Grabber, s_Limelight, s_Conveyor);
-    private final Score2Opposite c_Score2Opposite = new Score2Opposite(s_Swerve, s_Lift, s_Intake, s_Grabber);
-    private final ScoreBalance c_ScoreBalance = new ScoreBalance(s_Swerve, s_Lift, s_Grabber);
-    private final ScoreBalanceMobility c_ScoreBalanceMobility = new ScoreBalanceMobility(s_Swerve, s_Lift, s_Grabber);
+    private final Score2Opposite c_Score2Opposite = new Score2Opposite(s_Swerve, s_Lift, s_Intake, s_Grabber, s_Limelight, s_Conveyor);
+    private final ScoreBalance c_ScoreBalance = new ScoreBalance(s_Swerve, s_Lift, s_Grabber, s_Conveyor);
+    private final ScoreBalanceMobility c_ScoreBalanceMobility = new ScoreBalanceMobility(s_Swerve, s_Lift, s_Grabber, s_Conveyor);
     private final AutoBalance c_AutoBalance = new AutoBalance(s_Swerve);
 
     private final SendableChooser<Command> autonomousSelector = new SendableChooser<Command>();
@@ -171,7 +174,7 @@ public class RobotContainer {
         //autonomousSelector.addOption("Score Balance Adjacent", c_ScoreBalanceAdjacent);
         //autonomousSelector.addOption("Score Balance Opposite", c_ScoreBalanceOpposite);
         autonomousSelector.addOption("Score 2 Adjacent", c_Score2Adjacent);
-        //autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
+        autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
         autonomousSelector.addOption("Score Balance No Mobility", c_ScoreBalance);
         autonomousSelector.addOption("Score Balance Mobility", c_ScoreBalanceMobility);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
@@ -196,7 +199,7 @@ public class RobotContainer {
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         runConveyor.whileTrue(new TurnOnConveyor(s_Conveyor));
         runConveyor.whileFalse(new TurnOffConveyor(s_Conveyor));
-        
+
         intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor)));
         intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));
         SetLiftPosition0.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new Position0GrabberControl(s_Grabber, s_Lift), new SetPosition0(s_Lift)));
@@ -206,6 +209,7 @@ public class RobotContainer {
         SetLiftPositionIntake.onTrue(new SequentialCommandGroup(new SetServoLow(s_Conveyor), new OpenGrabber(s_Grabber), new SetPositionIntake(s_Lift), new TurnOffConveyor(s_Conveyor)));
         GrabberDropCone.whileTrue(new SequentialCommandGroup(new LimeLightSearchOn(s_Limelight), new AutoCenter(s_Swerve, s_Limelight), new SetPositionDrop(s_Lift), new ParallelCommandGroup(new OpenGrabber(s_Grabber), new SetPosition0(s_Lift))));
         GrabberDropCone.whileFalse(new LimeLightSearchOff(s_Limelight));
+        //DoubleSubstationTargeting.whileTrue(new SequentialCommandGroup(new ParallelCommandGroup(new DoubleSubstationDriveUp(s_Swerve, s_Lift), new SetPositionIntake(s_Lift), new OpenGrabber(s_Grabber)), new CloseGrabber(s_Grabber)));
         bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
         //onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetPositionGrab(s_Lift), new TurnOffConveyor(s_Conveyor)), new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
         

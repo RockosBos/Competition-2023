@@ -86,7 +86,7 @@ public class Intake extends SubsystemBase {
     kIz = 0; 
     kFF = 0; 
     kMaxOutput = 0.3; 
-    kMinOutput = -0.3;
+    kMinOutput = -0.7;
 
     // set PID coefficients
     m_pidController.setP(kP);

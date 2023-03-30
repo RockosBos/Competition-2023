@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +24,8 @@ public class LED extends SubsystemBase {
   String color, pattern;
   boolean useHSV;
   Alliance currentAlliance;
+
+  Timer patternTimer = new Timer();
 
   public LED() {
     leftLEDStrip.setLength(leftLedBuffer.getLength());
@@ -70,6 +73,15 @@ public class LED extends SubsystemBase {
   @Override
   public void periodic() {
         currentAlliance = DriverStation.getAlliance();
+        if(currentAlliance == DriverStation.Alliance.Red){
+            setStateRGB(255, 0, 0, "Solid");
+        }else if(currentAlliance == DriverStation.Alliance.Blue){
+            setStateRGB(0, 0, 255, "Solid");
+        }
+        else{
+            setStateRGB(255, 255, 255, "Solid");
+        }
+
 
         switch(pattern){
             case "Solid":
@@ -81,17 +93,6 @@ public class LED extends SubsystemBase {
                         leftLedBuffer.setRGB(i, r, g, b);
                     }       
                 } 
-            break;
-            case "Alliance":
-                if(currentAlliance == DriverStation.Alliance.Red){
-                    setStateRGB(255, 0, 0, "Solid");
-                }else if(currentAlliance == DriverStation.Alliance.Blue){
-                    setStateRGB(0, 0, 255, "Solid");
-                }
-                else{
-                    setStateRGB(255, 255, 255, "Solid");
-                }
-
             break;
             case "Blink":
 
