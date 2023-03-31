@@ -80,18 +80,18 @@ public class AutoBalance extends CommandBase {
         }
 
         
-        if(roll > 5.0){
-            translation = 0.10;
+        if(roll > 5.5){
+            translation = 0.11;
         }
-        else if(roll < -5.0){
-            translation = -0.10;
+        else if(roll < -5.5){
+            translation = -0.11;
         }
         else{
             firstPass = true;
             translation = 0.0;
         }
         if(!firstPass){
-            translation *= 1.5;
+            translation *= 1.25;
         }
         /* 
         if(this.s_Swerve.getRoll() - prevRollSample > 0.5){
