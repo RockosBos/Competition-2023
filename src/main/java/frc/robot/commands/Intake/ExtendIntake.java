@@ -27,7 +27,6 @@ public class ExtendIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Extend Intake");
       s_Intake.SetIntakePosition(Constants.INTAKE_EXTEND_POSITION);
       s_Intake.SetIntakeRollers(Constants.INTAKE_ROLLER_SPEED_VOLTS);
   }

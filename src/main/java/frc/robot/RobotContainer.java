@@ -30,6 +30,7 @@ import frc.robot.commands.Intake.ExtendIntake;
 import frc.robot.commands.Intake.ManualExtendIntake;
 import frc.robot.commands.Intake.ManualRetractIntake;
 import frc.robot.commands.Intake.RetractIntake;
+import frc.robot.commands.Intake.ReverseRollers;
 import frc.robot.commands.Lift.ManualControlExtend;
 import frc.robot.commands.Lift.ManualControlRetract;
 import frc.robot.commands.Lift.ManualControlRotateDown;
@@ -113,6 +114,8 @@ public class RobotContainer {
     private final JoystickButton SetLiftPositionIntake = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
     private final Trigger GrabberDropCone = new Trigger(() -> operatorController.getRawAxis(3) > 0.9);
     private final Trigger DoubleSubstationTargeting = new Trigger(() -> operatorController.getRawAxis(2) > 0.9);
+    private final Trigger NoConveyorInstructions = new Trigger(() -> !operatorController.getLeftBumper() && !driveController.getXButton() && !driveController.getBButton());
+
 
     private final Trigger ManualRaiseArm = new Trigger(() -> operatorController.getPOV() == 0);
     private final Trigger ManualLowerArm = new Trigger(() -> operatorController.getPOV() == 0);
@@ -198,7 +201,8 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         setZeroPoints.onTrue(new SetZeroPoints(s_Lift));
         runConveyor.whileTrue(new TurnOnConveyor(s_Conveyor));
-        runConveyor.whileFalse(new TurnOffConveyor(s_Conveyor));
+        runConveyorReverse.whileTrue(new ParallelCommandGroup(new ReverseConveyor(s_Conveyor), new ReverseRollers(s_Intake)));
+        NoConveyorInstructions.whileTrue(new TurnOffConveyor(s_Conveyor));
 
         intakeRun.whileTrue(new ParallelCommandGroup(new ExtendIntake(s_Intake), new TurnOnConveyor(s_Conveyor)));
         intakeRun.whileFalse(new ParallelCommandGroup(new RetractIntake(s_Intake), new TurnOffConveyor(s_Conveyor)));

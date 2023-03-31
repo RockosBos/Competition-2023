@@ -45,7 +45,7 @@ public class Conveyor extends SubsystemBase {
     /** Creates a new Conveyor. */
     private CANSparkMax conveyorMotor = new CANSparkMax(Constants.conveyorID, MotorType.kBrushless);
     private Servo endStopServo = new Servo(0);
-    private boolean runConveyor = false;
+    private boolean runConveyor = false, runConveyorReverse = false;
     private double servoPosition;
     private GenericEntry sensorEntry1, sensorEntry2, sensorEntryValid1, sensorEntryValid2;
 
@@ -84,6 +84,12 @@ public class Conveyor extends SubsystemBase {
 
     public void setConveyorState(boolean state){
         runConveyor = state;
+        runConveyorReverse = false;
+    }
+
+    public void setconveyorReverseState(boolean state){
+        runConveyorReverse = state;
+        runConveyor = false;
     }
 
     public String getError(){
@@ -149,6 +155,9 @@ public class Conveyor extends SubsystemBase {
     public void periodic() {
         if(runConveyor){
             conveyorMotor.setVoltage(Constants.CONVEYOR_FORWARD_SPEED_VOLTS);
+        }
+        else if(runConveyorReverse){
+            conveyorMotor.setVoltage(Constants.CONVEYOR_BACKWARD_SPEED_VOLTS);
         }
         else{
             conveyorMotor.setVoltage(0.0);

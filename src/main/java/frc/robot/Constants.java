@@ -47,8 +47,8 @@ public final class Constants {
     public static final double INTAKE_EXTENTION_SPEED_VOLTS = MAX_VOLTS * 0.4;
     public static final double INTAKE_RETRACTION_SPEED_VOLTS = MAX_VOLTS * -0.4;
     public static final double INTAKE_ROLLER_SPEED_VOLTS = MAX_VOLTS * -0.4;
-    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * -0.5;
-    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * -0.5;
+    public static final double LIFT_EXTEND_SPEED_VOLTS = MAX_VOLTS * -0.75;
+    public static final double LIFT_ROTATE_SPEED_VOLTS = MAX_VOLTS * -0.75;
 
     //Motor Position
     public static final double INTAKE_EXTEND_POSITION = 55.0;
