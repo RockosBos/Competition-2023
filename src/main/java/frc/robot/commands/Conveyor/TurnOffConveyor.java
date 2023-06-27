@@ -25,6 +25,7 @@ public class TurnOffConveyor extends CommandBase {
     @Override
     public void execute() {
       this.s_Conveyor.setConveyorState(false);
+      System.out.println("Conveyor off");
     }
 
     // Called once the command ends or is interrupted.

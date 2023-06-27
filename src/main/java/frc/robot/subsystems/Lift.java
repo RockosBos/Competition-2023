@@ -197,14 +197,14 @@ public class Lift extends SubsystemBase {
     }
 
     public void setPositionControl(boolean value){
-      if(value){
+      /*if(value){
         liftRotate.enableSoftLimit(SoftLimitDirection.kReverse, true);
         liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, true);
       }
       else{
         liftRotate.enableSoftLimit(SoftLimitDirection.kReverse, false);
         liftExtend.enableSoftLimit(SoftLimitDirection.kReverse, false);
-      }
+      }*/
         positionControl = value;
     }
 

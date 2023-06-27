@@ -5,40 +5,40 @@
 package frc.robot.commands.Lift;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Lift;
 
-public class ManualControlRotateDown extends CommandBase {
-  /** Creates a new ManualControlRotateUp. */
+public class DisableManualControl extends CommandBase {
+  /** Creates a new DisableManualControl. */
   Lift s_Lift;
-  public ManualControlRotateDown(Lift s_Lift) {
-      this.s_Lift = s_Lift;
-      addRequirements(s_Lift);
+  boolean complete = false;
+  public DisableManualControl(Lift s_Lift) {
+    this.s_Lift = s_Lift;
+    addRequirements(s_Lift);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    s_Lift.setPositionControl(false);
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Rotate Down");
-    s_Lift.setRotateVoltage(-Constants.LIFT_ROTATE_SPEED_VOLTS);
+    s_Lift.setPosition(s_Lift.getLiftRotatePosition(), s_Lift.getLiftExtendPosition());
+    s_Lift.setPositionControl(true);
+    complete = true;
+    System.out.println("Manual Control off");
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    s_Lift.setPosition(s_Lift.getLiftRotatePosition(), s_Lift.getLiftExtendPosition());
-    s_Lift.setPositionControl(true);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return complete;
   }
 }

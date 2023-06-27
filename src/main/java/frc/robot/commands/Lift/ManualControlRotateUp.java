@@ -25,6 +25,7 @@ public class ManualControlRotateUp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Rotate Up");
     s_Lift.setRotateVoltage(Constants.LIFT_ROTATE_SPEED_VOLTS);
   }
 

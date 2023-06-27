@@ -15,6 +15,7 @@ import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.Autonomous.Mobility;
+import frc.robot.commands.Autonomous.Score1_5Adjacent;
 import frc.robot.commands.Autonomous.Score2Adjacent;
 import frc.robot.commands.Autonomous.Score2Opposite;
 import frc.robot.commands.Autonomous.ScoreBalance;
@@ -31,6 +32,7 @@ import frc.robot.commands.Intake.ManualExtendIntake;
 import frc.robot.commands.Intake.ManualRetractIntake;
 import frc.robot.commands.Intake.RetractIntake;
 import frc.robot.commands.Intake.ReverseRollers;
+import frc.robot.commands.Lift.DisableManualControl;
 import frc.robot.commands.Lift.ManualControlExtend;
 import frc.robot.commands.Lift.ManualControlRetract;
 import frc.robot.commands.Lift.ManualControlRotateDown;
@@ -117,10 +119,11 @@ public class RobotContainer {
     private final Trigger NoConveyorInstructions = new Trigger(() -> !operatorController.getLeftBumper() && !driveController.getXButton() && !driveController.getBButton());
 
 
-    private final Trigger ManualRaiseArm = new Trigger(() -> operatorController.getPOV() == 0);
     private final Trigger ManualLowerArm = new Trigger(() -> operatorController.getPOV() == 0);
-    private final Trigger ManualExtendArm = new Trigger(() -> operatorController.getPOV() == 0);
-    private final Trigger ManualRetractArm = new Trigger(() -> operatorController.getPOV() == 0);
+    private final Trigger ManualRaiseArm = new Trigger(() -> operatorController.getPOV() == 180);
+    private final Trigger ManualExtendArm = new Trigger(() -> operatorController.getPOV() == 90);
+    private final Trigger ManualRetractArm = new Trigger(() -> operatorController.getPOV() == 270);
+    private final Trigger NoManual = new Trigger(() -> operatorController.getPOV() == -1);
 
     private final Trigger bothPhotoEyesBlocked = new Trigger(() -> {
         return (s_Conveyor.getConveyorState() && s_Conveyor.photoEye1BlockedValid() && s_Conveyor.photoEye2BlockedValid());
@@ -133,6 +136,7 @@ public class RobotContainer {
 
     /* Auto Commands */
     private final Mobility c_Mobility = new Mobility(s_Swerve);
+    private final Score1_5Adjacent c_Score1_5Adjacent = new Score1_5Adjacent(s_Swerve, s_Lift, s_Intake, s_Grabber, s_Limelight, s_Conveyor);
     private final ScoreBalanceAdjacent c_ScoreBalanceAdjacent = new ScoreBalanceAdjacent(s_Swerve, s_Lift, s_Grabber);
     private final ScoreBalanceOpposite c_ScoreBalanceOpposite = new ScoreBalanceOpposite(s_Swerve, s_Lift, s_Grabber);
     private final Score2Adjacent c_Score2Adjacent = new Score2Adjacent(s_Swerve, s_Lift, s_Intake, s_Grabber, s_Limelight, s_Conveyor);
@@ -180,6 +184,7 @@ public class RobotContainer {
         autonomousSelector.addOption("Score 2 Opposite", c_Score2Opposite);
         autonomousSelector.addOption("Score Balance No Mobility", c_ScoreBalance);
         autonomousSelector.addOption("Score Balance Mobility", c_ScoreBalanceMobility);
+        autonomousSelector.addOption("Score 1.5 Adjacent", c_Score1_5Adjacent);
         autonomousSelector.addOption("Test AutoBalance", c_AutoBalance);
 
         CameraServer.startAutomaticCapture();
@@ -217,10 +222,11 @@ public class RobotContainer {
         bothPhotoEyesBlocked.onTrue(new ParallelCommandGroup(new CloseGrabber(s_Grabber), new TurnOffConveyor(s_Conveyor)));
         //onePhotoEyeBlocked.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetPositionGrab(s_Lift), new TurnOffConveyor(s_Conveyor)), new CloseGrabber(s_Grabber), new SetPosition0(s_Lift)));
         
-        //ManualRaiseArm.whileTrue(new ManualControlRotateUp(s_Lift));
-        //ManualLowerArm.whileTrue(new ManualControlRotateDown(s_Lift));
+        ManualRaiseArm.whileTrue(new ManualControlRotateUp(s_Lift));
+        ManualLowerArm.whileTrue(new ManualControlRotateDown(s_Lift));
         //ManualExtendArm.whileTrue(new ManualControlExtend(s_Lift));
         //ManualRetractArm.whileTrue(new ManualControlRetract(s_Lift));
+        NoManual.whileTrue(new DisableManualControl(s_Lift));
     }
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous

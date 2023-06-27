@@ -24,6 +24,7 @@ public class AutoBalance extends CommandBase {
     private double driveSpeed = 0.2;
 
     private Timer timer = new Timer();
+    private Timer engagedTimer = new Timer();
 
     private double translation;
     private double strafe;
@@ -40,6 +41,7 @@ public class AutoBalance extends CommandBase {
     @Override
     public void initialize() {
         timer.start();
+        engagedTimer.start();
         prevRoll = this.s_Swerve.getRoll();
         firstPass = false;
     }
@@ -80,18 +82,23 @@ public class AutoBalance extends CommandBase {
         }
 
         
-        if(roll > 5.5){
-            translation = 0.11;
+        if(roll > 5.0){
+            translation = 0.13;
+            engagedTimer.reset();
         }
-        else if(roll < -5.5){
-            translation = -0.11;
+        else if(roll < -5.0){
+            translation = -0.13;
+            engagedTimer.reset();
         }
         else{
             firstPass = true;
             translation = 0.0;
+            if(engagedTimer.get() < 0.1){
+                strafe = 0.15; //Balance Correctly
+            }
         }
         if(!firstPass){
-            translation *= 1.25;
+            translation *= 1.1;
         }
         /* 
         if(this.s_Swerve.getRoll() - prevRollSample > 0.5){

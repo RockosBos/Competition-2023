@@ -26,6 +26,7 @@ public class ReverseConveyor extends CommandBase {
   public void execute() {
       this.s_Conveyor.setServoPosition(Constants.CONVEYOR_SERVO_HIGH_POSITION);
       this.s_Conveyor.setconveyorReverseState(true);
+      System.out.println("Reverse");
   }
 
   // Called once the command ends or is interrupted.
