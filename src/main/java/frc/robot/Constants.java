@@ -73,7 +73,7 @@ public final class Constants {
     public static final double LIFT_SETPOINT_DROP = 13.0;
 
     public static final double GRABBER_OPEN_POSITION = 0.0;
-    public static final double GRABBER_CLOSED_POSITION = 32.0;
+    public static final double GRABBER_CLOSED_POSITION = 25.0;
 
     public static final double GRABBER_LIFT_CLOSED_THRESHOLD = 2.0;
 

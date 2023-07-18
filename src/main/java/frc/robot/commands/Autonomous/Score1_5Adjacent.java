@@ -56,8 +56,8 @@ public class Score1_5Adjacent extends SequentialCommandGroup {
         new SetServoLow(s_Conveyor),
         new SetPositionGrab(s_Lift, s_Grabber),
         new AutoCloseGrabber(s_Grabber),
+        new AutoScoreLevel3(s_Lift),
         new ParallelCommandGroup(
-          new AutoScoreLevel3(s_Lift),
           new LimeLightSearchOn(s_Limelight), 
           new AutoCenter(s_Swerve, s_Limelight)
         ), 
@@ -67,7 +67,7 @@ public class Score1_5Adjacent extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new SetPosition0(s_Lift),
             new LimeLightSearchOff(s_Limelight),
-            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score2Adjacent", 5, 2.5), true), 
+            s_Swerve.followTrajectoryCommand(PathPlanner.loadPath("Score1_5Adjacent", 5, 2.5), true), 
             new ExtendIntake(s_Intake),
             new TurnOnConveyor(s_Conveyor)
         )
